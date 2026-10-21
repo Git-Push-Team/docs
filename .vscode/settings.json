@@ -1,0 +1,38 @@
+{
+  // Impostazioni di VS Code per questo repository (valgono solo qui).
+  // Serve l'estensione "LaTeX Workshop": VS Code la propone da solo
+  // quando aprite la cartella (vedi .vscode/extensions.json).
+
+  // Come compilare: latexmk con il file latexmkrc del repository.
+  // LaTeX Workshop lo lancia dalla cartella del documento, proprio come
+  // fa scripts/build.py: in VS Code e in CI il risultato e' lo stesso.
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk-gpt",
+      "command": "latexmk",
+      "args": [
+        "-r",
+        "%WORKSPACE_FOLDER%/latexmkrc",
+        "-synctex=1",
+        "-outdir=%OUTDIR%",
+        "%DOC%"
+      ],
+      "env": {}
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "Git Push Team (latexmk)",
+      "tools": ["latexmk-gpt"]
+    }
+  ],
+  // I file temporanei e il PDF di prova vanno in build/, come per build.py
+  "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build/%RELATIVE_DIR%",
+  // Compila a ogni salvataggio (Ctrl+S / Cmd+S)
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  // Il PDF si apre in una scheda accanto al testo
+  "latex-workshop.view.pdf.viewer": "tab",
+  "files.encoding": "utf8",
+  "editor.wordWrap": "on",
+  "cSpell.language": "it,en"
+}

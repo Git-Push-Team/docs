@@ -1,0 +1,74 @@
+% =====================================================================
+%  MODELLO: VERBALE INTERNO  (riunione del solo gruppo)
+%
+%  1. Copiate questo file nella cartella della milestone in corso:
+%       Candidatura/verbali/interni/   RTB/verbali/interni/   PB/verbali/interni/
+%     e chiamatelo VI-AAAA-MM-GG.tex (data della riunione), es.
+%       RTB/verbali/interni/VI-2026-11-03.tex
+%     Dopo il merge la CI mette accanto il PDF: VI-2026-11-03.pdf
+%  2. Cambiate i campi qui sotto. Tutto quello che segue il simbolo %
+%     è un commento: non viene stampato.
+%  3. Scrivete il contenuto dopo \begin{document}.
+%  Copertina, registro, presenze, intestazioni e numeri di pagina si
+%  fanno da soli. Guida completa: GUIDA.md (ricetta 1).
+% =====================================================================
+\documentclass[verbale=interno]{gpt}
+
+\titolo{Titolo della riunione}     % di cosa si è parlato, in poche parole
+\data{2026-10-26}                  % data della riunione: AAAA-MM-GG
+\orario{21:00}{22:00}              % ora di inizio, ora di fine
+\luogo{Discord}                    % oppure: Aula 1C150, Torre Archimede
+\redattore{guglielmo}              % chi scrive il verbale (la sua chiave)
+\verificatore{corro}               % chi lo controlla (un Verificatore,
+                                   % diverso dal redattore)
+
+% Chi faceva parte del gruppo il giorno della riunione.
+% Lasciate così, a meno che il gruppo sia cambiato.
+\componenti{biasini,cescobolla,corro,guglielmo,mazzurana,spagnoli}
+\assenti{}                         % chi mancava, es. \assenti{corro,spagnoli}
+
+% Solo DOPO l'assegnazione del capitolato (togliete il % davanti):
+% \capitolato{Cn -- Nome del capitolato (Azienda)}
+
+% ---------------------------------------------------------------------
+%  REGISTRO DELLE MODIFICHE  --  la riga più recente va IN CIMA.
+%  La versione del documento è quella della PRIMA riga.
+%
+%  \modifica{versione}{data}{autore}{verificatore}{cosa è cambiato}
+%
+%  Quando il Verificatore approva, aggiunge lui IN CIMA questa riga
+%  (con la data del giorno e le chiavi giuste):
+%  \modifica{1.0.0}{2026-10-27}{guglielmo}{corro}{Verifica e approvazione}
+% ---------------------------------------------------------------------
+\modifica{0.1.0}{2026-10-26}{guglielmo}{--}{Prima stesura}
+
+\begin{document}
+
+\section{Ordine del giorno}
+\begin{enumerate}
+  \item Primo punto.
+  \item Secondo punto.
+\end{enumerate}
+
+\section{Svolgimento}
+\subsection{Primo punto}
+Riassunto della discussione.
+
+\subsection{Secondo punto}
+Riassunto della discussione.
+
+\section{Decisioni}
+\begin{decisioni}
+  \decisione{Testo della decisione presa.}
+\end{decisioni}
+
+\section{Azioni da intraprendere}
+\begin{azioni}
+  % \azione[numero issue]{cosa fare}{chi (chiavi, separate da virgole)}{entro quando}
+  \azione[\#12]{Descrizione dell'attività.}{guglielmo}{30/10/2026}
+\end{azioni}
+
+\section{Prossima riunione}
+Data e argomenti previsti.
+
+\end{document}

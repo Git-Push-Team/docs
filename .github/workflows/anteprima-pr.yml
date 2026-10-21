@@ -1,0 +1,96 @@
+# =====================================================================
+#  Anteprima PDF  --  parte a ogni pull request verso main.
+#
+#  1. Compila TUTTO: documenti, modelli ed esempi. Così un errore non
+#     può sfuggire, nemmeno se sta in un capitolo incluso o nella classe.
+#  2. Commenta la pull request con i soli documenti toccati e il link
+#     al PDF (uno solo: si apre nel browser; più di uno: file zip).
+#  3. Se qualcosa non compila, il controllo diventa rosso. Diventa rosso
+#     anche se la PR carica un PDF che crea la CI (quello accanto al .tex).
+# =====================================================================
+name: Anteprima PDF
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: anteprima-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  compila:
+    name: Compila i documenti
+    # Versione di Ubuntu fissata: ubuntu-latest cambia da sola (e con lei
+    # la versione di TeX Live). Cambiatela solo di proposito, con una PR.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Scarica il repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0          # serve la storia per confrontare con main
+
+      - name: Installa LaTeX
+        uses: ./.github/actions/setup-latex
+
+      - name: Compila tutto e prepara l'anteprima
+        id: build
+        continue-on-error: true   # il commento parte anche se ci sono errori
+        run: python3 scripts/build.py --anteprima "origin/${{ github.base_ref }}"
+
+      # Un solo documento toccato: il PDF si carica così com'è e si apre
+      # direttamente nel browser.
+      - name: Carica il PDF
+        id: uno
+        if: steps.build.outputs.quanti == '1'
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ steps.build.outputs.pdf }}
+          archive: false
+          retention-days: 7
+
+      # Piu' documenti toccati: un unico file zip.
+      - name: Carica i PDF
+        id: molti
+        if: steps.build.outputs.quanti > 1
+        uses: actions/upload-artifact@v7
+        with:
+          name: anteprima-pr-${{ github.event.pull_request.number }}
+          path: build/anteprima/
+          retention-days: 7
+
+      - name: Commenta la pull request
+        if: always()
+        continue-on-error: true   # un commento non riuscito non deve bloccare la PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          QUANTI: ${{ steps.build.outputs.quanti }}
+          URL: ${{ steps.uno.outputs.artifact-url || steps.molti.outputs.artifact-url }}
+        run: |
+          {
+            echo "### 📄 Anteprima dei documenti"
+            echo
+            cat build/riepilogo.md 2>/dev/null \
+              || echo "La compilazione non è partita: aprite la scheda **Checks** e leggete il log."
+            echo
+            if [ -n "$URL" ] && [ "$QUANTI" = "1" ]; then
+              echo "📎 **[Apri il PDF]($URL)** (si apre nel browser, resta disponibile per 7 giorni)"
+            elif [ -n "$URL" ]; then
+              echo "📎 **[Scarica i $QUANTI PDF (zip)]($URL)** (restano disponibili per 7 giorni)"
+            fi
+          } > commento.md
+          # aggiorna il commento precedente del bot, oppure ne crea uno nuovo
+          gh pr comment "$PR" --edit-last --body-file commento.md \
+            || gh pr comment "$PR" --body-file commento.md
+
+      - name: Esito
+        if: steps.build.outcome == 'failure'
+        run: |
+          echo "::error::Almeno un documento non compila: leggete il commento nella pull request."
+          exit 1

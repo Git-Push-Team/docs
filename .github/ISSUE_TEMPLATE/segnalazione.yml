@@ -1,0 +1,20 @@
+name: Segnalazione di un errore
+description: Un errore trovato in un documento già pubblicato.
+title: "[ERRORE] "
+labels: ["errore"]
+projects: ["Git-Push-Team/1"]   # aggiunge la issue alla bacheca GIT PUSH TEAM
+body:
+  - type: input
+    id: documento
+    attributes:
+      label: Documento e versione
+      placeholder: "es. Norme di Progetto v1.2.0"
+    validations:
+      required: true
+  - type: textarea
+    id: errore
+    attributes:
+      label: Dov'è l'errore e cosa c'è di sbagliato
+      description: Pagina o sezione, testo attuale e testo corretto.
+    validations:
+      required: true

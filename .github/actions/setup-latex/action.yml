@@ -1,0 +1,21 @@
+# Installa TeX Live con i pacchetti usati dalla classe gpt.cls.
+# Lo usano tutti e tre i workflow. Se la classe inizia a usare un
+# pacchetto nuovo e la CI dice "File `xyz.sty' not found", aggiungete
+# qui il pacchetto Debian che lo contiene (cercatelo su packages.ubuntu.com).
+name: Installa LaTeX
+description: Installa TeX Live con i pacchetti usati dal template del gruppo.
+runs:
+  using: composite
+  steps:
+    - name: Installa TeX Live e latexmk
+      shell: bash
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y -qq --no-install-recommends \
+          latexmk \
+          texlive-latex-recommended \
+          texlive-latex-extra \
+          texlive-fonts-recommended \
+          texlive-pictures \
+          texlive-lang-italian \
+          lmodern

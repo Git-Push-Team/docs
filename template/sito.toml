@@ -1,0 +1,56 @@
+# =====================================================================
+#  Impostazioni del SITO (https://git-push-team.github.io/docs/)
+#
+#  Qui si scrivono solo le cose che non stanno nei documenti: a che
+#  punto è ogni milestone, i link extra, il capitolato, gli account
+#  GitHub dei membri. Nomi, email e anno arrivano da dati-gruppo.tex.
+#
+#  Regole del formato (TOML):
+#    - il testo va tra virgolette: "così"
+#    - tutto quello che segue # è un commento
+#    - un testo su più righe va tra tre virgolette: """ ... """
+#  Si modifica con una pull request, come tutto il resto.
+# =====================================================================
+
+[sito]
+# La frase sotto il nome del gruppo, in cima alla pagina
+descrizione = "Documentazione del progetto didattico di Ingegneria del Software"
+
+[progetto]
+# Compilate dopo l'assegnazione del capitolato (lasciate "" fino ad allora)
+capitolato = ""            # es. "C2 – NEXUM Concierge"
+proponente = ""            # es. "Eggon S.r.l."
+# Due o tre righe sul progetto, per la sezione "Il gruppo"
+descrizione = ""
+
+# ---------------------------------------------------------------------
+#  Le milestone. stato: "da iniziare", "in corso" oppure "conclusa".
+#  La prima "in corso" è quella mostrata per prima sul sito; le altre
+#  con dei documenti finiscono nell'Archivio.
+#  link: pulsanti extra nella milestone (PoC, MVP, presentazione...),
+#  es.  link = [ { testo = "Proof of Concept", url = "https://..." } ]
+# ---------------------------------------------------------------------
+[milestone.Candidatura]
+stato = "in corso"
+link = []
+
+[milestone.RTB]
+stato = "da iniziare"
+link = []
+
+[milestone.PB]
+stato = "da iniziare"
+link = []
+
+# ---------------------------------------------------------------------
+#  Account GitHub dei membri: servono per la foto e il link nella
+#  sezione "Il gruppo". A sinistra la chiave di dati-gruppo.tex, a destra
+#  il nome utente GitHub (senza @). Vuoto = niente foto, solo iniziali.
+# ---------------------------------------------------------------------
+[github]
+biasini = ""
+cescobolla = ""
+corro = ""
+guglielmo = ""
+mazzurana = ""
+spagnoli = ""

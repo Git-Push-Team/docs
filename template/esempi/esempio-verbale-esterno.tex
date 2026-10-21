@@ -1,0 +1,56 @@
+% =====================================================================
+%  ESEMPIO di verbale esterno (incontro con un proponente).
+%  Rispetto all'interno aggiunge: partecipanti esterni, domande e
+%  risposte e il riquadro firme finale. Le risposte sono da compilare
+%  durante l'incontro vero.
+% =====================================================================
+\documentclass[verbale=esterno]{gpt}
+
+\titolo{Incontro conoscitivo con Vimar}
+\data{2026-10-21}
+\orario{14:00}{15:00}
+\luogo{Microsoft Teams}
+\redattore{corro}
+\verificatore{mazzurana}
+\componenti{biasini,cescobolla,corro,guglielmo,mazzurana,spagnoli}
+\assenti{}
+
+\esterno{Mariano Sciacco}{IoT \& Cloud Engineer, Vimar S.p.A.}
+\esterno{Domenico Bevilacqua}{IoT Systems Engineer, Vimar S.p.A.}
+\firma{Mariano Sciacco}{Vimar S.p.A.}
+
+\modifica{1.0.0}{2026-10-22}{corro}{mazzurana}{Verifica e approvazione}
+\modifica{0.1.0}{2026-10-21}{corro}{--}{Prima stesura}
+
+\begin{document}
+
+\section{Ordine del giorno}
+\begin{enumerate}
+  \item Presentazione del gruppo.
+  \item Chiarimenti sui requisiti del capitolato C1 -- AURA.
+\end{enumerate}
+
+\section{Domande e risposte}
+\domanda{Che ruolo ha il client MCP da realizzare, visto che gli
+  assistenti AI commerciali fungono già da client?}
+  {\emph{Da compilare durante l'incontro.}}
+\domanda{Il deploy su AWS è richiesto o è sufficiente un'infrastruttura
+  Docker Compose ``cloud-ready''?}
+  {\emph{Da compilare durante l'incontro.}}
+\domanda{Quali assistenti AI vanno dimostrati al collaudo?}
+  {\emph{Da compilare durante l'incontro.}}
+\domanda{Le soglie di copertura dei test (75\% unità e integrazione,
+  80\% end-to-end) sono confermate?}
+  {\emph{Da compilare durante l'incontro.}}
+
+\section{Decisioni}
+\begin{decisioni}
+  \decisione{\emph{Da compilare.}}
+\end{decisioni}
+
+\section{Azioni da intraprendere}
+\begin{azioni}
+  \azione{\emph{Da compilare.}}{tutti}{--}
+\end{azioni}
+
+\end{document}

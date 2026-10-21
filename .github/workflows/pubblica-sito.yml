@@ -1,0 +1,84 @@
+# =====================================================================
+#  Pubblica il sito  --  parte a ogni modifica su main (cioè a ogni
+#  pull request unita) e si può lanciare a mano dalla scheda Actions.
+#
+#  1. Compila tutti i documenti di Candidatura/, RTB/ e PB/.
+#  2. Salva nel repository il PDF accanto a ogni .tex cambiato
+#     (es. RTB/verbali/interni/VI-2026-11-03.pdf), con un commit del bot.
+#     Per poterlo fare su main protetto serve la chiave CHIAVE_PDF:
+#     GUIDA.md, sezione 8. Senza chiave il sito si pubblica lo stesso,
+#     ma i PDF accanto ai .tex non vengono salvati (compare un avviso).
+#  3. Pubblica i PDF su GitHub Pages: https://git-push-team.github.io/docs/
+# =====================================================================
+name: Pubblica il sito
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write     # per salvare i PDF nel repository
+  pages: write
+  id-token: write
+
+# Un'esecuzione alla volta: due merge ravvicinati non si pestano i piedi
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  compila:
+    name: Compila tutti i documenti
+    runs-on: ubuntu-24.04     # fissata di proposito, vedi anteprima-pr.yml
+    timeout-minutes: 30
+    steps:
+      - name: Scarica il repository
+        uses: actions/checkout@v7
+        with:
+          ref: main               # l'ultima versione di main
+          fetch-depth: 0          # serve la storia per capire quali PDF sono cambiati
+          # con la chiave il bot può salvare i PDF su main protetto;
+          # se il segreto non esiste si usa il token normale
+          ssh-key: ${{ secrets.CHIAVE_PDF }}
+
+      - name: Installa LaTeX
+        uses: ./.github/actions/setup-latex
+
+      - name: Compila, prepara il sito e i PDF accanto ai sorgenti
+        id: build
+        run: python3 scripts/build.py --pdf-accanto
+
+      - name: Salva i PDF nel repository
+        if: steps.build.outputs.pdf_aggiornati != '0'
+        env:
+          HA_CHIAVE: ${{ secrets.CHIAVE_PDF != '' }}
+          MESSAGGIO: ${{ steps.build.outputs.messaggio }}   # contiene [skip ci]
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --quiet -m "$MESSAGGIO"
+          if git push origin HEAD:main; then
+            echo "PDF salvati nel repository."
+          elif [ "$HA_CHIAVE" != "true" ]; then
+            echo "::warning::PDF non salvati accanto ai .tex: main è protetto e manca la chiave CHIAVE_PDF (GUIDA.md, sezione 8). Il sito viene pubblicato lo stesso."
+          else
+            echo "::warning::PDF non salvati: main è cambiato durante la compilazione oppure la chiave non può scavalcare la protezione (GUIDA.md, sezione 8). Il prossimo merge li salverà. Il sito viene pubblicato lo stesso."
+          fi
+
+      - name: Carica il sito
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  pubblica:
+    name: Pubblica su GitHub Pages
+    needs: compila
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Pubblica
+        id: deployment
+        uses: actions/deploy-pages@v5

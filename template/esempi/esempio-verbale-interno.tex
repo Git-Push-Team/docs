@@ -1,0 +1,82 @@
+% =====================================================================
+%  ESEMPIO di verbale interno: mostra tutto ciò che il modello sa fare.
+%  Il contenuto è di prova: sostituitelo con quello della vostra
+%  riunione reale prima di consegnarlo.
+% =====================================================================
+\documentclass[verbale=interno]{gpt}
+
+\titolo{Analisi dei capitolati}
+\data{2026-10-15}
+\orario{17:30}{19:00}
+\luogo{Discord}
+\redattore{guglielmo}
+\verificatore{biasini}
+\componenti{biasini,cescobolla,corro,guglielmo,mazzurana,spagnoli}
+\assenti{spagnoli}
+
+\modifica{1.0.0}{2026-10-16}{guglielmo}{biasini}{Verifica e approvazione}
+\modifica{0.1.0}{2026-10-15}{guglielmo}{--}{Prima stesura}
+
+\begin{document}
+
+\section{Ordine del giorno}
+\begin{enumerate}
+  \item Confronto tra i capitolati presentati.
+  \item Scelta dei capitolati di interesse.
+  \item Domande da inviare ai proponenti.
+  \item Strumenti di lavoro del gruppo.
+\end{enumerate}
+
+\section{Svolgimento}
+
+\subsection{Confronto tra i capitolati}
+Ogni membro ha letto i dieci capitolati. Il gruppo ha valutato la
+fattibilità di ciascuno considerando il numero di tecnologie nuove,
+la presenza di hardware, la chiarezza del perimetro e il supporto
+offerto dal proponente. Sono stati scartati i capitolati con hardware
+fisico (C3) e quelli con uno stack vincolato molto ampio (C5, C6, C8).
+
+\subsection{Scelta dei capitolati di interesse}
+Restano in valutazione C0 (AIRA), C1 (AURA) e C2 (NEXUM Concierge).
+Per C1 il proponente fornisce un kit di impianto fisico e l'intero
+perimetro del progetto è il server \glo{MCP} riportato in
+Figura~\ref{fig:aura}.
+
+\figura[0.9]{esempi/2026-10-15/architettura-aura.png}{Architettura di
+riferimento di AURA (fonte: presentazione di Vimar S.p.A.)\label{fig:aura}}
+
+\begin{nota}[Criticità emerse]
+Per C0 resta da chiarire se le richieste vadano validate da un operatore
+o inviate in automatico; per C2 non è ancora disponibile il capitolato
+completo.
+\end{nota}
+
+\subsection{Strumenti di lavoro}
+Il gruppo userà GitHub per codice e documentazione, Discord per le
+riunioni e questo modello \LaTeX{} per tutti i verbali.
+
+\section{Decisioni}
+\begin{decisioni}
+  \decisione{I capitolati di interesse sono C0, C1 e C2, in ordine di
+    preferenza da stabilire dopo le risposte dei proponenti.}
+  \decisione{I verbali si redigono con il modello \LaTeX{} comune e si
+    archiviano nel repository di documentazione.}
+  \decisione{Ogni verbale ha un redattore e un verificatore diversi.}
+\end{decisioni}
+
+\section{Azioni da intraprendere}
+\begin{azioni}
+  \azione[\#1]{Inviare le domande a Vimar (Sciacco, in copia
+    Bevilacqua).}{guglielmo}{17/10/2026}
+  \azione[\#2]{Chiedere a Sanmarco Informatica chiarimenti sulla
+    validazione delle richieste.}{corro}{17/10/2026}
+  \azione[\#3]{Recuperare il capitolato completo di C2.}{mazzurana}{18/10/2026}
+  \azione[\#4]{Creare l'organizzazione GitHub e il repository dei
+    documenti.}{cescobolla,biasini}{19/10/2026}
+\end{azioni}
+
+\section{Prossima riunione}
+Lunedì 19 ottobre 2026 alle 17:30 su Discord, per discutere le risposte
+dei proponenti e stilare la classifica dei capitolati.
+
+\end{document}
