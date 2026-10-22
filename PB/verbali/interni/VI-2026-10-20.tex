@@ -1,0 +1,83 @@
+\documentclass[verbale=interno]{gpt}
+
+\titolo{Struttura del repository della documentazione}
+\data{2026-10-20}
+\orario{21:00}{22:30}
+\luogo{Discord}
+\redattore{guglielmo}
+\verificatore{corro}
+\componenti{biasini,cescobolla,corro,guglielmo,mazzurana,spagnoli}
+\assenti{biasini,cescobolla,corro,mazzurana}
+
+\modifica{0.1.0}{2026-10-22}{guglielmo}{--}{Prima stesura}
+
+\begin{document}
+
+\section{Ordine del giorno}
+\begin{enumerate}
+  \item Presentazione della struttura proposta per il repository della
+    documentazione.
+  \item Discussione e modifiche alla struttura.
+  \item Prossimi passi per il caricamento nell'organizzazione GitHub.
+\end{enumerate}
+
+\section{Svolgimento}
+
+La riunione è la call straordinaria prevista nel verbale del 19 ottobre
+2026 per avviare l'organizzazione dei repository. Vi hanno partecipato
+\nomi{guglielmo,spagnoli}.
+
+\subsection{Presentazione della struttura proposta}
+\nome{guglielmo} ha presentato la struttura che aveva preparato per il
+repository \texttt{docs}: il template \LaTeX{} comune a verbali e
+documenti, la compilazione automatica dei PDF e il sito su cui vengono
+pubblicati. Nella proposta i file erano divisi per tipo (verbali,
+documenti, lettere), mentre la suddivisione per milestone compariva solo
+sul sito.
+
+\subsection{Modifiche alla struttura}
+I partecipanti, su suggerimento di \nome{spagnoli}, hanno deciso di cambiare la struttura per renderla più
+chiara: la suddivisione per milestone (Candidatura, RTB e PB) deve
+esserci anche nel repository, non solo sul sito. Ogni milestone ha una
+propria cartella, con all'interno i documenti e i verbali, a loro volta
+divisi in interni ed esterni. In questo modo chi cerca un file lo trova
+nello stesso posto in cui lo trova sul sito.
+
+\subsection{Prossimi passi}
+Prima di caricarla nell'organizzazione, la struttura viene provata in un
+repository di prova, così da non introdurre errori nel repository
+ufficiale.
+
+\begin{nota}[Aggiornamento successivo alla riunione]
+Dopo l'incontro \nome{spagnoli} ha fatto notare a \nome{guglielmo} che
+la struttura si poteva migliorare ulteriormente. Si è quindi deciso di
+lavorarci ancora prima del caricamento: suddividere meglio le cartelle
+e migliorare il sito. Fino ad allora il lavoro è proseguito nel
+repository di prova.
+\end{nota}
+
+\section{Decisioni}
+\begin{decisioni}
+  \decisione{Il repository della documentazione è suddiviso per
+    milestone: Candidatura, RTB e PB. Ognuna contiene documenti e
+    verbali, divisi in interni ed esterni. La stessa suddivisione è
+    usata sul sito.}
+  \decisione{La struttura viene provata in un repository di prova e
+    caricata nell'organizzazione solo quando è completa e funzionante.}
+\end{decisioni}
+
+\section{Azioni da intraprendere}
+\begin{azioni}
+  \azione{Riorganizzare il repository di prova secondo la nuova
+    struttura e migliorare il sito.}{guglielmo}{26/10/2026}
+  \azione{Caricare la struttura nel repository \texttt{docs}
+    dell'organizzazione con una pull request.}{guglielmo}{26/10/2026}
+  \azione{Presentare la nuova struttura al resto del
+    gruppo.}{guglielmo,spagnoli}{26/10/2026}
+\end{azioni}
+
+\section{Prossima riunione}
+La prossima riunione ordinaria è lunedì 26 ottobre 2026 alle 21:00 su
+Discord.
+
+\end{document}
