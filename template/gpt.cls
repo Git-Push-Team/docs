@@ -834,7 +834,7 @@
       >{\raggedright\arraybackslash}p{3.7cm}p{2.15cm}p{1.45cm}@{}}
     \toprule
     \gpt@intest{ID} & \gpt@intest{Attività} & \gpt@intest{Responsabile}
-      & \gpt@intest{Scadenza} & \gpt@intest{Ticket} \\
+      & \gpt@intest{Scadenza} & \gpt@intest{Issue} \\
     \midrule\endhead
     \bottomrule\endfoot}
   {\end{longtable}\gpt@dopolt}
