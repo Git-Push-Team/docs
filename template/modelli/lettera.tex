@@ -1,0 +1,39 @@
+% =====================================================================
+%  MODELLO: LETTERA  (lettera di presentazione per RTB/PB, lettera di
+%  candidatura, comunicazioni ufficiali)
+%
+%  1. Una lettera è un documento esterno: copiate questo file in
+%       <Milestone>/documenti/esterni/   es.
+%       Candidatura/documenti/esterni/lettera-candidatura.tex
+%       RTB/documenti/esterni/lettera-presentazione-rtb.tex
+%  2. Cambiate i campi qui sotto (dopo il simbolo % c'è un commento).
+%  3. Scrivete il testo dopo \begin{document}.
+%  Carta intestata, data, destinatari, oggetto, saluti e firma si fanno
+%  da soli. La lettera non ha registro delle modifiche: la verifica si
+%  fa con la pull request. Guida completa: GUIDA.md (ricetta 6).
+% =====================================================================
+\documentclass[lettera]{gpt}
+
+\titolo{Lettera di presentazione}  % nome della lettera (sito e PDF)
+\oggetto{Oggetto della lettera}    % riga "Oggetto:" (se manca, usa il titolo)
+\data{2026-10-26}                  % data della lettera: AAAA-MM-GG
+\luogo{Padova}                     % città accanto alla data
+\responsabile{spagnoli}            % chi firma: il Responsabile del gruppo
+
+% Destinatari: se non scrivete niente valgono quelli di dati-gruppo.tex
+% (i due docenti). Per scrivere ad altri, togliete il % qui sotto:
+% \destinatari{Spett.le Azienda S.p.A.\newline Via Roma 1\newline 35100 Padova}
+
+% Saluto finale (facoltativo, questo è quello predefinito)
+% \chiusura{Cordiali saluti,}
+
+\begin{document}
+
+Egregio Prof.~Vardanega, egregio Prof.~Cardin,
+
+con la presente il gruppo \textbf{Git Push Team} vi comunica ...
+
+Il materiale è disponibile al seguente indirizzo:
+\url{https://git-push-team.github.io/docs/}
+
+\end{document}

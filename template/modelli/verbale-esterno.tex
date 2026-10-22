@@ -1,0 +1,79 @@
+% =====================================================================
+%  MODELLO: VERBALE ESTERNO  (incontro con un proponente o con i docenti)
+%
+%  1. Copiate questo file nella cartella della milestone in corso:
+%       Candidatura/verbali/esterni/   RTB/verbali/esterni/   PB/verbali/esterni/
+%     e chiamatelo VE-AAAA-MM-GG.tex (data dell'incontro), es.
+%       RTB/verbali/esterni/VE-2026-11-05.tex
+%     Dopo il merge la CI mette accanto il PDF: VE-2026-11-05.pdf
+%     La copia firmata dal proponente salvatela accanto con un altro
+%     nome: VE-2026-11-05-firmato.pdf (vedi GUIDA.md, ricetta 3)
+%  2. Cambiate i campi qui sotto (dopo il simbolo % c'è un commento).
+%  3. Scrivete il contenuto dopo \begin{document}.
+%  Rispetto al verbale interno ci sono in più: i partecipanti esterni,
+%  domande e risposte e, in fondo, il riquadro per la firma.
+%  Guida completa: GUIDA.md (ricetta 2).
+% =====================================================================
+\documentclass[verbale=esterno]{gpt}
+
+\titolo{Incontro con l'azienda}    % es. Chiarimenti sul capitolato C2
+\data{2026-10-22}                  % data dell'incontro: AAAA-MM-GG
+\orario{16:00}{17:00}              % ora di inizio, ora di fine
+\luogo{Microsoft Teams}            % oppure: sede dell'azienda, Discord...
+\redattore{corro}                  % chi scrive il verbale (la sua chiave)
+\verificatore{cescobolla}          % chi lo controlla (diverso dal redattore)
+
+% Chi faceva parte del gruppo il giorno dell'incontro.
+% Lasciate così, a meno che il gruppo sia cambiato.
+\componenti{biasini,cescobolla,corro,guglielmo,mazzurana,spagnoli}
+\assenti{}                         % chi mancava, es. \assenti{spagnoli}
+
+% Persone esterne presenti: una riga per persona
+\esterno{Nome Cognome}{Ruolo, Azienda}
+% \esterno{Altro Nome}{Altro ruolo, Azienda}
+
+% Chi firma il verbale per l'azienda (compare nel riquadro firma finale)
+\firma{Nome Cognome}{Azienda}
+
+% Destinatari: ai docenti aggiungete l'azienda (\newline = a capo)
+\destinatari{Prof.~Tullio Vardanega\newline Prof.~Riccardo Cardin\newline Azienda}
+
+% Solo DOPO l'assegnazione del capitolato (togliete il % davanti):
+% \capitolato{Cn -- Nome del capitolato (Azienda)}
+
+% ---------------------------------------------------------------------
+%  REGISTRO DELLE MODIFICHE  --  la riga più recente va IN CIMA.
+%  La versione del documento è quella della PRIMA riga.
+%
+%  \modifica{versione}{data}{autore}{verificatore}{cosa è cambiato}
+%
+%  Quando il Verificatore approva, aggiunge lui IN CIMA questa riga:
+%  \modifica{1.0.0}{2026-10-23}{corro}{cescobolla}{Verifica e approvazione}
+% ---------------------------------------------------------------------
+\modifica{0.1.0}{2026-10-22}{corro}{--}{Prima stesura}
+
+\begin{document}
+
+\section{Ordine del giorno}
+\begin{enumerate}
+  \item Presentazione del gruppo.
+  \item Chiarimenti sui requisiti.
+\end{enumerate}
+
+\section{Domande e risposte}
+% \domanda{la domanda fatta}{la risposta ricevuta}
+\domanda{Prima domanda?}{Risposta ricevuta.}
+\domanda{Seconda domanda?}{Risposta ricevuta.}
+
+\section{Decisioni}
+\begin{decisioni}
+  \decisione{Testo della decisione presa.}
+\end{decisioni}
+
+\section{Azioni da intraprendere}
+\begin{azioni}
+  % \azione[numero issue]{cosa fare}{chi (chiavi, separate da virgole)}{entro quando}
+  \azione{Descrizione dell'attività.}{tutti}{30/10/2026}
+\end{azioni}
+
+\end{document}

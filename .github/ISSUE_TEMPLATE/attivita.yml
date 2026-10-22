@@ -1,0 +1,55 @@
+name: Attività
+description: Un compito da svolgere su un documento.
+title: "[DOC] "
+labels: ["documentazione"]
+projects: ["Git-Push-Team/1"]   # aggiunge la issue alla bacheca GIT PUSH TEAM
+body:
+  - type: dropdown
+    id: documento
+    attributes:
+      label: Documento
+      options:
+        - Verbale interno
+        - Verbale esterno
+        - Norme di Progetto
+        - Piano di Progetto
+        - Piano di Qualifica
+        - Analisi dei Requisiti
+        - Specifica Tecnica
+        - Manuale Utente
+        - Glossario
+        - Candidatura
+        - Lettera di presentazione
+        - Altro
+    validations:
+      required: true
+  - type: textarea
+    id: descrizione
+    attributes:
+      label: Cosa va fatto
+      description: Descrivete il risultato atteso, in modo che chiunque possa capire quando è finito.
+    validations:
+      required: true
+  - type: dropdown
+    id: ruolo
+    attributes:
+      label: Ruolo
+      options:
+        - Responsabile
+        - Amministratore
+        - Analista
+        - Progettista
+        - Programmatore
+        - Verificatore
+    validations:
+      required: true
+  - type: input
+    id: stima
+    attributes:
+      label: Stima in ore
+      placeholder: "es. 2"
+  - type: input
+    id: scadenza
+    attributes:
+      label: Scadenza
+      placeholder: "AAAA-MM-GG"

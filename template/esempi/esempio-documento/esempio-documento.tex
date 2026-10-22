@@ -1,0 +1,30 @@
+% =====================================================================
+%  ESEMPIO di documento diviso in capitoli: mostra tutto quello che il
+%  tipo [documento] sa fare. Il contenuto è di prova.
+%
+%  Struttura della cartella:
+%     esempio-documento.tex      <- questo file (il "principale")
+%     capitoli/introduzione.tex  <- richiamato con \input{capitoli/introduzione}
+%     capitoli/processi.tex      <- richiamato con \input{capitoli/processi}
+%  I file dei capitoli NON hanno \documentclass né \begin{document}:
+%  contengono solo testo. Si compila sempre il file principale.
+% =====================================================================
+\documentclass[documento]{gpt}
+
+\titolo{Norme di Progetto}
+\uso{interno}
+\responsabile{spagnoli}
+
+% Registro: la riga più recente in cima. In copertina compaiono da soli
+% versione (1.1.0), data dell'ultima modifica, redattori e verificatori.
+\modifica{1.1.0}{2026-11-20}{mazzurana}{cescobolla}{Aggiunta la sezione sulla verifica}
+\modifica{1.0.0}{2026-11-10}{guglielmo}{corro}{Verifica e approvazione}
+\modifica{0.2.0}{2026-11-05}{biasini}{--}{Stesura della sezione sui processi}
+\modifica{0.1.0}{2026-10-28}{guglielmo}{--}{Prima stesura: struttura del documento}
+
+\begin{document}
+
+\input{capitoli/introduzione}
+\input{capitoli/processi}
+
+\end{document}

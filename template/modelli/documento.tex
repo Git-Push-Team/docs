@@ -1,0 +1,61 @@
+% =====================================================================
+%  MODELLO: DOCUMENTO  (Norme di Progetto, Piano di Progetto, Piano di
+%  Qualifica, Analisi dei Requisiti, Glossario, Specifica Tecnica,
+%  Manuale Utente, documenti della candidatura...)
+%
+%  1. Create una cartella per il documento e copiateci questo file:
+%       <Milestone>/documenti/interni/<nome>/<nome>.tex   (uso interno)
+%       <Milestone>/documenti/esterni/<nome>/<nome>.tex   (uso esterno)
+%     es.  RTB/documenti/interni/norme-di-progetto/norme-di-progetto.tex
+%     (Milestone = Candidatura, RTB oppure PB). Dopo il merge la CI
+%     mette accanto il PDF con lo stesso nome; sul sito il nome ha in
+%     fondo la versione. \uso qui sotto deve dire come la cartella.
+%  2. Cambiate i campi qui sotto (dopo il simbolo % c'è un commento).
+%  3. Scrivete il contenuto dopo \begin{document}.
+%  Copertina, registro, indice, elenco di figure e tabelle (se ce ne
+%  sono), intestazioni e numeri di pagina si fanno da soli.
+%  Guida completa: GUIDA.md (ricetta 4).
+% =====================================================================
+\documentclass[documento]{gpt}
+
+\titolo{Nome del documento}        % es. Norme di Progetto
+\uso{esterno}                      % "interno" (es. Norme di Progetto)
+                                   % oppure "esterno" (tutti gli altri)
+\responsabile{spagnoli}            % chi approva il documento: il Responsabile
+
+% Facoltativi (togliete il % davanti se servono):
+% \capitolato{Cn -- Nome del capitolato (Azienda)}   % solo dopo l'assegnazione
+% \destinatari{Prof.~Tullio Vardanega\newline Prof.~Riccardo Cardin\newline Azienda}
+
+% ---------------------------------------------------------------------
+%  REGISTRO DELLE MODIFICHE  --  la riga più recente va IN CIMA.
+%  La versione del documento è quella della PRIMA riga. Redattori e
+%  verificatori in copertina si ricavano da qui, da soli.
+%
+%  \modifica{versione}{data}{autore}{verificatore}{cosa è cambiato}
+%
+%  Esempio di registro "cresciuto" (la riga nuova si aggiunge sopra):
+%  \modifica{1.1.0}{2026-11-20}{mazzurana}{corro}{Aggiunta sezione sui test}
+%  \modifica{1.0.0}{2026-11-10}{guglielmo}{corro}{Verifica e approvazione}
+%  \modifica{0.2.0}{2026-11-05}{guglielmo}{--}{Stesura della sezione 2}
+% ---------------------------------------------------------------------
+\modifica{0.1.0}{2026-10-26}{guglielmo}{--}{Prima stesura: struttura del documento}
+
+\begin{document}
+
+\section{Introduzione}
+
+\subsection{Scopo del documento}
+A cosa serve questo documento e a chi si rivolge.
+
+\subsection{Glossario}
+I termini con la \glo{G} a pedice sono spiegati nel Glossario.
+
+\section{Primo argomento}
+Testo.
+
+% Documento lungo? Mettete ogni capitolo in un file a parte nella
+% sottocartella capitoli/ e richiamatelo così (senza ".tex"):
+% \input{capitoli/secondo-argomento}
+
+\end{document}

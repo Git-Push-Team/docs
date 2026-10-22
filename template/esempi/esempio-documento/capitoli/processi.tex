@@ -1,0 +1,51 @@
+% !TEX root = ../esempio-documento.tex
+% (la riga qui sopra dice a VS Code quale file compilare quando salvate questo)
+% Capitolo richiamato da esempio-documento.tex con \input{capitoli/processi}
+
+\section{Processi di supporto}
+
+\subsection{Documentazione}
+Ogni documento ha un redattore e un verificatore diversi. Il ciclo di
+vita di un documento è:
+\begin{enumerate}
+  \item stesura nel proprio branch;
+  \item apertura della pull request;
+  \item verifica sul PDF dell'anteprima automatica;
+  \item approvazione e unione in \glo{main}.
+\end{enumerate}
+
+\begin{nota}[Da ricordare]
+La versione del documento è quella della prima riga del registro delle
+modifiche: non va scritta da nessun'altra parte.
+\end{nota}
+
+\subsection{Versioni}
+La Tabella~\ref{tab:versioni} riassume quando cambia ogni numero della
+versione.
+
+\begin{table}[H]
+  \centering
+  \caption{Regole per il numero di versione\label{tab:versioni}}
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    \intestazione{Quando} & \intestazione{Nuova versione} \\
+    \midrule
+    Prima stesura                & 0.1.0 \\
+    Ogni modifica prima della verifica & 0.2.0, 0.3.0, \ldots \\
+    Verifica e approvazione      & 1.0.0 \\
+    Modifica dopo l'approvazione & 1.1.0, 1.2.0, \ldots \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Architettura di riferimento}
+Le immagini stanno nella cartella \emph{allegati} e si inseriscono con
+\emph{figura}, come in Figura~\ref{fig:architettura}.
+
+\figura[0.9]{esempi/2026-10-15/architettura-aura.png}{Un'immagine di
+esempio presa dalla cartella allegati\label{fig:architettura}}
+
+\section{Verifica}
+\subsection{Controlli sul documento}
+Il Verificatore legge il PDF per intero e controlla ortografia, date,
+nomi e riferimenti, poi approva la pull request.
