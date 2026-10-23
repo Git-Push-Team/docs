@@ -1,0 +1,74 @@
+% =====================================================================
+%  MODELLO DI VERBALE  --  Git Push Team
+%
+%  Come si usa:
+%   1. Duplicate questo file e rinominatelo, es.  VI-2026-10-22.tex
+%      (VI = verbale interno, VE = verbale esterno, poi la data).
+%   2. Compilate i campi qui sotto (tutto ciò che segue un % è un
+%      commento e non viene stampato).
+%   3. Scrivete il contenuto nelle sezioni in fondo.
+%  Copertina, registro modifiche, presenze, intestazioni e numeri di
+%  pagina si generano da soli.
+% =====================================================================
+
+% interno = riunione del gruppo   |   esterno = con proponente o docenti
+\documentclass[verbale=esterno]{gpt}
+
+\titolo{Incontro conoscitivo con San Marco Informatica}
+\data{2026-10-21}                  % formato AAAA-MM-GG
+\orario{15:00}{16:00}              % inizio, fine
+\luogo{Google Meet}                    % oppure: Aula 1C150, Torre Archimede
+\redattore{corro}              % chiavi definite in dati-gruppo.tex
+\verificatore{biasini}
+
+\componenti{biasini,cescobolla,corro,guglielmo,mazzurana,spagnoli}
+\assenti{guglielmo}
+\esterno{Linda Benozzato}{Sanmarco Informatica}
+\esterno{Luca Marcon}{Sanmarco Informatica}% es. \assenti{corro,spagnoli}
+
+% Solo per i verbali esterni (togliete il % davanti):
+% \esterno{Nome Cognome}{Ruolo, Azienda}
+% \firma{Nome Cognome}{Azienda}
+
+% Registro delle modifiche: la versione più recente in cima.
+%          versione  data         autore     verificatore  descrizione
+\modifica{1.0.0}{2026-10-21}{corro}{biasini}{Verifica e approvazione}
+\modifica{0.1.0}{2026-10-21}{corro}{biasini}{Prima stesura}
+
+\begin{document}
+
+\section{Ordine del giorno}
+\begin{enumerate}
+    \item Chiarimenti sugli ambienti di test e risorse esterne.
+    \item Definizione delle priorità dei canali di comunicazione.
+    \item Analisi dei requisiti di sicurezza e gestione degli errori.
+    \item Definizione delle modalità di affiancamento aziendale.
+\end{enumerate}
+
+\section{Svolgimento}
+\subsection{Ambienti di test e risorse esterne}
+È stato chiarito che non vi saranno costi per API esterne o servizi cloud. Lo sviluppo del motore IA avverrà in locale utilizzando modelli LLM \textit{open weight} (l'azienda ha suggerito Qwen di Alibaba). Per il canale WhatsApp, non verranno utilizzate le API ufficiali a pagamento; l'acquisizione sarà simulata fornendo al sistema file audio realistici contenenti rumori di sottofondo. Anche le chiamate ai sistemi gestionali target (B2B) saranno simulate (mock) tramite lo scambio di file JSON o liste di articoli allegate.
+
+\subsection{Priorità dei canali di comunicazione}
+L'azienda ha specificato che non è necessario implementare simultaneamente tutti i canali citati nel capitolato. I canali ritenuti fondamentali e prioritari per la prima fase di sviluppo sono due: il canale E-mail (che include la lettura e l'estrazione dati dagli allegati) e il canale audio (simulazione delle note vocali di WhatsApp). Ulteriori aggiunte implementate solo se vi sono risorse ancora disponibili eventualmente.
+
+\subsection{Requisiti di sicurezza e gestione degli errori}
+Il team dovrà ragionare in modo proattivo sulla sicurezza implementando diverse misure, oltre a una semplice whitelist. Le richieste specifiche includono:
+\begin{itemize}
+    \item Filtro in ingresso antispam (vengono processate solo le richieste da utenti autenticati/riconosciuti).
+    \item Offuscamento dei dati anagrafici estratti dai messaggi.
+    \item Cifratura dei dati salvati all'interno del server locale.
+    \item Garanzia di isolamento dei tenant (i dati di un cliente non devono mai essere esposti a un altro).
+    \item Netta separazione e gestione dei livelli di autenticazione tra Utente e Amministratore del sistema.
+\end{itemize}
+
+\subsection{Modalità di affiancamento}
+Sanmarco Informatica garantirà un supporto strutturato. Durante la fase iniziale di avviamento, verrà fissato un incontro di allineamento di circa un'ora ogni due settimane (il giovedì pomeriggio). Successivamente, nella fase post-PoC, si passerà a uno Stato Avanzamento Lavori (SAL) settimanale di circa 30 minuti, per fare il punto e pianificare gli sprint successivi. Gli incontri si terranno online, con disponibilità per eventuali incontri in presenza, e verrà aperto un canale di messaggistica diretto per il supporto continuativo.  
+
+
+
+%\esterno{Nome Cognome}{Ruolo, Azienda}
+%\firma{Nome Cognome}{Azienda}
+
+
+\end{document}
