@@ -8,7 +8,7 @@ site/
 # eccezione: i PDF firmati (es. VE-2026-11-05-firmato.pdf) si caricano a mano
 !*-firmato.pdf
 # e le diapositive (presentazioni, diari di bordo), fatte fuori da LaTeX
-!**/diapositive/**/*.pdf
+!**/Diari di bordo/**/*.pdf
 
 # File temporanei di LaTeX
 *.aux
