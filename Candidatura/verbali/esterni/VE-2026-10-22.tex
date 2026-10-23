@@ -1,0 +1,235 @@
+% =====================================================================
+%  MODELLO: VERBALE ESTERNO  (incontro con un proponente o con i docenti)
+%
+%  1. Copiate questo file nella cartella della milestone in corso:
+%       Candidatura/verbali/esterni/   RTB/verbali/esterni/   PB/verbali/esterni/
+%     e chiamatelo VE-AAAA-MM-GG.tex (data dell'incontro), es.
+%       RTB/verbali/esterni/VE-2026-11-05.tex
+%     Dopo il merge la CI mette accanto il PDF: VE-2026-11-05.pdf
+%     La copia firmata dal proponente salvatela accanto con un altro
+%     nome: VE-2026-11-05-firmato.pdf (vedi GUIDA.md, ricetta 3)
+%  2. Cambiate i campi qui sotto (dopo il simbolo % c'è un commento).
+%  3. Scrivete il contenuto dopo \begin{document}.
+%  Rispetto al verbale interno ci sono in più: i partecipanti esterni,
+%  domande e risposte e, in fondo, il riquadro per la firma.
+%  Guida completa: GUIDA.md (ricetta 2).
+% =====================================================================
+\documentclass[verbale=esterno]{gpt}
+
+\titolo{Incontro conoscitivo con VIMAR}    % es. Chiarimenti sul capitolato C2
+\data{2026-10-22}                  % data dell'incontro: AAAA-MM-GG
+\orario{16:00}{17:00}              % ora di inizio, ora di fine
+\luogo{Microsoft Teams}            % oppure: sede dell'azienda, Discord...
+\redattore{mazzurana}                  % chi scrive il verbale (la sua chiave)
+\verificatore{cescobolla}          % chi lo controlla (diverso dal redattore)
+
+% Chi faceva parte del gruppo il giorno dell'incontro.
+% Lasciate così, a meno che il gruppo sia cambiato.
+\componenti{biasini,cescobolla,corro,guglielmo,mazzurana,spagnoli}
+\assenti{}                         % chi mancava, es. \assenti{spagnoli}
+
+% Persone esterne presenti: una riga per persona
+\esterno{Mariano Sciacco}{Referente, VIMAR}
+\esterno{Domenico Bevilacqua}{Referente, VIMAR}
+% \esterno{Altro Nome}{Altro ruolo, Azienda}
+
+% Chi firma il verbale per l'azienda (compare nel riquadro firma finale)
+%\firma{Nome Cognome}{Azienda}
+
+% Destinatari: ai docenti aggiungete l'azienda (\newline = a capo)
+\destinatari{Prof.~Tullio Vardanega\newline Prof.~Riccardo Cardin\newline VIMAR}
+
+% Solo DOPO l'assegnazione del capitolato (togliete il % davanti):
+% \capitolato{Cn -- Nome del capitolato (Azienda)}
+
+% ---------------------------------------------------------------------
+%  REGISTRO DELLE MODIFICHE  --  la riga più recente va IN CIMA.
+%  La versione del documento è quella della PRIMA riga.
+%
+%  \modifica{versione}{data}{autore}{verificatore}{cosa è cambiato}
+%
+%  Quando il Verificatore approva, aggiunge lui IN CIMA questa riga:
+%  
+% ---------------------------------------------------------------------
+\modifica{1.0.0}{2026-10-23}{mazzurana}{cescobolla}{Verifica e approvazione}
+\modifica{0.1.0}{2026-10-22}{mazzurana}{cescobolla}{Prima stesura}
+
+\begin{document}
+
+\section{Ordine del giorno}
+\begin{enumerate}
+  \item Risposte del proponente ai temi emersi dal sondaggio tra i gruppi.
+  \item Domande libere (Q\&A dal vivo).
+  \item Prossimi passi: redazione e firma del verbale esterno.
+\end{enumerate}
+
+\section{Svolgimento}
+L'incontro è stato organizzato da Vimar S.p.A. prima dell'assegnazione
+dei capitolati ed era aperto a tutti i gruppi interessati al capitolato
+C1 -- AURA. Prima dell'incontro i gruppi avevano inviato le proprie
+domande tramite un sondaggio: otto gruppi hanno posto 37 domande, che il
+proponente ha raggruppato in 14 temi e quattro aree (architettura e
+linguaggi, tecnologie e sicurezza, sviluppo e test, organizzazione).
+
+Il Git Push Team aveva posto domande sui temi dei comandi critici e
+degli argomenti da studiare subito (temi 6 e 13). Le risposte a tutti i
+temi sono riportate nella sezione seguente.
+
+\section{Domande e risposte}
+
+\subsection{Architettura e linguaggi}
+
+\domanda{Quale linguaggio e quale SDK vanno usati per il server MCP?}{%
+  Il linguaggio è libero (Python, Java o TypeScript): il proponente non
+  pone vincoli. È consigliato Python con FastMCP, l'SDK suggerito nel
+  capitolato e quello su cui Vimar può offrire il supporto più diretto.
+  Usare lo stesso SDK per client e server semplifica i test di
+  integrazione.}
+
+\domanda{Che ruolo deve avere il client MCP?}{%
+  Lo scopo finale è che un LLM possa usare il server MCP del gruppo; i
+  client commerciali (Claude, ChatGPT\ldots) includono già un client MCP
+  standard. Un client proprio serve soprattutto per i test di
+  integrazione; CLI, TUI ed estensione per VS Code sono opzionali. La
+  divisione della gestione degli errori tra client e server (es.
+  dispositivo non raggiungibile) va decisa in progettazione. Il punto
+  principale resta il controllo in lettura e scrittura dei dispositivi.}
+
+\domanda{Cosa viene fornito all'utente finale per collegare il proprio
+  LLM?}{%
+  Non serve sviluppare un'app né un sito: la soluzione è principalmente
+  back-end e l'utente usa l'interfaccia dei servizi LLM. Si consiglia un
+  server MCP locale per sviluppo e debug e, per l'utente, un server MCP
+  remoto con URL pubblico e autenticazione, usabile da web, desktop e
+  mobile. Basta che funzioni con un servizio AI commerciale; supportarne
+  più di uno è un valore aggiunto, senza interfacce di selezione.}
+
+\domanda{Quali risorse LLM e cloud saranno disponibili e cosa serve per
+  la consegna?}{%
+  Si possono usare i piani gratuiti o per studenti dei servizi
+  commerciali (es. connettore personalizzato di Claude, Copilot con il
+  GitHub Student Pack). Su richiesta, da discutere all'avvio, Vimar può
+  dare accesso a un insieme ristretto di servizi AWS e a una chiave LLM
+  per le prove. Per la consegna basta che la soluzione giri in locale con
+  Docker: al collaudo Vimar la installa su AWS o su un proprio server.
+  Con il GitHub Student Pack sono disponibili 100\$ di Microsoft Azure,
+  in alternativa al piano gratuito di AWS.}
+
+\subsection{Tecnologie e sicurezza}
+
+\domanda{Come funziona l'autenticazione MyVimar in chat?}{%
+  Serve un account MyVimar con accesso all'impianto; ogni utente vede
+  solo i propri impianti, anche più di uno. Il server MCP associa ogni
+  utente alla sua autorizzazione OAuth2 e la usa verso le API: il
+  servizio AI non vede mai i token. Il flusso di login (es. link di
+  autorizzazione da aprire nel browser, permessi da concedere) va
+  progettato dal gruppo. I dati dell'impianto possono arrivare all'LLM
+  per elaborare la risposta, i dati sensibili mai.}
+
+\domanda{Comandi critici: chi blocca le richieste sbagliate?}{%
+  Le API Vimar non hanno protezioni specifiche per l'uso con un LLM:
+  leggono e scrivono come qualsiasi app. Le letture possono essere
+  dirette; per le scritture (es. ``spegni tutto'') si può prevedere una
+  conferma dell'utente. Gli \emph{scope} KNX IoT permettono permessi
+  configurabili (sola lettura, lettura e scrittura, solo alcuni
+  dispositivi). Guardrail o skill aggiuntive sono ammessi se motivati nei
+  requisiti.}
+
+\domanda{Per lo stato e le notifiche serve il polling o la
+  subscription?}{%
+  Per questo progetto il polling va bene, come previsto dal capitolato.
+  In genere un servizio AI non riceve messaggi avviati da un webhook, ma
+  si può esplorare se qualche servizio lo consente. Il caso \#21
+  (``avvisami quando\ldots'') è un nice-to-have realizzabile come azione
+  programmata; le subscription vanno valutate solo dopo aver completato i
+  casi base.}
+
+\domanda{Quali richieste deve saper gestire l'assistente?}{%
+  Non solo le frasi degli esempi: l'LLM deve gestire varianti, sinonimi
+  e richieste ambigue. I casi base e avanzati del capitolato sono un
+  punto di partenza per i requisiti, non un elenco esaustivo; nuove
+  interazioni sono un nice-to-have gradito. Per aumentare la variabilità
+  si consiglia di far riformulare a un LLM le domande della test list e
+  di provarle con modelli diversi.}
+
+\subsection{Sviluppo e test}
+
+\domanda{Come si usa e si condivide il kit di impianto?}{%
+  Il kit si collega al Wi-Fi e si comanda via cloud con le API KNX IoT,
+  senza USB né VPN. Un membro del gruppo lo tiene a casa, sempre acceso
+  e collegato, e gli altri lavorano da remoto tramite le API. Vimar
+  fornisce un account amministratore a cui aggiungere altri utenti
+  registrati su MyVimar.}
+
+\domanda{Esiste un ambiente simulato per sviluppare in parallelo?}{%
+  Dalla specifica OpenAPI di KNX IoT si può generare in locale un mock
+  server (es. con Prism); esiste anche una demo online con API di
+  mocking, inclusa nella documentazione per integratori. Il mock non
+  replica esattamente il concetto di impianto di Vimar: la validazione
+  finale va fatta sul kit. Il mock serve per lo sviluppo quotidiano, il
+  kit per i test end-to-end.}
+
+\domanda{Cosa misurano i test end-to-end e come si gestisce la CI?}{%
+  La copertura dell'80\% dei test end-to-end si misura sui requisiti di
+  progetto; la test list del capitolato copre i casi base. Nei test di
+  unità e di integrazione si può simulare il servizio AI, così i test
+  sono ripetibili e senza costi; per questi vale la copertura del codice,
+  almeno 75\% e facoltativamente oltre il 90\%. Un LLM reale non è
+  deterministico, quindi è meglio tenerlo fuori dalla CI.}
+
+\subsection{Organizzazione}
+
+\domanda{Quali sono le priorità e cosa ci si aspetta dal PoC?}{%
+  Il capitolato descrive esigenze di business: requisiti formali e
+  priorità li definisce il gruppo nella propria analisi. Il PoC minimo è
+  un server MCP funzionante su due o tre casi base: accesso
+  all'impianto, elenco degli impianti associati, stato di una luce. Né
+  gli opzionali né i nice-to-have sono obbligatori; i nice-to-have sono
+  preferibili.}
+
+\domanda{Cosa conviene studiare subito e quali difficoltà hanno avuto i
+  gruppi degli anni scorsi?}{%
+  Non c'è una scadenza: il lavoro parte dopo l'assegnazione, ma
+  esplorare ora le tecnologie aiuta a scegliere. Conviene partire dalla
+  documentazione KNX IoT per integratori, dalle primitive Vimar rispetto
+  al protocollo e dallo standard MCP. Le difficoltà principali degli
+  anni scorsi sono state requisiti poco chiari all'inizio,
+  documentazione migliorabile e i limiti degli LLM eseguiti in locale:
+  meglio chiarire presto i dubbi con Vimar e usare i servizi commerciali.}
+
+\domanda{Come si svolgono SAL e incontri durante il progetto?}{%
+  I SAL si tengono di solito su Teams, con la possibilità di incontri
+  in sede Vimar. Sono previsti due incontri obbligatori in presenza
+  (consegna del kit e collaudo finale) e indicativamente due demo con i
+  colleghi di R\&D, al PoC e all'MVP. Vimar è disponibile per dubbi
+  progettuali e scelte architetturali, ma non può revisionare i documenti
+  per la parte accademica. Approfondimenti mirati vanno richiesti con una
+  o due settimane di anticipo.}
+
+\subsection{Domande libere}
+Nella seconda parte dell'incontro i gruppi hanno potuto porre domande
+libere tramite il Q\&A di Teams o intervenendo a voce.
+% Aggiungete qui le domande fatte dal vivo, per esempio:
+% \domanda{La domanda}{La risposta ricevuta.}
+
+\section{Prossimi passi}
+Il gruppo procede alla redazione del verbale esterno e all'invio da VIMAR per la firma digitale.
+
+\section{Decisioni}
+\begin{decisioni}
+  \decisione{Il gruppo redige il verbale esterno dell'incontro e lo
+    invia ai referenti Vimar per l'approvazione con firma digitale.}
+  \decisione{Le risposte ricevute vengono usate nella valutazione dei
+    capitolati in vista della scelta.}
+\end{decisioni}
+
+
+\section{Azioni da intraprendere}
+\begin{azioni}
+  \azione{Inviare il verbale ai referenti Vimar per la firma
+    digitale.}{mazzurana}{2026/10/22}
+  \azione{Approfondire la documentazione KNX IoT per integratori e lo
+    standard MCP, per valutare il capitolato C1.}{tutti}{2026/10/22}
+\end{azioni}
+
+\end{document}
