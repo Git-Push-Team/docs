@@ -516,7 +516,7 @@ git push origin rtb-v1
 
 Dopo qualche minuto, nella pagina del repository, sezione *Releases*, compare **"Consegna rtb-v1"** con i PDF della cartella `RTB/` allegati uno per uno e uno zip che mantiene le cartelle (`documenti/esterni`, `verbali/interni`…). È la "fotografia" ufficiale della consegna, e resta lì anche quando i documenti cambieranno per la PB. Il sito ha in fondo il link *Archivio delle consegne* che porta a questa pagina.
 
-- Il nome del tag sceglie la cartella: `candidatura…` → `Candidatura/`, `rtb…` → `RTB/`, `pb…` → `PB/` (es. `candidatura-v1`, `rtb-v1`, `pb-v1`).
+- Il nome del tag sceglie la cartella: `candidatura…` → `Candidatura/`, `rtb…` → `RTB/`, `pb…` → `PB/` (es. `candidatura-v1`, `rtb-v1`, `pb-v1`). ATTENZIONE: NOMI DEI TAG TUTTI IN minuscolo, altrimenti non si triggera l'action.
 - ⚠️ Create **solo il tag** con i comandi qui sopra: non create la release a mano dal sito, altrimenti l'automazione trova la release già esistente e si ferma.
 
 ---

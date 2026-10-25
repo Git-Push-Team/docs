@@ -33,6 +33,7 @@ docs/
 │       └── interni/       VI-AAAA-MM-GG.tex (+ il .pdf, creato dalla CI)
 ├── RTB/                   stessa struttura
 ├── PB/                    stessa struttura
+├── Diari di Bordo         PPT usati per le presentazioni dei diari di bordo (via upload)
 ├── allegati/              immagini usate nei documenti
 ├── scripts/build.py       compila i documenti (lo usa anche la CI)
 ├── scripts/sito.py        costruisce la pagina del sito
