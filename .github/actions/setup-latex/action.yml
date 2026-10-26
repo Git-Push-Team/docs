@@ -1,7 +1,9 @@
 # Installa TeX Live con i pacchetti usati dalla classe gpt.cls.
 # Lo usano tutti e tre i workflow. Se la classe inizia a usare un
-# pacchetto nuovo e la CI dice "File `xyz.sty' not found", aggiungete
+# pacchetto nuovo e la CI dice "File `xyz.sty' not found", aggiungere
 # qui il pacchetto Debian che lo contiene (cercatelo su packages.ubuntu.com).
+#
+# Ogni tanto rallenta per problema non a noi imputabile. Aggiunti retry e timeout, salta aggiornamento manuali ubuntu
 name: Installa LaTeX
 description: Installa TeX Live con i pacchetti usati dal template del gruppo.
 runs:
@@ -10,12 +12,23 @@ runs:
     - name: Installa TeX Live e latexmk
       shell: bash
       run: |
-        sudo apt-get update -qq
-        sudo apt-get install -y -qq --no-install-recommends \
-          latexmk \
-          texlive-latex-recommended \
-          texlive-latex-extra \
-          texlive-fonts-recommended \
-          texlive-pictures \
-          texlive-lang-italian \
-          lmodern
+        # Ubuntu aggiorna l'indice dei manuali (man-db) dopo ogni pacchetto
+        # installato: con TeX Live può richiedere minuti, e qui non serve.
+        sudo rm -f /var/lib/man-db/auto-update
+
+        APT="sudo apt-get -y -qq -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Dpkg::Use-Pty=0"
+        PACCHETTI="latexmk texlive-latex-recommended texlive-latex-extra
+          texlive-fonts-recommended texlive-pictures texlive-lang-italian lmodern
+          poppler-utils"   # poppler-utils = pdftoppm, per le anteprime del sito
+
+        for tentativo in 1 2; do
+          if timeout 5m $APT update && \
+             timeout 12m $APT install --no-install-recommends $PACCHETTI; then
+            echo "TeX Live installato (tentativo $tentativo)."
+            exit 0
+          fi
+          echo "::warning::Installazione di TeX Live lenta o non riuscita (tentativo $tentativo): riprovo."
+          sudo dpkg --configure -a || true   # sistema un'installazione interrotta a metà
+        done
+        echo "::error::TeX Live non si installa: i server dei pacchetti di Ubuntu hanno problemi. Rilanciate più tardi (Re-run jobs)."
+        exit 1
