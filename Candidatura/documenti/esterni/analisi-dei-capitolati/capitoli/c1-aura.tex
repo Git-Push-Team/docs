@@ -1,0 +1,56 @@
+% !TEX root = ../analisi-dei-capitolati.tex
+% Capitolo 4 - C1 - AURA
+
+\section{C1 -- AURA}\label{sec:c1}
+
+\begin{scheda}
+  \voce{Proponente}{Vimar S.p.A.}
+  \voce{Dominio}{domotica e servizi di intelligenza artificiale generativa}
+\end{scheda}
+
+\subsection{Obiettivo}
+Vimar chiede un server \glo{MCP} che renda lo standard \textbf{KNX IoT 3rd
+Party API}, con cui si comandano i suoi impianti domotici, utilizzabile dai
+principali servizi commerciali di intelligenza artificiale (Claude,
+ChatGPT, Copilot, Gemini). L'utente può così interrogare e comandare la
+propria casa in linguaggio naturale con l'assistente che preferisce.
+
+\subsection{Requisiti principali}
+Sono obbligatori tre componenti: un'infrastruttura a container descritta
+come codice con Docker Compose e compatibile con AWS; un server MCP con
+autenticazione OAuth2, selezione dell'impianto, lettura e scrittura sui
+dispositivi, più un client MCP per i test; il collegamento a un servizio
+di intelligenza artificiale commerciale, che deve gestire 17 casi d'uso
+base e 21 avanzati. I test devono coprire almeno il 75\% del codice e
+l'80\% dei requisiti end-to-end. Sono opzionali il rilascio su AWS, il
+client via VS Code, CLI o TUI e la copertura oltre il 90\%; storico,
+scenari composti e trigger sono \emph{nice-to-have}. Vimar fornisce un kit
+di impianto fisico per gruppo e consiglia Python con l'SDK FastMCP.
+
+\subsection{Incontro con il proponente}
+Alla sessione congiunta del 22 ottobre 2026 (VE~2026-10-22) Vimar ha
+chiarito che il linguaggio è libero, che la soluzione è principalmente
+back-end e basta che giri in locale con Docker, che per lo stato il
+\emph{polling} è accettato, che il kit resta a casa di un membro e si
+comanda via cloud, e che il PoC minimo copre due o tre casi base. Nei test
+il servizio di intelligenza artificiale va simulato, perché un LLM reale
+non è deterministico.
+
+\subsection{Valutazione del gruppo}
+
+\begin{fortedeboli}
+  \fd{\textbf{Tema innovativo}: MCP collegato a un impianto reale.}
+     {\textbf{Hardware}: il kit fisico condiviso è un punto singolo di
+      guasto.}
+  \fd{\textbf{Requisiti molto dettagliati} e proponente molto
+      strutturato.}
+     {\textbf{Dominio da studiare}: KNX IoT e documentazione per
+      integratori.}
+  \fd{\textbf{Materiale fornito}: kit, API ed eventuali risorse AWS.}
+     {\textbf{Parte conversazionale delegata} a servizi esterni.}
+\end{fortedeboli}
+
+C1 è la prima alternativa del gruppo: solido e ben seguito, ma con la
+dipendenza da un dispositivo fisico e un interesse leggermente inferiore
+per un progetto in cui l'intelligenza artificiale è affidata a servizi
+commerciali.

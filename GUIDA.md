@@ -30,6 +30,7 @@ Non serve conoscere LaTeX né Git: seguite le ricette e copiate i comandi così 
     - [R13. Passare alla milestone successiva](#r13-passare-alla-milestone-successiva)
     - [R14. Caricare un verbale esterno firmato](#r14-caricare-un-verbale-esterno-firmato)
     - [R15. Aggiornare il sito: milestone, diapositive, gruppo](#r15-aggiornare-il-sito-milestone-diapositive-gruppo)
+    - [R16. Il Glossario: crearlo, aggiungere termini, marcarli](#r16-il-glossario-crearlo-aggiungere-termini-marcarli)
 5. [Le versioni: la regola semplice](#5-le-versioni-la-regola-semplice)
 6. [Prontuario dei comandi](#6-prontuario-dei-comandi)
 7. [Quando qualcosa va storto](#7-quando-qualcosa-va-storto)
@@ -484,6 +485,7 @@ Copiate questo blocco e cambiate il contenuto. `&` separa le colonne, `\\` chiud
 \href{https://github.com/Git-Push-Team}{il nostro GitHub}   % link con testo
 
 \glo{repository}         % termine del Glossario: aggiunge la G a pedice
+\glo[pull request]{pull requests}   % testo diverso dalla voce (plurale): R16
 
 \begin{nota}[Attenzione]
 Un riquadro colorato per mettere in evidenza qualcosa.
@@ -516,7 +518,7 @@ git push origin rtb-v1
 
 Dopo qualche minuto, nella pagina del repository, sezione *Releases*, compare **"Consegna rtb-v1"** con i PDF della cartella `RTB/` allegati uno per uno e uno zip che mantiene le cartelle (`documenti/esterni`, `verbali/interni`…). È la "fotografia" ufficiale della consegna, e resta lì anche quando i documenti cambieranno per la PB. Il sito ha in fondo il link *Archivio delle consegne* che porta a questa pagina.
 
-- Il nome del tag sceglie la cartella: `candidatura…` → `Candidatura/`, `rtb…` → `RTB/`, `pb…` → `PB/` (es. `candidatura-v1`, `rtb-v1`, `pb-v1`). ATTENZIONE: NOMI DEI TAG TUTTI IN minuscolo, altrimenti non si triggera l'action.
+- Il nome del tag sceglie la cartella: `candidatura…` → `Candidatura/`, `rtb…` → `RTB/`, `pb…` → `PB/` (es. `candidatura-v1`, `rtb-v1`, `pb-v1`).
 - ⚠️ Create **solo il tag** con i comandi qui sopra: non create la release a mano dal sito, altrimenti l'automazione trova la release già esistente e si ferma.
 
 ---
@@ -586,6 +588,7 @@ Ogni file vive in **una sola cartella**: non si fanno copie (due copie dello ste
   ```
 
   Dopo il merge il bot mette il PDF nella cartella nuova e toglie quello rimasto nella vecchia. La versione consegnata all'RTB non si perde: è nella release *Consegna rtb-…* ([R10](#r10-fare-la-release-di-una-consegna-rtb-pb)) e nella storia di Git.
+- **Il Glossario è uno solo** e si sposta come gli altri documenti che continuano (cartella intera, con `capitoli/`). Se per sbaglio ne restano due copie, la PR lo segnala.
 - **Prima di spostare**, assicuratevi che la release della milestone appena chiusa sia stata fatta.
 
 ---
@@ -649,7 +652,70 @@ RTB/diapositive/presentazione-rtb.pdf    -> "Presentazione RTB", con anteprima
 RTB/diapositive/diario-2026-11-14.pdf    -> "Diario di bordo, 14 novembre 2026"
 ```
 
-I file che iniziano con `diario` e contengono una data finiscono tra i *Diari di bordo*; tutti gli altri tra le *Presentazioni*, con il titolo preso dal nome del file. Questi PDF si caricano normalmente con commit e PR: la CI non li tocca.
+I file che iniziano con `diario` (oppure `DDB`, es. `DDB-2026-10-26.pdf`) e contengono una data finiscono tra i *Diari di bordo*; tutti gli altri tra le *Presentazioni*, con il titolo preso dal nome del file. Questi PDF si caricano normalmente con commit e PR: la CI non li tocca.
+
+---
+
+### R16. Il Glossario: crearlo, aggiungere termini, marcarli
+
+Il Glossario è **un solo documento**, nella milestone in corso, con **una lettera per file**. Da lì nascono tre cose: il PDF del Glossario, i controlli nelle PR e la pagina **Glossario** del sito.
+
+**Crearlo (una volta sola, un Amministratore).** Copiate l'intera cartella del modello nella milestone in corso:
+
+```bash
+cp -r template/modelli/glossario RTB/documenti/esterni/glossario
+```
+
+Viene fuori così:
+
+```text
+RTB/documenti/esterni/glossario/
+├── glossario.tex      <- il documento: titolo, registro, nient'altro da toccare
+└── capitoli/
+    ├── a.tex          <- le voci che iniziano per A
+    └── r.tex          <- ... per R (cancellate le voci di esempio)
+```
+
+**Aggiungere un termine.**
+
+1. Aprite il file della sua lettera, per esempio `capitoli/p.tex`. Se non esiste, copiate `capitoli/a.tex` con il nome della lettera e cambiate la riga `\letteraglossario{A}` in `\letteraglossario{P}`. Non serve toccare `glossario.tex`: le lettere nuove si includono da sole.
+2. Aggiungete la voce **al suo posto in ordine alfabetico**:
+
+   ```latex
+   \termine{Pull request}{Richiesta di unire le modifiche di un branch al
+     branch principale, dopo la verifica di un altro membro del gruppo.}
+   ```
+
+3. Nella definizione potete usare `\emph{}`, `\textbf{}`, `\url{}` e `\glo{}` (se anche quel termine è nel Glossario: sul sito diventa un link). Niente tabelle, immagini o elenchi.
+4. Aggiungete una riga in cima al registro di `glossario.tex`, come per ogni documento.
+
+**Marcare un termine nei documenti.** Dove il termine compare nel testo:
+
+```latex
+Ogni modifica passa da una \glo{pull request}.            % stessa forma della voce
+Abbiamo aperto tre \glo[pull request]{pull requests}.     % forma diversa: la voce va tra [ ]
+```
+
+Maiuscole e spazi non contano: `\glo{Pull Request}` e `\glo{pull request}` sono la stessa voce. Quante volte marcare un termine (ogni volta, o solo la prima in ogni documento) lo decidono le Norme di Progetto.
+
+**Il termine nuovo va nel Glossario nella stessa PR in cui lo marcate.** Nella PR il commento automatico ha una parte **📖 Glossario** che segnala:
+
+| Messaggio | Cosa fare |
+| --- | --- |
+| *"…" è marcato con \glo in `file:riga` ma non è nel Glossario* | aggiungete la voce, oppure controllate di averla scritta uguale (o usate `\glo[voce]{testo}`) |
+| *La voce "…" è ripetuta* | tenete una sola delle due definizioni |
+| *Le voci non sono in ordine alfabetico* / *è nella lettera sbagliata* | spostate la voce al suo posto |
+| *La voce "…" non ha una definizione* | scrivetela |
+| *C'è più di un Glossario* | è rimasta una copia (succede spostandolo di milestone): cancellate quella vecchia |
+| *Voci del Glossario non marcate in nessun documento* (in corsivo) | solo un'informazione: va bene se sono termini utili |
+
+Come funzionano i controlli:
+
+- nelle PR normali si controllano solo i file toccati; se la PR cambia il Glossario si controllano tutti i documenti;
+- le milestone segnate `"conclusa"` in `template/sito.toml` non si controllano: i documenti già consegnati non danno avvisi;
+- **per ora gli avvisi non bloccano la PR.** Quando il Glossario è a regime, per esempio prima dell'RTB, un Amministratore può renderli bloccanti: in `scripts/glossario.py` cambia `BLOCCANTE = False` in `BLOCCANTE = True`. Da quel momento termini mancanti, voci ripetute e Glossari doppi rendono rossa la PR.
+
+**Sul sito**: appena il Glossario esiste, nella barra in alto compare **Glossario**. È una pagina con le lettere, le voci in ordine, la ricerca e il link al PDF. Ogni voce ha il suo indirizzo, per esempio `…/glossario.html#pull-request`: si può mandare il link a un termine preciso.
 
 ---
 
@@ -704,7 +770,8 @@ Cosa controlla la classe da sola: che la versione abbia tre numeri, che la data 
 | `\figura[0.6]{cartella/file.png}{didascalia}` | immagine con cornice (da `allegati/`) |
 | `\figurasenzabordo{...}{...}` | immagine senza cornice |
 | `\begin{nota}[Titolo] ... \end{nota}` | riquadro di nota |
-| `\glo{termine}` | termine del Glossario (G a pedice) |
+| `\glo{termine}` / `\glo[voce]{testo}` | termine del Glossario (G a pedice); tra `[ ]` la voce, se il testo è diverso ([R16](#r16-il-glossario-crearlo-aggiungere-termini-marcarli)) |
+| `\letteraglossario{A}` / `\termine{Voce}{Definizione}` | solo nel Glossario: titolo di una lettera e una voce ([R16](#r16-il-glossario-crearlo-aggiungere-termini-marcarli)) |
 | `\nome{chiave}` / `\nomi{a,b}` | nome e cognome dei membri |
 | `\intestazione{Testo}` | intestazione di colonna nello stile delle tabelle del gruppo |
 | `\datariunione` / `\codiceverbale` | data lunga e codice del verbale (es. VI 2026-10-26) |
@@ -789,6 +856,8 @@ Dove leggere l'errore: nella **PR**, nel commento automatico (righe `file:riga: 
 | Un membro non ha la foto | il suo nome utente GitHub manca o è sbagliato nella sezione `[github]` di `template/sito.toml` (senza `@`) |
 | Una presentazione finisce tra i diari di bordo (o viceversa) | contano solo il nome del file e la cartella: i diari di bordo iniziano con `diario` e contengono la data (`diario-2026-11-14.pdf`), e tutti stanno in `<Milestone>/diapositive/` |
 | Nelle *Actions*, il passo *Compila* dice `Nessun documento da compilare` e il sito è vuoto | i `.tex` non sono dentro `Candidatura/`, `RTB/` o `PB/` (scritte esattamente così, maiuscole comprese): per esempio sono ancora nelle vecchie cartelle `verbali/`, `documenti/`. Gli avvisi gialli nella pagina dell'Action dicono quali file spostare |
+| La voce **Glossario** non compare nel menu del sito | il Glossario non esiste ancora, oppure non ha voci `\termine{…}{…}` ([R16](#r16-il-glossario-crearlo-aggiungere-termini-marcarli)) |
+| Il commento della PR ha una parte **📖 Glossario** | termini marcati che mancano nel Glossario, voci doppie o fuori ordine: la tabella in [R16](#r16-il-glossario-crearlo-aggiungere-termini-marcarli) dice cosa fare |
 | Il pulsante **Firmato** non compare | la copia firmata deve stare accanto al `.tex` con lo stesso nome più `-firmato`: `VE-2026-11-05-firmato.pdf` accanto a `VE-2026-11-05.tex` ([R14](#r14-caricare-un-verbale-esterno-firmato)) |
 
 ---

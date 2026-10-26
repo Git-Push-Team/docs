@@ -1,0 +1,49 @@
+% !TEX root = ../analisi-dei-capitolati.tex
+% Capitolo 5 - C0 - AIRA
+
+\section{C0 -- AIRA}\label{sec:c0}
+
+\begin{scheda}
+  \voce{Proponente}{Sanmarco Informatica S.p.A.}
+  \voce{Dominio}{automazione delle richieste B2B multicanale}
+\end{scheda}
+
+\subsection{Obiettivo}
+Le richieste dei clienti B2B (ordini, ticket, appuntamenti, documenti
+contabili) arrivano da canali eterogenei: e-mail con allegati, note
+vocali, messaggi, foto di cataloghi. Il progetto chiede uno strumento che
+monitori i canali, interpreti le richieste con trascrizione vocale,
+\glo{OCR} e un LLM, ne estragga dati strutturati e li inoltri in
+automatico ai gestionali aziendali tramite API REST o e-mail.
+
+\subsection{Requisiti principali}
+Sono obbligatori il controllo continuo dei canali, un filtro di sicurezza
+in ingresso, l'elaborazione semantica tramite LLM, l'avvio di azioni
+configurabili e un'interfaccia amministrativa web; sono opzionali una
+dashboard di monitoraggio e le risposte automatiche al mittente. Le
+tecnologie consigliate sono Angular, Java con Spring Boot, LangChain4j,
+Whisper o Tesseract per voce e immagini e un database relazionale.
+
+\subsection{Incontro con il proponente}
+All'incontro del 21 ottobre 2026 (VE~2026-10-21) Sanmarco Informatica ha
+chiarito che non ci saranno costi esterni (modelli \emph{open weight} in
+locale, per esempio Qwen), che WhatsApp e i gestionali saranno simulati e
+che i canali prioritari sono e-mail e audio. Ha inoltre chiesto misure di
+sicurezza oltre la whitelist: antispam, offuscamento e cifratura dei dati,
+isolamento dei tenant. Il supporto prevede un incontro ogni due settimane,
+poi settimanale dopo il PoC.
+
+\subsection{Valutazione del gruppo}
+
+\begin{fortedeboli}
+  \fd{\textbf{Problema concreto} e diffuso nelle aziende.}
+     {\textbf{Ampiezza tecnologica}: voce, OCR, LLM, integrazioni e
+      interfaccia web insieme.}
+  \fd{\textbf{Nessun costo}: modelli locali e canali simulati.}
+     {\textbf{Limiti dei modelli locali}, legati all'hardware dei membri.}
+  \fd{\textbf{Priorità chiarite} e supporto regolare.}
+     {\textbf{Sicurezza estesa} su un nucleo già ampio.}
+\end{fortedeboli}
+
+C0 è la seconda alternativa del gruppo: concreto e senza costi, ma il più
+ampio dei tre finalisti sul piano tecnologico e il meno votato.

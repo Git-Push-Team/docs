@@ -1,0 +1,67 @@
+% =====================================================================
+%  MODELLO: GLOSSARIO
+%
+%  Il Glossario è uno solo e sta nella milestone in corso. Si crea
+%  copiando TUTTA questa cartella (glossario.tex + capitoli/):
+%       RTB/documenti/esterni/glossario/glossario.tex
+%       RTB/documenti/esterni/glossario/capitoli/a.tex ...
+%  Quando inizia la milestone successiva si SPOSTA (non si copia),
+%  insieme agli altri documenti che continuano: GUIDA.md, ricetta 13.
+%
+%  Le voci NON si scrivono qui ma nei file delle lettere, in capitoli/:
+%  una lettera per file (a.tex, b.tex, ...), voci in ordine alfabetico.
+%  Per una lettera nuova basta creare il suo file: questo file la
+%  include da solo. Guida completa: GUIDA.md (ricetta 16).
+% =====================================================================
+\documentclass[documento]{gpt}
+
+\titolo{Glossario}
+\uso{esterno}
+\responsabile{spagnoli}            % chi approva il documento: il Responsabile
+
+% Facoltativo, solo dopo l'assegnazione del capitolato:
+% \capitolato{Cn -- Nome del capitolato (Azienda)}
+
+% ---------------------------------------------------------------------
+%  REGISTRO DELLE MODIFICHE  --  la riga più recente va IN CIMA.
+%  Chi aggiunge o cambia delle voci aggiunge anche una riga qui.
+% ---------------------------------------------------------------------
+\modifica{0.1.0}{2026-10-26}{guglielmo}{--}{Prima stesura: voci dei termini usati nell'Analisi dei Capitolati}
+
+\begin{document}
+
+\section*{Introduzione}
+Questo documento raccoglie i termini tecnici usati nella documentazione
+del progetto. Nei documenti, i termini spiegati qui sono contrassegnati
+dalla lettera G a pedice.
+
+% Una lettera per file: se il file non esiste, la lettera si salta.
+% Non serve toccare queste righe quando aggiungete una lettera.
+\InputIfFileExists{capitoli/a.tex}{}{}
+\InputIfFileExists{capitoli/b.tex}{}{}
+\InputIfFileExists{capitoli/c.tex}{}{}
+\InputIfFileExists{capitoli/d.tex}{}{}
+\InputIfFileExists{capitoli/e.tex}{}{}
+\InputIfFileExists{capitoli/f.tex}{}{}
+\InputIfFileExists{capitoli/g.tex}{}{}
+\InputIfFileExists{capitoli/h.tex}{}{}
+\InputIfFileExists{capitoli/i.tex}{}{}
+\InputIfFileExists{capitoli/j.tex}{}{}
+\InputIfFileExists{capitoli/k.tex}{}{}
+\InputIfFileExists{capitoli/l.tex}{}{}
+\InputIfFileExists{capitoli/m.tex}{}{}
+\InputIfFileExists{capitoli/n.tex}{}{}
+\InputIfFileExists{capitoli/o.tex}{}{}
+\InputIfFileExists{capitoli/p.tex}{}{}
+\InputIfFileExists{capitoli/q.tex}{}{}
+\InputIfFileExists{capitoli/r.tex}{}{}
+\InputIfFileExists{capitoli/s.tex}{}{}
+\InputIfFileExists{capitoli/t.tex}{}{}
+\InputIfFileExists{capitoli/u.tex}{}{}
+\InputIfFileExists{capitoli/v.tex}{}{}
+\InputIfFileExists{capitoli/w.tex}{}{}
+\InputIfFileExists{capitoli/x.tex}{}{}
+\InputIfFileExists{capitoli/y.tex}{}{}
+\InputIfFileExists{capitoli/z.tex}{}{}
+
+\end{document}

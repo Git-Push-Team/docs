@@ -493,10 +493,43 @@ def togli_dal_sito(d: Documento) -> None:
         vecchio.unlink()
 
 
-def scrivi_sito(documenti: list[Documento]) -> None:
+def scrivi_sito(documenti: list[Documento], voci_glossario=None) -> None:
     """La pagina del sito (index.html) la costruisce scripts/sito.py."""
     import sito    # sta nella stessa cartella di build.py
-    sito.scrivi(documenti, root=ROOT, site=SITE)
+    sito.scrivi(documenti, root=ROOT, site=SITE, glossario=voci_glossario)
+
+
+# --------------------------------------------------------------------------
+#  Glossario (la logica è in scripts/glossario.py)
+# --------------------------------------------------------------------------
+def milestone_aperte() -> list[str]:
+    """Le milestone non concluse secondo template/sito.toml: i controlli
+    del Glossario non disturbano con i documenti già consegnati."""
+    try:
+        import sito
+        stati = sito.carica_impostazioni(ROOT).get("milestone", {}) or {}
+    except SystemExit:
+        stati = {}
+    return [m for m in NOMI_MILESTONE
+            if str((stati.get(m) or {}).get("stato", "")).strip().lower() != "conclusa"]
+
+
+def controlla_glossario(cambiati: set[str] | None):
+    """cambiati = file della pull request (None = controlla tutto).
+    Restituisce (glossario, esito)."""
+    import glossario
+    g = glossario.leggi(ROOT, NOMI_MILESTONE)
+    aperte = milestone_aperte()
+    tutti = [p for m in aperte if (ROOT / m).is_dir() for p in sorted((ROOT / m).rglob("*.tex"))]
+    glossario_toccato = bool(g.cartella) and cambiati is not None and any(
+        (ROOT / c).is_relative_to(g.cartella) for c in cambiati)
+    if cambiati is None or glossario_toccato:
+        da_controllare = tutti          # build completa, o PR che cambia il Glossario
+    else:
+        da_controllare = [p for p in tutti if p.relative_to(ROOT).as_posix() in cambiati]
+    esito = glossario.controlla(g, ROOT, NOMI_MILESTONE, da_controllare,
+                                completo=cambiati is None or glossario_toccato)
+    return g, esito
 
 
 # --------------------------------------------------------------------------
@@ -531,7 +564,9 @@ def riepilogo_semplice(documenti: list[Documento], extra_avvisi: list[str]) -> s
 
 def riepilogo_anteprima(toccati: list[Documento], falliti: list[Documento],
                         n_documenti: int, n_esempi: int,
-                        pdf_vietati: list[str], extra_avvisi: list[str]) -> str:
+                        pdf_vietati: list[str], extra_avvisi: list[str],
+                        righe_glossario: list[str] | None = None,
+                        glossario_rosso: bool = False) -> str:
     righe: list[str] = []
     if toccati:
         tabella = ["| Documento | Versione | Esito |", "| --- | --- | --- |"]
@@ -559,10 +594,13 @@ def riepilogo_anteprima(toccati: list[Documento], falliti: list[Documento],
                   "li rigenera. Dettagli: GUIDA.md, sezione 7.",
                   *[f"- `{p}`" for p in pdf_vietati]]
     righe += blocco_avvisi([a for d in toccati for a in d.avvisi] + extra_avvisi)
+    righe += righe_glossario or []
     if falliti:
         esito = f"{len(falliti)} con errori ❌"
     elif pdf_vietati:
         esito = "tutti compilati, ma ci sono PDF da togliere ❌"
+    elif glossario_rosso:
+        esito = "tutti compilati, ma il Glossario va sistemato ❌"
     else:
         esito = "nessun errore ✅"
     righe += ["", f"Controllo completo: compilati {n_documenti} documenti "
@@ -629,12 +667,19 @@ def anteprima(base: str) -> int:
 
     # i documenti fuori posto si segnalano solo se li tocca questa PR
     extra = [a for a in avvisi_fuori_posto() if any(f"`{c}`" in a for c in cambiati)]
+
+    # Glossario: termini marcati con \glo nei file della PR (tutti, se la PR
+    # cambia il Glossario) confrontati con le voci \termine
+    import glossario
+    _, esito_g = controlla_glossario(cambiati)
+    glossario_rosso = glossario.BLOCCANTE and bool(esito_g.bloccanti)
+
     testo = riepilogo_anteprima(toccati, falliti, len(documenti), len(esempi),
-                                pdf_vietati, extra)
+                                pdf_vietati, extra, esito_g.righe_markdown(), glossario_rosso)
     salva_riepilogo(testo)
     print()
     print(testo)
-    return 1 if falliti or pdf_vietati else 0
+    return 1 if falliti or pdf_vietati or glossario_rosso else 0
 
 
 # --------------------------------------------------------------------------
@@ -728,11 +773,18 @@ def main() -> int:
         else:
             togli_dal_sito(d)
 
+    # Glossario: controlli (solo avvisi, qui non blocca mai) e voci per il sito
+    g, esito_g = controlla_glossario(None if not args.file else
+                                     {Path(f).resolve().relative_to(ROOT).as_posix()
+                                      for f in args.file if Path(f).resolve().is_file()})
+
     if not args.no_site:
         # l'indice elenca tutto ciò che c'è in site/, non solo questa esecuzione
-        scrivi_sito([leggi(s) for s in pubblicabili])
+        scrivi_sito([leggi(s) for s in pubblicabili], g)
 
     testo = riepilogo_semplice(documenti, extra_avvisi)
+    if esito_g.righe_markdown():
+        testo += "\n" + "\n".join(esito_g.righe_markdown())
     falliti = [d for d in documenti if not d.ok]
 
     if args.pdf_accanto and not falliti:

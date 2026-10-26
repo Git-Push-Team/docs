@@ -10,7 +10,8 @@ a mano. Cosa mostra la pagina:
     esterni e interni con l'anteprima della prima pagina, verbali;
   - le diapositive (PDF in <Milestone>/diapositive/);
   - l'archivio delle milestone precedenti;
-  - il gruppo (membri, capitolato) e i contatti.
+  - il gruppo (membri, capitolato) e i contatti;
+  - se c'è il Glossario, una pagina a parte: glossario.html.
 
 Le impostazioni che non stanno nei documenti (stato delle milestone, link
 extra, account GitHub) sono in template/sito.toml.
@@ -116,7 +117,7 @@ def titolo_da_nome(nome: str) -> str:
     """'presentazione-rtb' -> 'Presentazione RTB'; 'diario-2026-11-10' ->
     'Diario di bordo, 10 novembre 2026'."""
     data = re.search(r"(\d{4}-\d{2}-\d{2})", nome)
-    if nome.lower().startswith("diario") and data:
+    if nome.lower().startswith(("diario", "ddb")) and data:
         return f"Diario di bordo, {data_lunga(data.group(1))}"
     parole = re.split(r"[-_ ]+", nome)
     sigle = {"rtb": "RTB", "pb": "PB", "tb": "TB", "mvp": "MVP", "poc": "PoC"}
@@ -241,7 +242,7 @@ def membri_html(gruppo: dict, account: dict) -> str:
 # --------------------------------------------------------------------------
 #  La pagina
 # --------------------------------------------------------------------------
-def scrivi(documenti: list, root: Path, site: Path) -> None:
+def scrivi(documenti: list, root: Path, site: Path, glossario=None) -> None:
     site.mkdir(parents=True, exist_ok=True)
     for nome in ("logo.png", "logo-bianco.png"):
         logo = root / "template" / "img" / nome
@@ -274,7 +275,8 @@ def scrivi(documenti: list, root: Path, site: Path) -> None:
             voce = {"titolo": titolo_da_nome(pdf.stem), "milestone": chiave,
                     "href": destinazione.relative_to(site).as_posix(), "pdf": destinazione,
                     "data": (re.search(r"\d{4}-\d{2}-\d{2}", pdf.stem) or [""])[0]}
-            (diari if pdf.stem.lower().startswith("diario") else presentazioni).append(voce)
+            diario = pdf.stem.lower().startswith(("diario", "ddb"))   # es. DDB-2026-10-26.pdf
+            (diari if diario else presentazioni).append(voce)
 
     # stato delle milestone e quale mostrare per prima
     conf_milestone = impostazioni.get("milestone", {})
@@ -306,7 +308,7 @@ def scrivi(documenti: list, root: Path, site: Path) -> None:
         f'<p>{e(in_corso["esteso"]) if in_corso["chiave"] != "Candidatura" else "Documenti per la candidatura al capitolato"}'
         f' <span class="badge {in_corso["classe"]}">{e(in_corso["stato"])}</span></p></header>'
         f'{corpo or "<p class=vuoto>I documenti compariranno qui dopo il primo merge.</p>"}</section>')
-    menu.append((in_corso["ancora"], in_corso["chiave"]))
+    menu.append(("#" + in_corso["ancora"], in_corso["chiave"]))
 
     if presentazioni or diari:
         parti = []
@@ -337,7 +339,7 @@ def scrivi(documenti: list, root: Path, site: Path) -> None:
         sezioni.append(f'<section id="diapositive"><header class="testata"><h2>Diapositive</h2>'
                        f'<p>Presentazioni delle revisioni e diari di bordo</p></header>'
                        f'{"".join(parti)}</section>')
-        menu.append(("diapositive", "Diapositive"))
+        menu.append(("#diapositive", "Diapositive"))
 
     if archivio:
         cassetti = []
@@ -354,7 +356,7 @@ def scrivi(documenti: list, root: Path, site: Path) -> None:
         sezioni.append(f'<section id="archivio"><header class="testata"><h2>Archivio</h2>'
                        f'<p>Le milestone precedenti, con i documenti com\'erano alla loro chiusura</p>'
                        f'</header>{"".join(cassetti)}</section>')
-        menu.append(("archivio", "Archivio"))
+        menu.append(("#archivio", "Archivio"))
 
     # ---- il gruppo -----------------------------------------------------
     progetto = impostazioni.get("progetto", {}) or {}
@@ -372,7 +374,9 @@ def scrivi(documenti: list, root: Path, site: Path) -> None:
     sezioni.append(f'<section id="gruppo"><header class="testata"><h2>Il gruppo</h2></header>'
                    f'<div class="due"><div class="prosa">{"".join(righe_gruppo)}</div>'
                    f'{membri_html(gruppo, impostazioni.get("github", {}) or {})}</div></section>')
-    menu.append(("gruppo", "Il gruppo"))
+    if glossario:
+        menu.append(("glossario.html", "Glossario"))
+    menu.append(("#gruppo", "Il gruppo"))
 
     repo = os.environ.get("GITHUB_REPOSITORY", "Git-Push-Team/docs")
     try:
@@ -388,7 +392,7 @@ def scrivi(documenti: list, root: Path, site: Path) -> None:
     sezioni.append(f'<section id="contatti"><header class="testata"><h2>Contatti</h2></header>'
                    f'<ul class="contatti">{"".join(contatti)}</ul>'
                    f'<p class="aggiornato">Ultimo aggiornamento: {e(aggiornato)}</p></section>')
-    menu.append(("contatti", "Contatti"))
+    menu.append(("#contatti", "Contatti"))
 
     # ---- documenti.json (per chi vuole riusare l'elenco) ---------------
     (site / "documenti.json").write_text(json.dumps([{
@@ -400,12 +404,133 @@ def scrivi(documenti: list, root: Path, site: Path) -> None:
 
     descrizione_sito = str((impostazioni.get("sito", {}) or {}).get(
         "descrizione", "Documentazione del progetto didattico di Ingegneria del Software"))
-    voci_menu = "".join(f'<a href="#{a}">{e(t)}</a>' for a, t in menu)
+    voci_menu = "".join(f'<a href="{e(a)}">{e(t)}</a>' for a, t in menu)
     pagina = MODELLO.format(
         nome=e(gruppo["nome"]), numero=e(gruppo["numero"]), anno=e(gruppo["anno"]),
         descrizione=e(descrizione_sito), menu=voci_menu, grafo=grafo(milestone),
         sezioni="".join(sezioni), css=CSS, js=JS)
     (site / "index.html").write_text(pagina, encoding="utf-8")
+
+    pagina_glossario = site / "glossario.html"
+    if glossario:
+        scrivi_glossario(glossario, pubblicati, site, gruppo, menu)
+    elif pagina_glossario.exists():
+        pagina_glossario.unlink()
+
+
+# --------------------------------------------------------------------------
+#  Pagina del Glossario (glossario.html)
+# --------------------------------------------------------------------------
+def latex_html(testo: str, ancore: dict) -> str:
+    """Il poco LaTeX delle definizioni in HTML: corsivo, grassetto, link,
+    \\glo (diventa un link alla voce), trattini, virgolette, ~."""
+    import glossario as gl
+    out, i = [], 0
+    semplici = {"emph": "em", "textit": "em", "textbf": "strong", "texttt": "code"}
+    nomi = {"LaTeX": "LaTeX", "TeX": "TeX", "ldots": "…", "dots": "…", "newline": " ", "quad": " "}
+    while i < len(testo):
+        if testo[i] == "\\":
+            m = re.match(r"\\([A-Za-z@]+)\*?", testo[i:])
+            if not m:                                   # \% \& \_ \# \$ ...
+                segno = testo[i + 1:i + 2]
+                out.append(" " if segno in ",;:! \\" else e(segno))
+                i += 2
+                continue
+            comando, i = m.group(1), i + m.end()
+            opzionale = ""
+            mo = re.match(r"\s*\[([^\]]*)\]", testo[i:])
+            if comando == "glo" and mo:
+                opzionale, i = mo.group(1), i + mo.end()
+            arg = gl._graffa(testo, i)
+            if comando in nomi:
+                out.append(nomi[comando])
+                if arg and arg[0] == "":
+                    i = arg[1]
+                continue
+            if arg is None:
+                continue
+            contenuto, i = arg
+            if comando == "glo":
+                a = ancore.get(gl.chiave(opzionale or contenuto))
+                corpo = latex_html(contenuto, ancore)
+                out.append(f'<a href="#{a}">{corpo}</a>' if a else corpo)
+            elif comando in semplici:
+                tag = semplici[comando]
+                out.append(f"<{tag}>{latex_html(contenuto, ancore)}</{tag}>")
+            elif comando == "url":
+                out.append(f'<a href="{e(contenuto)}">{e(contenuto)}</a>')
+            elif comando == "href":
+                testo_link = gl._graffa(testo, i)
+                if testo_link:
+                    out.append(f'<a href="{e(contenuto)}">{latex_html(testo_link[0], ancore)}</a>')
+                    i = testo_link[1]
+            else:                                       # altri comandi: solo il contenuto
+                out.append(latex_html(contenuto, ancore))
+        elif testo.startswith("---", i):
+            out.append("—"); i += 3
+        elif testo.startswith("--", i):
+            out.append("–"); i += 2
+        elif testo.startswith("``", i):
+            out.append("“"); i += 2
+        elif testo.startswith("''", i):
+            out.append("”"); i += 2
+        elif testo[i] == "~":
+            out.append("&nbsp;"); i += 1
+        elif testo[i] in "{}":
+            i += 1
+        else:
+            out.append(e(testo[i])); i += 1
+    return re.sub(r"\s+", " ", "".join(out)).strip()
+
+
+def scrivi_glossario(g, pubblicati: list, site: Path, gruppo: dict, menu: list) -> None:
+    import glossario as gl
+    voci = sorted(g.voci, key=lambda v: gl.ordinamento(v.termine))
+    ancore, usate = {}, set()
+    for v in voci:                                # un indirizzo per voce, senza doppioni
+        a, n = gl.ancora(v.termine), 2
+        while a in usate:
+            a, n = f"{gl.ancora(v.termine)}-{n}", n + 1
+        usate.add(a)
+        ancore.setdefault(v.chiave, a)
+
+    per_lettera: dict[str, list] = {}
+    for v in voci:
+        iniziale = gl.ordinamento(v.termine)[:1].upper()
+        per_lettera.setdefault(iniziale if iniziale.isalpha() else "#", []).append(v)
+
+    sezioni = []
+    for lettera, gruppo_voci in per_lettera.items():
+        righe = "".join(
+            f'<div class="voce" id="{ancore[v.chiave]}" '
+            f'data-cerca="{testo_cerca(gl.testo_semplice(v.termine), gl.testo_semplice(v.definizione))}">'
+            f'<dt><a href="#{ancore[v.chiave]}">{latex_html(v.termine, {})}</a></dt>'
+            f'<dd>{latex_html(v.definizione, ancore)}</dd></div>'
+            for v in gruppo_voci)
+        id_lettera = "lettera-" + (lettera.lower() if lettera != "#" else "altro")
+        sezioni.append(f'<section id="{id_lettera}"><h2>{e(lettera)}</h2>'
+                       f'<dl class="glossario">{righe}</dl></section>')
+
+    alfabeto = "".join(
+        f'<a href="#lettera-{c.lower()}">{c}</a>' if c in per_lettera
+        else f'<span aria-hidden="true">{c}</span>'
+        for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+    documento = next((d for d in pubblicati if d.sorgente == g.principale), None)
+    pdf = ""
+    if documento is not None:
+        versione = f" v{e(documento.versione)}" if documento.versione else ""
+        pdf = (f' <a class="pulsante piccolo" href="{e(documento.pdf_sito.relative_to(site).as_posix())}">'
+               f"Scarica il PDF{versione}</a>")
+
+    voci_menu = "".join(
+        f'<a href="{"index.html" + a if a.startswith("#") else "#"}"'
+        f'{" class=attiva" if a == "glossario.html" else ""}>{e(t)}</a>'
+        for a, t in menu)
+    pagina = MODELLO_GLOSSARIO.format(
+        nome=e(gruppo["nome"]), menu=voci_menu, n=len(voci), pdf=pdf,
+        alfabeto=alfabeto, sezioni="".join(sezioni), css=CSS, js=JS)
+    (site / "glossario.html").write_text(pagina, encoding="utf-8")
 
 
 # --------------------------------------------------------------------------
@@ -449,6 +574,45 @@ MODELLO = """<!doctype html>
 </header>
 <main id="contenuto">
 <p id="nessuno" class="vuoto" hidden>Nessun documento corrisponde alla ricerca.</p>
+{sezioni}
+</main>
+<script>{js}</script>
+</body>
+</html>
+"""
+
+MODELLO_GLOSSARIO = """<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossario · {nome}</title>
+<link rel="icon" href="logo.png" media="(prefers-color-scheme: light)">
+<link rel="icon" href="logo-bianco.png" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>{css}</style>
+</head>
+<body>
+<a class="salta" href="#contenuto">Vai alle voci</a>
+<nav class="barra" aria-label="Sezioni">
+  <a class="marchio" href="index.html">
+    <picture><source srcset="logo-bianco.png" media="(prefers-color-scheme: dark)"><img src="logo.png" alt="" width="32" height="32"></picture>
+    <span>{nome}</span>
+  </a>
+  <div class="voci">{menu}</div>
+  <label class="cerca"><span class="nascosto">Cerca un termine</span>
+    <input id="cerca" type="search" placeholder="Cerca un termine" autocomplete="off"></label>
+</nav>
+<header class="eroe">
+  <h1>Glossario</h1>
+  <p class="descrizione">I {n} termini tecnici usati nella documentazione. Nei documenti sono
+    contrassegnati dalla lettera G a pedice.{pdf}</p>
+  <nav class="alfabeto" aria-label="Lettere">{alfabeto}</nav>
+</header>
+<main id="contenuto">
+<p id="nessuno" class="vuoto" hidden>Nessun termine corrisponde alla ricerca.</p>
 {sezioni}
 </main>
 <script>{js}</script>
@@ -651,6 +815,24 @@ summary .dettaglio { color: var(--tenue); }
 .contatti a:hover { color: var(--blu); text-decoration-color: currentColor; }
 .aggiornato { color: var(--tenue); font-size: 14px; margin-top: 40px; }
 
+/* pagina del Glossario */
+.alfabeto { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 28px; }
+.alfabeto a, .alfabeto span { width: 36px; height: 36px; display: grid; place-items: center;
+  border-radius: 8px; font: 700 16px var(--display); text-decoration: none; }
+.alfabeto a { background: var(--superficie); border: 1px solid var(--linea); }
+.alfabeto a:hover { border-color: var(--blu); color: var(--blu); }
+.alfabeto span { color: var(--linea); }
+.pulsante.piccolo { display: inline-block; margin-left: 8px; padding: 4px 12px; font-size: 15px; }
+dl.glossario { margin: 0; border-top: 1px solid var(--linea); }
+.voce { display: grid; grid-template-columns: minmax(160px, 1fr) 3fr; gap: 6px 28px;
+        padding: 16px 4px; border-bottom: 1px solid var(--linea); scroll-margin-top: 90px; }
+.voce:target { background: var(--ambra-chiaro); }
+.voce dt { font: 700 18px/1.3 var(--display); }
+.voce dt a { text-decoration: none; }
+.voce dd { margin: 0; max-width: 68ch; }
+.voce dd a { color: var(--blu); text-underline-offset: 3px; }
+@media (max-width: 760px) { .voce { grid-template-columns: 1fr; } }
+
 /* ricerca */
 [data-cerca].fuori, .gruppo.fuori, .evidenza.fuori, section.fuori, details.fuori { display: none; }
 
@@ -680,7 +862,8 @@ summary .dettaglio { color: var(--tenue); }
 JS = """
 (() => {
   // voce del menu evidenziata mentre si scorre
-  const voci = [...document.querySelectorAll('.voci a')];
+  const voci = [...document.querySelectorAll('.voci a')]
+    .filter(a => a.getAttribute('href').startsWith('#') && a.getAttribute('href').length > 1);
   const sezioni = voci.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
   if ('IntersectionObserver' in window) {
     const osserva = new IntersectionObserver(eventi => {
