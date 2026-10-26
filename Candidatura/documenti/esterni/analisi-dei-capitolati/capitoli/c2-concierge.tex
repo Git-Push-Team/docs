@@ -1,0 +1,181 @@
+% !TEX root = ../analisi-dei-capitolati.tex
+% Capitolo 3 - Capitolato scelto: C2 - NEXUM Concierge
+
+\section{Capitolato scelto: C2 -- NEXUM Concierge}\label{sec:c2}
+
+\begin{scheda}
+  \voce{Proponente}{Eggon S.r.l., Padova}
+  \voce{Referente}{Gianpaolo Ferrarin}
+  \voce{Dominio}{assistente conversazionale per i servizi HR di una
+    piattaforma esistente}
+\end{scheda}
+
+\subsection{Obiettivo}
+Eggon sviluppa \textbf{NEXUM}, una piattaforma per la comunicazione
+aziendale e i servizi HR composta da un \glo{backoffice} amministrativo e
+da una \glo{PWA} per il personale. Il progetto chiede di introdurre nella
+PWA un \textbf{Concierge}: un assistente conversazionale con cui il
+personale trova informazioni, capisce le procedure e usa i servizi
+aziendali in linguaggio naturale, mentre dal backoffice l'azienda gestisce
+le fonti e le capacità dell'assistente.
+
+Per restare affrontabile, l'\glo{MVP} è limitato a \textbf{ferie e
+permessi}, ma l'architettura deve permettere di aggiungere in futuro
+altre fonti e abilità senza riprogettare il sistema. Il capitolato
+prosegue la collaborazione avviata con l'Università nel 2025/2026, ma il
+nuovo progetto ne è indipendente.
+
+\subsection{Caratteristiche funzionali}
+Il cuore del capitolato è riconoscere quattro tipi di richiesta, anche
+all'interno della stessa conversazione (Tabella~\ref{tab:c2-capacita}).
+
+\begin{table}[H]
+  \centering
+  \caption{Le quattro capacità del Concierge\label{tab:c2-capacita}}
+  \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.3cm}
+      >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \intestazione{Capacità} & \intestazione{Esempio} &
+    \intestazione{Fonte o strumento} \\
+    \midrule
+    Conoscenza aziendale & «Come funzionano le ferie in azienda?» &
+      Regolamenti caricati dal backoffice \\
+    Conoscenza del prodotto & «Dove posso segnare le ferie?» & Manuali di
+      NEXUM \\
+    Dati personali & «Quante ferie ho fatto quest'anno?» & Abilità di
+      lettura dei dati \\
+    Operazioni & «Registra le mie ferie dal 10 al 15 ottobre» & Abilità di
+      registrazione della richiesta \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Attorno a queste capacità il BRD richiede:
+\begin{itemize}
+  \item una \textbf{chat testuale} che mantiene il contesto e chiede
+        chiarimenti quando la richiesta è ambigua (per esempio una data
+        senza anno);
+  \item un \textbf{backoffice} per caricare, sostituire e ritirare le fonti
+        (inizialmente PDF), organizzate in \glo{bucket} con destinatari
+        autorizzati; le risposte devono citare le fonti e il sistema deve
+        astenersi quando le informazioni non bastano;
+  \item \textbf{dati personali} letti solo tramite i servizi di NEXUM: il
+        modello non deve inventare dati né fare conteggi al posto dei
+        servizi;
+  \item un \textbf{riepilogo completo e una conferma esplicita} prima di
+        ogni invio, distinguendo tra richiesta registrata e approvata;
+  \item \textbf{autorizzazioni, gestione degli errori e tracciabilità}:
+        due profili (personale e amministrazione), separazione tra aziende,
+        registrazione delle fonti usate e degli esiti delle operazioni.
+\end{itemize}
+
+\subsection{Requisiti e criteri di accettazione}
+Il BRD elenca sedici requisiti di business, che saranno la base
+dell'Analisi dei Requisiti. Non distingue requisiti obbligatori e
+opzionali: il nucleo obbligatorio è l'intero percorso sul dominio scelto,
+mentre grafi di conoscenza, distillazione avanzata, altri formati e altri
+domini sono possibilità ulteriori. Per l'accettazione l'MVP deve
+dimostrare tutte e quattro le capacità e un percorso unitario dalla
+domanda informativa all'invio della richiesta, verificando inoltre
+chiarimenti, citazioni e astensione, aggiornamento dopo il ritiro di una
+fonte, autorizzazioni e gestione degli errori.
+
+Il lavoro è diviso in tre fasi: un \glo{PoC} con le interfacce concordate
+(alla RTB), poi il percorso completo e la verifica dell'MVP (alla PB).
+L'MVP può usare servizi NEXUM di prova o simulatori conformi al contratto
+di integrazione definito da Eggon, purché il percorso sia eseguibile da
+capo a fondo.
+
+\subsection{Considerazioni tecnologiche}
+Il capitolato non impone tecnologie. Nell'incontro Eggon ha indicato come
+riferimento non vincolante il proprio stack: Ruby on Rails per il backend,
+Angular per backoffice e PWA, RubyLLM come interfaccia unica verso i
+provider di modelli (per esempio Amazon Bedrock, Google Vertex,
+OpenRouter), infrastruttura AWS. Chiede però un approccio
+\textbf{agnostico rispetto al provider} e una scelta motivata da
+esperimenti:
+\begin{itemize}
+  \item per la \textbf{conoscenza documentale}, confrontare il documento
+        inserito nel contesto della conversazione con soluzioni basate su
+        \glo{embedding}, ricerca vettoriale ed eventualmente grafi
+        (\glo{RAG});
+  \item per le \textbf{operazioni}, esporre le abilità tramite \glo{MCP},
+        con un registro che ne definisce ingressi e uscite e un
+        classificatore che riconosce l'intenzione dell'utente (posizione
+        ferie, richiesta, conferma, annullamento, spostamento).
+\end{itemize}
+Il gruppo partirà da servizi simulati per poi passare ai modelli reali su
+AWS, controllando il consumo di token.
+
+\subsection{Incontro con il proponente}
+Dall'incontro del 26 ottobre 2026 (VE~2026-10-26) sono emersi questi
+chiarimenti:
+\begin{itemize}
+  \item \textbf{perimetro}: MVP solo su ferie e permessi, con il
+        regolamento aziendale in PDF come primo documento e solo lingua
+        italiana;
+  \item \textbf{ricerca applicata}: il valore atteso sta nel confronto tra
+        approcci e nella qualità delle decisioni, non solo nel PoC;
+  \item \textbf{risorse}: accesso ad AWS e ai modelli con limiti di
+        budget, i due repository dei gruppi precedenti come riferimento,
+        esempi e materiali di prova costruiti insieme;
+  \item \textbf{dati}: solo dati fittizi in sperimentazione;
+  \item \textbf{gruppo}: sei persone invece delle sette del BRD non sono un
+        problema;
+  \item \textbf{collaborazione}: incontro settimanale di circa un'ora in un
+        giorno fisso, Telegram per le comunicazioni rapide, Meet per gli
+        incontri; Eggon chiede un confronto proattivo sulle scelte, anche
+        nei periodi di esami;
+  \item \textbf{strumenti di generazione del codice}: ammessi, purché il
+        gruppo sappia spiegare il codice e ne curi la sicurezza (OWASP,
+        Cyber Resilience Act); Eggon è disponibile a mostrare come lavora
+        con Claude Code.
+\end{itemize}
+
+\subsection{Rischi principali}
+\begin{itemize}
+  \item \textbf{Ampliamento del perimetro}: mantenere ferie e permessi come
+        unico dominio dell'MVP.
+  \item \textbf{Risposte non supportate dalle fonti}: citazioni
+        verificabili, astensione e un insieme di domande di prova per
+        misurare la qualità.
+  \item \textbf{Invii errati o duplicati}: riepilogo, conferma esplicita e
+        verifica dell'esito prima di ripetere un'operazione.
+  \item \textbf{Dipendenza dalle integrazioni}: concordare presto il
+        contratto con Eggon e sviluppare su simulatori conformi.
+  \item \textbf{Tecnologie nuove}: studio mirato nelle prime settimane e
+        incontri di approfondimento con il proponente.
+  \item \textbf{Continuità della comunicazione}, indicata da Eggon come
+        rischio principale: incontro settimanale fisso anche nei periodi di
+        esami.
+  \item \textbf{Costi dei modelli}: servizi simulati all'inizio e
+        monitoraggio del consumo di token entro il budget concordato.
+\end{itemize}
+
+\subsection{Valutazione del gruppo}
+
+\begin{fortedeboli}
+  \fd{\textbf{Perimetro circoscritto}: un solo dominio e vincoli espliciti
+      su ciò che non è richiesto.}
+     {\textbf{Scelte da sperimentare}: stack e strategia documentale vanno
+      decisi e motivati con esperimenti.}
+  \fd{\textbf{Criteri di accettazione verificabili}: ottima base per
+      requisiti e test.}
+     {\textbf{Qualità delle risposte difficile da misurare}: servono
+      metriche e domande di prova costruite dal gruppo.}
+  \fd{\textbf{Tecnologie attuali}: RAG, MCP e uso di strumenti da parte
+      di un \glo{LLM}.}
+     {\textbf{Tecnologie nuove per il gruppo}: serve un investimento
+      iniziale di studio.}
+  \fd{\textbf{Prodotto reale e proponente presente}: infrastruttura
+      fornita, incontri settimanali, materiale dei gruppi precedenti.}
+     {\textbf{Dipendenze}: contratto di integrazione da Eggon e budget
+      per i modelli da rispettare.}
+\end{fortedeboli}
+
+Il gruppo ha scelto C2 per l'equilibrio tra interesse, valore formativo e
+sostenibilità: un tema attuale in un prodotto reale, con un perimetro
+limitato e criteri verificabili, senza hardware né tecnologie imposte.
+L'incontro con Eggon ha confermato la scelta: il proponente fornisce le
+risorse necessarie e cerca proprio una collaborazione basata sulla
+sperimentazione e sul confronto delle scelte.

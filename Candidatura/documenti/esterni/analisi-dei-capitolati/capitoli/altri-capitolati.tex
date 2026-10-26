@@ -1,0 +1,209 @@
+% !TEX root = ../analisi-dei-capitolati.tex
+% Capitolo 6 - Altri capitolati (C3-C9)
+
+\section{Altri capitolati}\label{sec:altri}
+
+I capitolati C3--C9 sono stati letti e discussi da tutto il gruppo nella
+fase di prima selezione, ma non sono entrati tra i finalisti e non sono
+stati approfonditi con i proponenti. Per ciascuno si riportano obiettivo,
+requisiti e tecnologie principali e la valutazione del gruppo.
+
+% ---------------------------------------------------------------------
+\subsection{C3 -- FossDot}
+\textbf{Proponente}: Uranion EMEA Ltd.
+
+\textbf{Obiettivo.} Gli smart speaker in commercio sono dispositivi chiusi,
+legati al cloud del produttore e a un solo assistente vocale. Uranion
+propone un ecosistema open source completo per un assistente vocale
+domestico sul modello dell'Echo Dot, in cui il proprietario sceglie il
+provider di intelligenza artificiale (in cloud o locale), collega servizi
+esterni tramite \glo{MCP} e fa cooperare più dispositivi in casa.
+
+\textbf{Requisiti e tecnologie.} L'MVP comprende la scelta e la validazione
+dell'hardware di riferimento (scheda, array di microfoni, altoparlante) con
+distinta base e prototipo, un firmware che cattura l'audio, riconosce la
+parola di attivazione e trasmette la voce al server, un servizio di
+\emph{bridging} con pipeline speech-to-text, LLM e text-to-speech, e
+un'interfaccia web per registrare i dispositivi. La consegna completa
+aggiunge più provider commutabili, integrazione MCP, \emph{skill} e
+agenti, funzioni multi-dispositivo e gestione sicura dei segreti, con una
+copertura dei test software dell'80\%. Lo stack è libero, con licenza
+Apache~2.0 o MIT; Rust è preferito per il firmware, e sono suggeriti
+Raspberry Pi, ReSpeaker, openWakeWord, faster-whisper, Piper e Ollama.
+
+\textbf{Valutazione.} Il tema della privacy e del controllo sui propri dati
+è stato apprezzato. Il progetto richiede però competenze di elettronica e
+di programmazione embedded lontane dal percorso del gruppo, l'acquisto e la
+gestione di hardware e una dimostrazione finale su dispositivo fisico: un
+rischio ritenuto non sostenibile.
+
+% ---------------------------------------------------------------------
+\subsection{C4 -- Piattaforma per la gestione dei veicoli e dei servizi post-vendita}
+\textbf{Proponente}: M31 S.r.l.
+
+\textbf{Obiettivo.} Le informazioni su modelli, veicoli venduti,
+manutenzioni e campagne di richiamo sono sparse tra sistemi diversi. M31
+chiede una piattaforma distribuita che colleghi casa automobilistica,
+concessionarie e proprietari, con accesso separato ai dati in base al ruolo
+e all'organizzazione.
+
+\textbf{Requisiti e tecnologie.} Sono obbligatori la gestione di modelli,
+veicoli, concessionarie e proprietari, le richieste di manutenzione con
+aggiornamento dello stato, le campagne di richiamo con individuazione dei
+veicoli coinvolti, le notifiche, tre interfacce web distinte e \glo{API}
+sicure, documentate e versionate; i dati dei veicoli possono essere
+inseriti a mano o simulati. Tra gli opzionali figurano storico tecnico,
+passaggio di proprietà, preventivi, manutenzione predittiva e ricerca
+geografica. Sono richiesti anche un'analisi dello stato dell'arte e un
+\emph{test book}. Le tecnologie indicate sono microservizi in Node.js con
+Nest.js e TypeScript, Go per le componenti più esigenti, NATS o Kafka per
+gli eventi, Kubernetes su Google Cloud Platform, PostgreSQL, MongoDB,
+Redis, Angular, Prometheus e Grafana.
+
+\textbf{Valutazione.} Il capitolato è chiaro e ben strutturato, ma la parte
+applicativa è un gestionale tradizionale e la complessità sta soprattutto
+nell'infrastruttura distribuita (microservizi, code di eventi,
+orchestrazione). Il gruppo ha preferito un progetto in cui l'innovazione
+riguardi il comportamento del prodotto.
+
+% ---------------------------------------------------------------------
+\subsection{C5 -- RareCare}
+\textbf{Proponente}: Miriade S.r.l.
+
+\textbf{Obiettivo.} Le famiglie di persone con malattie rare devono
+coordinarsi da sole con centri clinici, pediatri, terapisti, scuola e
+servizi sociali. RareCare Navigator, pensato inizialmente per la Sindrome
+di Sanfilippo, vuole affiancare la figura del \emph{Care Navigator} con un
+assistente basato sull'intelligenza artificiale, un sistema di scadenze e
+un archivio condiviso dei documenti di cura.
+
+\textbf{Requisiti e tecnologie.} Sono obbligatori un modello di ruoli e
+permessi granulare, un motore di scadenze e notifiche (rinnovi, piani
+assistenziali ed educativi) e un'interfaccia conversazionale \glo{RAG} che
+risponde solo sulla base di fonti ufficiali verificate; sono opzionali un
+assistente vocale, la mappatura dei servizi territoriali e l'analisi
+predittiva dei bisogni. Il nucleo della piattaforma deve essere
+indipendente dalla patologia, con pacchetti di configurazione per
+estenderla ad altre malattie. Sono raccomandati un'architettura serverless
+su AWS (API Gateway, Lambda, Bedrock), un'app multipiattaforma in Flutter o
+React Native, cifratura dei dati, autenticazione a più fattori e
+accessibilità WCAG~2.1~AA.
+
+\textbf{Valutazione.} Il valore sociale del progetto è stato riconosciuto
+da tutto il gruppo e la componente RAG è affine a quella di C2. Hanno
+pesato però la delicatezza del dominio (dati sanitari di minori,
+conformità GDPR, possibili implicazioni regolatorie), l'ampiezza delle
+responsabilità richieste e uno sviluppo mobile multipiattaforma che il
+gruppo non intendeva affrontare.
+
+% ---------------------------------------------------------------------
+\subsection{C6 -- Caching semantico e dashboard FinOps per LiteLLM}
+\textbf{Proponente}: Var Group S.p.A.
+
+\textbf{Obiettivo.} Var Group usa il progetto open source LiteLLM come
+orchestratore davanti a più provider di modelli linguistici. In produzione
+ne ha riscontrato due limiti: la cache riconosce solo richieste identiche,
+quindi domande equivalenti formulate in modo diverso vengono pagate due
+volte, e non esiste una visione dei costi per team, progetto o utente.
+
+\textbf{Requisiti e tecnologie.} Il progetto chiede di estendere LiteLLM
+con una cache semantica basata su \glo{embedding} e ricerca per
+similarità, con soglia configurabile e invalidazione, e con un servizio
+FinOps che attribuisca i costi, gestisca budget e avvisi e preveda la
+spesa mensile, con isolamento dei dati tra team. Prima dello sviluppo sono
+richiesti una sessione di design thinking, lo user story mapping e un PoC
+di fattibilità; i test devono coprire almeno il 70\% del codice. Le
+tecnologie consigliate sono Python con FastAPI, Docker Compose,
+sentence-transformers o gli embedding di OpenAI, Redis, Qdrant o
+pgvector, PostgreSQL e React con Chart.js.
+
+\textbf{Valutazione.} Il tema è attuale e ben delimitato, ma molto
+orientato all'infrastruttura: il prodotto non ha un utente finale diretto
+e il suo valore si misura soprattutto in risparmi di costo. L'interesse
+del gruppo è stato inferiore rispetto ai finalisti.
+
+% ---------------------------------------------------------------------
+\subsection{C7 -- SmartDashboard}
+\textbf{Proponente}: Ergon Informatica S.r.l.
+
+\textbf{Obiettivo.} I dati delle aziende di produzione e distribuzione
+restano spesso chiusi nel gestionale e ogni nuovo report richiede
+l'intervento del reparto IT. Ergon chiede una piattaforma di
+\glo{Business Intelligence} self-service che recuperi i dati dal
+gestionale, li consolidi in un \glo{data warehouse} e permetta agli utenti
+di costruire da soli le proprie dashboard.
+
+\textbf{Requisiti e tecnologie.} La web app deve offrire un costruttore di
+dashboard a trascinamento con grafici, KPI, tabelle pivot, gauge e mappe,
+filtri trasversali, esportazione in PDF ed Excel e gestione degli utenti.
+Un livello di intelligenza artificiale deve generare visualizzazioni da
+richieste in linguaggio naturale e, come estensioni progressive, produrre
+insight automatici, suggerire widget e spiegare gli indicatori. Il
+proponente consiglia di costruire prima la pipeline di Business
+Intelligence e poi il livello AI, e può fornire i dati di un caso di studio
+reale. Le tecnologie suggerite sono DuckDB per il data warehouse (con
+supporto desiderabile ad altri database), PostgreSQL o MariaDB, Polars per
+le trasformazioni, React, Angular o Vue e un LLM commerciale.
+
+\textbf{Valutazione.} Il capitolato è chiaro e propone un percorso
+incrementale ragionevole. La parte prevalente del lavoro riguarda però la
+pipeline dei dati e il costruttore di dashboard, ambiti che hanno
+suscitato meno interesse rispetto agli assistenti conversazionali dei
+finalisti.
+
+% ---------------------------------------------------------------------
+\subsection{C8 -- Sonar}
+\textbf{Proponente}: Halue S.r.l. Società Benefit.
+
+\textbf{Obiettivo.} Con gli anni uno store Shopify accumula app, webhook,
+campi personalizzati, script e codice di tema di cui nessuno ricorda più
+lo scopo, e questa conoscenza si perde a ogni cambio di fornitore. Sonar
+deve collegarsi a uno store, acquisirne configurazioni e codice e
+ricostruire in automatico cosa è installato, cosa reagisce a quali
+eventi, quali campi sono davvero usati e cosa è orfano.
+
+\textbf{Requisiti e tecnologie.} Le scansioni sono lunghe e soggette ai
+limiti di frequenza delle API di Shopify: devono essere durevoli,
+riprendibili e osservabili, e salvare ogni volta uno snapshot immutabile.
+I dati confluiscono in un grafo di entità e dipendenze, su cui un motore di
+regole estensibile segnala codice morto e configurazioni orfane con una
+motivazione per ciascuna segnalazione; la documentazione è esportabile in
+Markdown o HTML. Sono richiesti cifratura dei token, isolamento tra
+organizzazioni, copertura dei test del 70\% e un \emph{test book}. Lo
+stack è in gran parte vincolante: Next.js su Vercel, Vercel Workflows e
+Cron Jobs, Supabase con autenticazione Google, TypeScript e Shopify Admin
+GraphQL API.
+
+\textbf{Valutazione.} È tra i capitolati più curati per requisiti e criteri
+di accettazione, ma è legato a un ecosistema specifico con molti vincoli
+tecnologici, e il dominio dell'e-commerce enterprise non ha coinvolto il
+gruppo quanto i finalisti.
+
+% ---------------------------------------------------------------------
+\subsection{C9 -- SpecCheck}
+\textbf{Proponente}: Zucchetti S.p.A.
+
+\textbf{Obiettivo.} Con lo sviluppo assistito dagli LLM il collo di
+bottiglia si è spostato dalla scrittura del codice alla sua verifica:
+compilatori e test dicono se il codice funziona, non se fa ciò che era
+stato chiesto. Zucchetti chiede di estendere l'agente di sviluppo
+OpenCode con strumenti che verifichino la tracciabilità tra casi d'uso,
+requisiti e codice sorgente.
+
+\textbf{Requisiti e tecnologie.} Il prodotto è un pacchetto di skill,
+comandi e almeno un plugin per OpenCode, installabile con uno script, che
+legga i diagrammi e le descrizioni dei casi d'uso (per esempio in Mermaid,
+XMI o Markdown) e le specifiche dei requisiti, li confronti tra loro e con
+il comportamento del codice e mostri le discrepanze in una dashboard,
+anche testuale. Il confronto finale, che richiede precisione, va
+realizzato come plugin o programma esterno e non affidato solo al modello.
+Sono opzionali una dashboard grafica, l'individuazione del codice non
+coperto da specifiche e la lettura diretta da PDF. Il proponente fornisce
+accesso a modelli di grandi dimensioni, con un tetto di spesa, e a
+modelli più piccoli senza limiti.
+
+\textbf{Valutazione.} Il tema è originale e molto vicino agli argomenti del
+corso, ma il capitolato si dichiara fortemente esplorativo: parte dei
+risultati dipende da capacità degli LLM non ancora consolidate. Il gruppo
+ha preferito un progetto con perimetro e criteri di accettazione più
+definiti.

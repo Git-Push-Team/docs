@@ -1,0 +1,65 @@
+% =====================================================================
+%  Analisi dei Capitolati  --  Git Push Team (Gruppo 9)
+%  Documento esterno della Candidatura, diviso in capitoli:
+%     analisi-dei-capitolati.tex   <- questo file (si compila questo)
+%     capitoli/*.tex               <- un file per capitolo
+% =====================================================================
+\documentclass[documento]{gpt}
+
+\titolo{Analisi dei Capitolati}
+\uso{esterno}
+\responsabile{spagnoli}
+
+% Il capitolato in copertina si aggiunge solo dopo l'aggiudicazione
+% (3 novembre 2026):
+% \capitolato{C2 -- NEXUM Concierge (Eggon S.r.l.)}
+
+% ---------------------------------------------------------------------
+%  REGISTRO DELLE MODIFICHE  --  la riga più recente va IN CIMA.
+%  Alla verifica finale il Verificatore aggiunge in cima la riga 1.0.0.
+% ---------------------------------------------------------------------
+\modifica{1.0.0}{2026-10-26}{guglielmo}{corro}{Verifica e approvazione}
+\modifica{0.9.1}{2026-10-26}{guglielmo}{--}{Termini marcati allineati al Glossario}
+\modifica{0.9.0}{2026-10-26}{guglielmo}{--}{Revisione complessiva: sintesi dei contenuti e approfondimento dei capitolati C3--C9}
+\modifica{0.8.0}{2026-10-26}{biasini}{corro}{Integrazione degli esiti dell'incontro con Eggon del 26 ottobre}
+\modifica{0.7.0}{2026-10-26}{guglielmo}{cescobolla}{Valutazione finale di C2, tabelle di confronto e conclusioni}
+\modifica{0.6.0}{2026-10-25}{biasini}{corro}{Stesura della sintesi dei capitolati C3--C9}
+\modifica{0.5.0}{2026-10-24}{guglielmo}{cescobolla}{Stesura dell'analisi del capitolato scelto, C2 -- NEXUM Concierge}
+\modifica{0.4.0}{2026-10-23}{biasini}{corro}{Stesura dell'analisi di C1 -- AURA con gli esiti dell'incontro del 22 ottobre}
+\modifica{0.3.0}{2026-10-22}{guglielmo}{cescobolla}{Stesura dell'analisi di C0 -- AIRA con gli esiti dell'incontro del 21 ottobre}
+\modifica{0.2.0}{2026-10-21}{biasini}{corro}{Stesura della metodologia e dei criteri di valutazione}
+\modifica{0.1.0}{2026-10-20}{guglielmo}{cescobolla}{Prima stesura: struttura del documento e introduzione}
+
+% Tabella a due colonne per punti di forza e criticità:
+%   \begin{fortedeboli} \fd{forza}{criticità} ... \end{fortedeboli}
+\newenvironment{fortedeboli}{%
+  \par\noindent\tabularx{\linewidth}{@{}>{\raggedright\arraybackslash}X
+      >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \intestazione{Punti di forza} & \intestazione{Criticità} \\
+    \midrule}
+  {\bottomrule\endtabularx\par}
+\newcommand{\fd}[2]{#1 & #2 \\[0.3em]}
+
+% Scheda sintetica di un capitolato:  \begin{scheda} \voce{a}{b} \end{scheda}
+\newenvironment{scheda}{%
+  \par\noindent\tabularx{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.24\linewidth}
+      >{\raggedright\arraybackslash}X@{}}
+    \toprule}
+  {\bottomrule\endtabularx\par}
+\newcommand{\voce}[2]{\textsf{\small\bfseries #1} & #2 \\}
+
+% Indice fino alle sottosezioni
+\setcounter{tocdepth}{2}
+
+\begin{document}
+
+\input{capitoli/introduzione}
+\input{capitoli/metodologia}
+\input{capitoli/c2-concierge}
+\input{capitoli/c1-aura}
+\input{capitoli/c0-aira}
+\input{capitoli/altri-capitolati}
+\input{capitoli/conclusioni}
+
+\end{document}

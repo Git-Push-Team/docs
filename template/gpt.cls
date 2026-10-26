@@ -876,7 +876,20 @@
   \end{figure}}
 
 % Termine di glossario:  \glo{termine}  ->  termine con pedice G
-\newcommand{\glo}[1]{#1\textsubscript{\sffamily\bfseries\color{gptaccento}G}}
+% Se il testo è diverso dalla voce del Glossario (plurale, forma diversa)
+% la voce va tra parentesi quadre:  \glo[pull request]{pull requests}
+% (la voce serve solo ai controlli di build.py, nel PDF non si vede).
+\newcommand{\glo}[2][]{#2\textsubscript{\sffamily\bfseries\color{gptaccento}G}}
+
+% ---- Glossario (vedi template/modelli/glossario/) -----------------------
+% \letteraglossario{A}   titolo di una lettera (finisce anche nell'indice)
+% \termine{Voce}{Definizione}   una voce del Glossario
+\newcommand{\letteraglossario}[1]{%
+  \section*{#1}\addcontentsline{toc}{section}{#1}}
+\newcommand{\termine}[2]{%
+  \par\addvspace{0.6\baselineskip}%
+  \noindent{\sffamily\bfseries\color{gptaccento}#1}\par\nopagebreak
+  \noindent\hangindent=1em\hangafter=0 #2\par}
 
 
 % =====================================================================
