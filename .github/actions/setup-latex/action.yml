@@ -1,31 +1,79 @@
 # Installa TeX Live con i pacchetti usati dalla classe gpt.cls.
 # Lo usano tutti e tre i workflow. Se la classe inizia a usare un
-# pacchetto nuovo e la CI dice "File `xyz.sty' not found", aggiungere
+# pacchetto nuovo e la CI dice "File `xyz.sty' not found", aggiungete
 # qui il pacchetto Debian che lo contiene (cercatelo su packages.ubuntu.com).
 #
-# Ogni tanto rallenta per problema non a noi imputabile. Aggiunti retry e timeout, salta aggiornamento manuali ubuntu
+# Perché è fatto così: i server dei pacchetti di Ubuntu ogni tanto si
+# piantano e l'installazione resta bloccata per minuti. Allora:
+#   1. la prima volta (e poi una volta al mese) i pacchetti si scaricano
+#      e si salvano nella cache di GitHub Actions;
+#   2. le volte successive si installano dalla cache, SENZA scaricare
+#      niente da Ubuntu: un paio di minuti, sempre uguali;
+#   3. se la cache non c'è o non va bene, si scarica come prima, con
+#      tempi massimi e un secondo tentativo.
+# Nel log, le righe con l'ora dicono a che punto è.
 name: Installa LaTeX
 description: Installa TeX Live con i pacchetti usati dal template del gruppo.
 runs:
   using: composite
   steps:
+    - name: Prepara la cache dei pacchetti
+      id: mese
+      shell: bash
+      # la cache si rinnova da sola ogni mese (e quando cambia questo file)
+      run: echo "mese=$(date +%Y-%m)" >> "$GITHUB_OUTPUT"
+
+    - name: Recupera i pacchetti dalla cache
+      uses: actions/cache@v5
+      with:
+        path: ~/cache-latex
+        key: latex-${{ runner.os }}-${{ hashFiles('.github/actions/setup-latex/action.yml') }}-${{ steps.mese.outputs.mese }}
+
     - name: Installa TeX Live e latexmk
       shell: bash
       run: |
+        ora() { echo "[$(date +%H:%M:%S)] $*"; }
+        CACHE="$HOME/cache-latex"
+        PACCHETTI="latexmk texlive-latex-recommended texlive-latex-extra
+          texlive-fonts-recommended texlive-pictures texlive-lang-italian lmodern
+          poppler-utils"   # poppler-utils = pdftoppm, per le anteprime del sito
+        # i pacchetti scaricati restano in $CACHE/archivi (salvata dalla cache)
+        APT="sudo apt-get -y -q -o Dpkg::Use-Pty=0 -o Dir::Cache::archives=$CACHE/archivi"
+        mkdir -p "$CACHE/archivi/partial" "$CACHE/elenchi"
+
         # Ubuntu aggiorna l'indice dei manuali (man-db) dopo ogni pacchetto
         # installato: con TeX Live può richiedere minuti, e qui non serve.
         sudo rm -f /var/lib/man-db/auto-update
 
-        APT="sudo apt-get -y -qq -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Dpkg::Use-Pty=0"
-        PACCHETTI="latexmk texlive-latex-recommended texlive-latex-extra
-          texlive-fonts-recommended texlive-pictures texlive-lang-italian lmodern
-          poppler-utils"   # poppler-utils = pdftoppm, per le anteprime del sito
-
-        for tentativo in 1 2; do
-          if timeout 5m $APT update && \
-             timeout 12m $APT install --no-install-recommends $PACCHETTI; then
-            echo "TeX Live installato (tentativo $tentativo)."
+        # --- 1. dalla cache: nessun download -------------------------------
+        if ls "$CACHE"/archivi/*.deb > /dev/null 2>&1; then
+          ora "Installo dalla cache ($(ls "$CACHE"/archivi/*.deb | wc -l) pacchetti, niente download)"
+          sudo cp "$CACHE"/elenchi/* /var/lib/apt/lists/ 2> /dev/null || true
+          if timeout 10m $APT install --no-download --no-install-recommends $PACCHETTI > /tmp/apt.log 2>&1; then
+            ora "TeX Live installato dalla cache."
             exit 0
+          fi
+          tail -n 15 /tmp/apt.log
+          ora "La cache non basta (Ubuntu ha aggiornato qualcosa): scarico i pacchetti."
+          sudo dpkg --configure -a || true
+        fi
+
+        # --- 2. da Ubuntu, con tempi massimi e un secondo tentativo ----------
+        for tentativo in 1 2; do
+          ora "Aggiorno l'elenco dei pacchetti (tentativo $tentativo)"
+          if timeout 4m $APT -o Acquire::Retries=3 -o Acquire::http::Timeout=30 update -qq; then
+            ora "Scarico TeX Live (tentativo $tentativo)"
+            if timeout 10m $APT -o Acquire::Retries=3 -o Acquire::http::Timeout=30 \
+                 install --download-only --no-install-recommends $PACCHETTI > /tmp/apt.log 2>&1 \
+               && ora "Installo TeX Live" \
+               && timeout 10m $APT install --no-download --no-install-recommends $PACCHETTI >> /tmp/apt.log 2>&1; then
+              ora "TeX Live installato. Salvo i pacchetti per le prossime volte."
+              sudo find /var/lib/apt/lists -maxdepth 1 -type f ! -name lock \
+                -exec cp {} "$CACHE/elenchi/" \;
+              sudo chown -R "$(id -u):$(id -g)" "$CACHE"
+              exit 0
+            fi
+            tail -n 15 /tmp/apt.log
           fi
           echo "::warning::Installazione di TeX Live lenta o non riuscita (tentativo $tentativo): riprovo."
           sudo dpkg --configure -a || true   # sistema un'installazione interrotta a metà
