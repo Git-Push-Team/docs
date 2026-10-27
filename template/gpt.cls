@@ -618,7 +618,6 @@
   \gpt@inizioschede
       \gpt@rigacop{Identificativo}{\gpt@id}
       \gpt@rigacop{Versione}{\gpt@versione}
-      \gpt@rigacop{Uso}{\gpt@Uso}
       \gpt@rigacop{Redattore}{\nome{\gpt@redattore}}
       \gpt@rigacop{Verificatore}{\nome{\gpt@verificatore}}
       \ifdefempty{\gpt@capitolato}{}{\gpt@rigacop{Capitolato}{\gpt@capitolato}}
@@ -633,9 +632,7 @@
   \gpt@testacopertina{Documento a uso \gpt@uso}{28}{Versione \gpt@versione}%
   \vfill
   \gpt@inizioschede
-      \gpt@rigacop{Versione}{\gpt@versione}
       \gpt@rigacop{Ultima modifica}{\gpt@datalungada{\gpt@dataversione}}
-      \gpt@rigacop{Uso}{\gpt@Uso}
       \ifdefempty{\gpt@responsabile}{}{\gpt@rigacop{Responsabile}{\nome{\gpt@responsabile}}}
       \gpt@rigacop{Redattori}{\gpt@stampaautori}
       \gpt@rigacop{Verificatori}{\gpt@stampaverificatori}
