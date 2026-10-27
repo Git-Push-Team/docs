@@ -474,7 +474,7 @@
     \xdef\gpt@versione{\gpt@versioneletta}%
     \gdef\gpt@dataversione{#2}}{}%
   \gpt@registrapersone{#3}{#4}%
-  \gappto\gpt@righemodifiche{#1 & #2 & \nome{#3} & \nome{#4} & #5 \\}}
+  \gappto\gpt@righemodifiche{#1 & #2 & \nomi{#3} & \nomi{#4} & #5 \\}}
 
 
 % =====================================================================
