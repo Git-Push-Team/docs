@@ -1,0 +1,76 @@
+
+\documentclass[verbale=esterno]{gpt}
+
+\titolo{Incontro conoscitivo con Eggon}    
+\data{2026-10-26}                  
+\orario{17:00}{17:30}              
+\luogo{Google Meet}                
+\redattore{corro}                
+\verificatore{mazzurana}             
+
+\componenti{biasini,cescobolla,corro,guglielmo,mazzurana,spagnoli}
+\assenti{}                        
+
+\esterno{Gianpaolo Ferrarin}{Founder \& CEO, Eggon}
+
+\firma{Gianpaolo Ferrarin}{Eggon}
+
+\destinatari{Prof.~Tullio Vardanega\newline Prof.~Riccardo Cardin\newline Eggon}
+
+% ---------------------------------------------------------------------
+%  REGISTRO DELLE MODIFICHE 
+% ---------------------------------------------------------------------
+\modifica{1.0.0}{2026-10-27}{corro}{mazzurana}{Verifica e approvazione}
+\modifica{0.1.0}{2026-10-26}{corro}{mazzurana}{Prima stesura}
+
+\begin{document}
+
+\section{Ordine del giorno}
+\begin{enumerate}
+  \item Chiarimenti sul perimetro del progetto, vincoli orari e MVP.
+  \item Architettura, stack tecnologico e integrazione AI (utilizzo di RubyLLM).
+  \item Dati di test, sicurezza e utilizzo delle infrastrutture cloud AWS.
+  \item Organizzazione del lavoro, affiancamento e modalità di comunicazione.
+\end{enumerate}
+
+\section{Svolgimento}
+L'incontro è stato organizzato da Eggon per discutere i dettagli operativi e architetturali del capitolato C2 (NEXUM Concierge). Il proponente ha illustrato l'ecosistema in cui andrà a inserirsi l'assistente virtuale e chiarito i dubbi sollevati dal gruppo riguardo al budget orario e all'infrastruttura.
+
+\section{Domande e risposte}
+
+\subsection{Perimetro del progetto e budget orario}
+
+\domanda{Come si conciliano i vincoli didattici di 90-95 ore per studente e il team da 6 persone con il riferimento di 480 ore del BRD?}{%
+  La dimensione del team e il vincolo orario accademico non rappresentano un problema; il dato di 480 ore è uno standard aziendale non vincolante.}
+
+\subsection{Architettura e Tecnologie}
+
+\domanda{Siamo vincolati allo stack aziendale (Angular, Ruby on Rails) o c'è margine di sperimentazione?}{%
+  L'azienda suggerisce il proprio stack per mantenere vicinanza all'applicativo finale, ma il team è libero di scegliere e sperimentare gli strumenti che preferisce. L'unico vincolo tassativo richiesto è l'approccio \textit{model-agnostic}: la soluzione non deve dipendere da un singolo provider AI.}
+
+\domanda{Come verrà gestito l'interfacciamento con i vari modelli LLM?}{%
+  L'architettura aziendale prevede l'utilizzo della gemma \textit{RubyLLM}, che funge da router verso vari provider (come AWS Bedrock, Vertex, OpenRouter). Il flusso prevede un classificatore iniziale che identifica l'intenzione dell'utente nella chat per poi chiamare la relativa abilità tramite protocollo MCP (es. interrogazione, richiesta, annullamento ferie). Le strategie di recupero e interrogazione dei documenti (embedding, vettori, grafi) andranno indagate dal team.}
+
+\domanda{Ci sono limitazioni sull'uso di strumenti di intelligenza artificiale per la scrittura del codice?}{%
+  L'uso di strumenti di generazione del codice (es. Copilot, Claude Code, Codex) è consentito e incoraggiato. Tuttavia, i membri del gruppo devono essere in grado di spiegare e verificare il codice prodotto.}
+
+\subsection{Gestione dati e Sicurezza}
+
+\domanda{Come verranno gestiti i dati sensibili, i server di test e i costi per le API?}{%
+  La sperimentazione avverrà inizialmente con dati fittizi (mock). L'infrastruttura cifrerà i dati e assicurerà la netta separazione tra i tenant aziendali. Eggon fornirà l'accesso alla propria infrastruttura AWS con limiti di budget predefiniti per monitorare i consumi (nella fase iniziale il team può operare tramite \textit{stub} o servizi simulati).}
+
+\subsection{Modalità di affiancamento e Organizzazione}
+
+\domanda{Con quale frequenza e tramite quali canali avverranno gli allineamenti?}{%
+  È previsto un incontro con frequenza definita a seguito dell'assegnazione del capitolato gestito tramite un calendario condiviso. Per le comunicazioni informali e le richieste repentine verrà creato un gruppo Telegram con il referente. Eggon fornirà inoltre accesso a due repository sviluppati da studenti degli anni passati come documentazione di esempio.}
+
+\section{Prossimi passi}
+Il gruppo procede alla redazione formale del verbale e alla sua condivisione con il proponente per l'approvazione e la firma digitale, come concordato durante la chiamata. Successivamente, inizierà la valutazione dell'architettura e lo studio del protocollo MCP.
+
+
+\section{Azioni da intraprendere}
+\begin{azioni}
+  \azione{Inviare il verbale formale dell'incontro via email a Gianpaolo Ferrarin.}{corro}{2026-10-28}
+\end{azioni}
+
+\end{document}
