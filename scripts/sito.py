@@ -38,6 +38,15 @@ MILESTONE = [
 ]
 STATI = ("da iniziare", "in corso", "conclusa")
 
+# I PDF e i siti esterni si aprono in una scheda nuova, così la pagina del
+# sito resta aperta; i collegamenti interni (#sezione) restano nella stessa.
+NUOVA_SCHEDA = 'target="_blank" rel="noopener"'
+
+
+def attributi_link(url: str) -> str:
+    """NUOVA_SCHEDA per tutto tranne le ancore della stessa pagina."""
+    return "" if url.startswith("#") else " " + NUOVA_SCHEDA
+
 e = html.escape
 
 
@@ -150,7 +159,7 @@ def scheda_documento(d, site: Path, grande: bool = False) -> str:
     sotto = f'<p class="sotto">{e(d.sottotitolo)}</p>' if d.sottotitolo else ""
     classe = "scheda grande" if grande else "scheda"
     azione = '<span class="azione">Apri il PDF</span>' if grande else ""
-    return (f'<a class="{classe}" href="{e(href)}" data-cerca="{testo_cerca(d.titolo, d.sottotitolo, d.milestone)}">'
+    return (f'<a class="{classe}" href="{e(href)}" {NUOVA_SCHEDA} data-cerca="{testo_cerca(d.titolo, d.sottotitolo, d.milestone)}">'
             f'<span class="foglio">{figura}</span>'
             f'<span class="testo"><span class="titolo">{e(d.titolo)}</span>{sotto}'
             f'<span class="meta">{"".join(meta)}</span>{azione}</span></a>')
@@ -159,12 +168,12 @@ def scheda_documento(d, site: Path, grande: bool = False) -> str:
 def riga_verbale(d, site: Path, firmato: str) -> str:
     giorno, mese = data_breve(d.data)
     href = d.pdf_sito.relative_to(site).as_posix()
-    firma = (f'<a class="firmato" href="{e(firmato)}" title="Copia firmata dal proponente">'
+    firma = (f'<a class="firmato" href="{e(firmato)}" {NUOVA_SCHEDA} title="Copia firmata dal proponente">'
              "Firmato</a>") if firmato else ""
     ver = f'<span class="ver">v{e(d.versione)}</span>' if d.versione else ""
     return (f'<li data-cerca="{testo_cerca(d.titolo, d.data, data_lunga(d.data), d.milestone)}">'
             f'<time datetime="{e(d.data)}"><b>{e(giorno)}</b><span>{e(mese)}</span></time>'
-            f'<a class="titolo" href="{e(href)}">{e(d.titolo)}</a>'
+            f'<a class="titolo" href="{e(href)}" {NUOVA_SCHEDA}>{e(d.titolo)}</a>'
             f'<span class="coda">{firma}{ver}</span></li>')
 
 
@@ -175,7 +184,7 @@ def blocco_milestone(chiave: str, voci: list, site: Path, firmati: dict,
     lettere = [d for d in voci if d.tipo == "lettera"]
     documenti = [d for d in voci if d.categoria == "documenti" and d.tipo != "lettera"]
 
-    pulsanti = "".join(f'<a class="pulsante" href="{e(str(l.get("url", "")))}">'
+    pulsanti = "".join(f'<a class="pulsante" href="{e(str(l.get("url", "")))}"{attributi_link(str(l.get("url", "")))}>'
                        f'{e(str(l.get("testo", "Link")))}</a>'
                        for l in link if isinstance(l, dict) and l.get("url"))
     if lettere or pulsanti:
@@ -230,7 +239,7 @@ def membri_html(gruppo: dict, account: dict) -> str:
         if utente:
             foto = (f'<img src="https://github.com/{e(utente)}.png?size=128" alt="" '
                     f'loading="lazy" width="56" height="56">')
-            nome = (f'<a href="https://github.com/{e(utente)}">{e(m["nome"])}</a>'
+            nome = (f'<a href="https://github.com/{e(utente)}" {NUOVA_SCHEDA}>{e(m["nome"])}</a>'
                     f'<span>@{e(utente)}</span>')
         else:
             foto = f'<span class="iniziali" aria-hidden="true">{e(iniziali)}</span>'
@@ -253,11 +262,13 @@ def scrivi(documenti: list, root: Path, site: Path, glossario=None) -> None:
     gruppo = leggi_gruppo(root)
     pubblicati = [d for d in documenti if d.pdf_sito.exists() and d.milestone]
 
-    # verbali firmati: <nome>-firmato.pdf accanto al .tex
+    # verbali firmati: <nome>-firmato.pdf accanto al .tex (anche -Firmato.pdf)
     firmati: dict = {}
     for d in pubblicati:
-        firmato = d.sorgente.with_name(d.sorgente.stem + "-firmato.pdf")
-        if firmato.exists():
+        cercato = (d.sorgente.stem + "-firmato.pdf").lower()
+        firmato = next((f for f in sorted(d.sorgente.parent.glob("*.pdf"))
+                        if f.name.lower() == cercato), None)
+        if firmato is not None:
             destinazione = d.pdf_sito.parent / firmato.name
             shutil.copy2(firmato, destinazione)
             firmati[d.sorgente] = destinazione.relative_to(site).as_posix()
@@ -319,7 +330,7 @@ def scrivi(documenti: list, root: Path, site: Path, glossario=None) -> None:
                 figura = (f'<img src="{e(png.relative_to(site).as_posix())}" alt="" loading="lazy" '
                           f'width="297" height="210">' if anteprima_pdf(p["pdf"], png)
                           else '<span class="segnaposto" aria-hidden="true"></span>')
-                schede.append(f'<a class="scheda orizzontale" href="{e(p["href"])}" '
+                schede.append(f'<a class="scheda orizzontale" href="{e(p["href"])}" {NUOVA_SCHEDA} '
                               f'data-cerca="{testo_cerca(p["titolo"], p["milestone"])}">'
                               f'<span class="foglio">{figura}</span><span class="testo">'
                               f'<span class="titolo">{e(p["titolo"])}</span>'
@@ -332,7 +343,7 @@ def scrivi(documenti: list, root: Path, site: Path, glossario=None) -> None:
                 giorno, mese = data_breve(dd["data"])
                 righe.append(f'<li data-cerca="{testo_cerca(dd["titolo"], dd["milestone"])}">'
                              f'<time datetime="{e(dd["data"])}"><b>{e(giorno)}</b><span>{e(mese)}</span></time>'
-                             f'<a class="titolo" href="{e(dd["href"])}">{e(dd["titolo"])}</a>'
+                             f'<a class="titolo" href="{e(dd["href"])}" {NUOVA_SCHEDA}>{e(dd["titolo"])}</a>'
                              f'<span class="coda"><span class="ver">{e(dd["milestone"])}</span></span></li>')
             parti.append(f'<div class="gruppo"><h3>Diari di bordo <small>{len(diari)}</small></h3>'
                          f'<ol class="verbali">{"".join(righe)}</ol></div>')
@@ -386,8 +397,8 @@ def scrivi(documenti: list, root: Path, site: Path, glossario=None) -> None:
         adesso = datetime.now()
     aggiornato = f"{data_lunga(adesso.date().isoformat())}, ore {adesso:%H:%M}"
     contatti = [f'<li><span>Email</span><a href="mailto:{e(gruppo["email"])}">{e(gruppo["email"])}</a></li>',
-                f'<li><span>Sorgenti</span><a href="https://github.com/{e(repo)}">github.com/{e(repo)}</a></li>',
-                f'<li><span>Consegne</span><a href="https://github.com/{e(repo)}/releases">'
+                f'<li><span>Sorgenti</span><a href="https://github.com/{e(repo)}" {NUOVA_SCHEDA}>github.com/{e(repo)}</a></li>',
+                f'<li><span>Consegne</span><a href="https://github.com/{e(repo)}/releases" {NUOVA_SCHEDA}>'
                 "Archivio delle release</a></li>"]
     sezioni.append(f'<section id="contatti"><header class="testata"><h2>Contatti</h2></header>'
                    f'<ul class="contatti">{"".join(contatti)}</ul>'
@@ -458,11 +469,11 @@ def latex_html(testo: str, ancore: dict) -> str:
                 tag = semplici[comando]
                 out.append(f"<{tag}>{latex_html(contenuto, ancore)}</{tag}>")
             elif comando == "url":
-                out.append(f'<a href="{e(contenuto)}">{e(contenuto)}</a>')
+                out.append(f'<a href="{e(contenuto)}"{attributi_link(contenuto)}>{e(contenuto)}</a>')
             elif comando == "href":
                 testo_link = gl._graffa(testo, i)
                 if testo_link:
-                    out.append(f'<a href="{e(contenuto)}">{latex_html(testo_link[0], ancore)}</a>')
+                    out.append(f'<a href="{e(contenuto)}"{attributi_link(contenuto)}>{latex_html(testo_link[0], ancore)}</a>')
                     i = testo_link[1]
             else:                                       # altri comandi: solo il contenuto
                 out.append(latex_html(contenuto, ancore))
@@ -520,7 +531,7 @@ def scrivi_glossario(g, pubblicati: list, site: Path, gruppo: dict, menu: list) 
     pdf = ""
     if documento is not None:
         versione = f" v{e(documento.versione)}" if documento.versione else ""
-        pdf = (f' <a class="pulsante piccolo" href="{e(documento.pdf_sito.relative_to(site).as_posix())}">'
+        pdf = (f' <a class="pulsante piccolo" href="{e(documento.pdf_sito.relative_to(site).as_posix())}" {NUOVA_SCHEDA}>'
                f"Scarica il PDF{versione}</a>")
 
     voci_menu = "".join(

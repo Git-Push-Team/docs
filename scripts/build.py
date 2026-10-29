@@ -94,6 +94,7 @@ class Documento:
     ok: bool = False                # compilato senza errori?
     errori: list[str] = field(default_factory=list)
     dipendenze: set[str] = field(default_factory=set)  # file letti da LaTeX
+    registro: list[str] = field(default_factory=list)  # problemi del registro
 
     @property
     def relativo(self) -> Path:
@@ -143,6 +144,7 @@ class Documento:
             else:
                 rimedio = f"in copertina c'è scritto uso {self.uso} (comando `\\uso`)"
             trovati.append(f"`{dove}` è nella cartella `{cartella}` ma {rimedio}.")
+        trovati += [f"`{dove}`, registro delle modifiche: {r}" for r in self.registro]
         return trovati
 
     @property
@@ -201,6 +203,66 @@ def argomenti(testo: str, comando: str, quanti: int = 1) -> list[str]:
     return risultato
 
 
+def righe_registro(testo: str) -> list[dict]:
+    """Tutte le righe \\modifica{versione}{data}{autore}{verificatore}{descrizione}[approvatore]
+    del registro, nell'ordine in cui sono scritte (la più recente in cima)."""
+    righe = []
+    for m in re.finditer(r"\\modifica(?![A-Za-z@])", testo):
+        i, valori = m.end(), []
+        while len(valori) < 5:                  # i cinque argomenti {...}
+            while i < len(testo) and testo[i] in " \t\r\n":
+                i += 1
+            if i >= len(testo) or testo[i] != "{":
+                break
+            livello, inizio = 1, i + 1
+            i += 1
+            while i < len(testo) and livello:
+                if testo[i] == "\\":
+                    i += 2
+                    continue
+                livello += {"{": 1, "}": -1}.get(testo[i], 0)
+                i += 1
+            valori.append(testo[inizio:i - 1].strip())
+        if len(valori) < 5:
+            continue
+        approvatore = re.match(r"\s*\[([^\]]*)\]", testo[i:])   # l'eventuale [approvatore]
+        righe.append(dict(zip(("versione", "data", "autore", "verificatore", "descrizione"), valori),
+                          approvatore=approvatore.group(1).strip() if approvatore else ""))
+    return righe
+
+
+def persone(campo: str) -> set[str]:
+    """'mazzurana, biasini' -> {'mazzurana', 'biasini'}; '--' o vuoto -> {}."""
+    return {p.strip() for p in campo.split(",") if p.strip() not in ("", "--", "-")}
+
+
+def controlla_registro(testo: str, tipo: str, data_riunione: str) -> list[str]:
+    """Le regole delle versioni (GUIDA.md, sezione 5) che la classe non può
+    controllare da sola. Sono solo avvisi: non bloccano la compilazione."""
+    problemi = []
+    righe = righe_registro(testo)
+    for n, r in enumerate(righe):
+        v = r["versione"]
+        if not persone(r["autore"]):
+            problemi.append(f"nella riga {v} manca l'autore: ogni riga è una modifica fatta da qualcuno "
+                            "(niente righe di sola \"Verifica\").")
+        if not persone(r["verificatore"]):
+            problemi.append(f"la riga {v} non è ancora verificata (`--`). Prima del merge il Verificatore "
+                            "scrive la sua chiave al posto di `--`: una versione esiste solo se è verificata.")
+        elif persone(r["autore"]) & persone(r["verificatore"]):
+            problemi.append(f"nella riga {v} chi verifica è anche autore: serve un'altra persona.")
+        if re.fullmatch(r"[1-9]\d*\.0\.0", v) and tipo == "documento" and not r["approvatore"]:
+            problemi.append(f"la riga {v} è un'approvazione ma manca l'approvatore: aggiungete in fondo "
+                            "`[chiave del Responsabile]`.")
+        if n + 1 < len(righe) and r["data"] < righe[n + 1]["data"]:
+            problemi.append(f"la riga {v} ({r['data']}) è più vecchia della riga sotto, "
+                            f"{righe[n + 1]['versione']} ({righe[n + 1]['data']}): le date non possono "
+                            "tornare indietro salendo.")
+        if tipo.startswith("verbale") and data_riunione and r["data"] < data_riunione:
+            problemi.append(f"la riga {v} ha data {r['data']}, prima della riunione ({data_riunione}).")
+    return problemi
+
+
 def pulisci(latex: str) -> str:
     """Rende leggibile un titolo LaTeX per la pagina web."""
     t = latex.replace("~", " ").replace("--", "–").replace("\\&", "&")
@@ -232,6 +294,7 @@ def leggi(sorgente: Path, esempio: bool = False) -> Documento:
     data = argomenti(testo, "data")
     d.data = data[0] if data else (modifica[1] if len(modifica) > 1 else "")
     d.tipo = tipo_documento(testo)
+    d.registro = controlla_registro(testo, d.tipo, data[0] if data else "")
     oggetto = argomenti(testo, "oggetto")
     if oggetto:
         d.sottotitolo = pulisci(oggetto[0])
