@@ -31,7 +31,7 @@ Non serve conoscere LaTeX né Git: seguite le ricette e copiate i comandi così 
     - [R14. Caricare un verbale esterno firmato](#r14-caricare-un-verbale-esterno-firmato)
     - [R15. Aggiornare il sito: milestone, diapositive, gruppo](#r15-aggiornare-il-sito-milestone-diapositive-gruppo)
     - [R16. Il Glossario: crearlo, aggiungere termini, marcarli](#r16-il-glossario-crearlo-aggiungere-termini-marcarli)
-5. [Le versioni: la regola semplice](#5-le-versioni-la-regola-semplice)
+5. [Le versioni: le regole del registro](#5-le-versioni-le-regole-del-registro)
 6. [Prontuario dei comandi](#6-prontuario-dei-comandi)
 7. [Quando qualcosa va storto](#7-quando-qualcosa-va-storto)
 8. [Impostazioni da fare una volta sola (Amministratori)](#8-impostazioni-da-fare-una-volta-sola-amministratori)
@@ -250,7 +250,7 @@ cp template/modelli/verbale-interno.tex Candidatura/verbali/interni/VI-2026-10-2
 | `\verificatore{...}` | **chiave** di chi controlla (un Verificatore, diverso dal redattore) | `\verificatore{corro}` |
 | `\componenti{...}` | chi faceva parte del gruppo quel giorno: **lasciatelo com'è** | (già pronto) |
 | `\assenti{...}` | chiavi di chi mancava, separate da virgole; vuoto se c'erano tutti | `\assenti{spagnoli}` |
-| `\modifica{0.1.0}{...}` | prima riga del registro: data di oggi e la vostra chiave | `\modifica{0.1.0}{2026-10-26}{mazzurana}{--}{Prima stesura}` |
+| `\modifica{0.1.0}{...}` | prima riga del registro: data di oggi, la vostra chiave e `--` al posto del verificatore (lo sostituisce lui quando ha verificato) | `\modifica{0.1.0}{2026-10-26}{mazzurana}{--}{Stesura del verbale}` |
 
 > Le chiavi sono in `template/dati-gruppo.tex`: `biasini`, `cescobolla`, `corro`, `guglielmo`, `mazzurana`, `spagnoli`.
 > Se ne scrivete una sbagliata, la compilazione si ferma e vi dice quali sono quelle giuste.
@@ -274,7 +274,19 @@ cp template/modelli/verbale-interno.tex Candidatura/verbali/interni/VI-2026-10-2
 
 Le decisioni si numerano da sole (D1, D2…), le azioni pure (A1, A2…). `tutti` stampa "Tutto il gruppo".
 
-**4. Consegnate** con il giro dei 7 passi. Quando il Verificatore approva, aggiunge lui in cima al registro la riga `1.0.0` (vedi [R12](#r12-verificare-il-lavoro-di-un-altro-verificatore)).
+**4. Consegnate** con il giro dei 7 passi. Nella PR il registro si completa così (regole nella [sezione 5](#5-le-versioni-le-regole-del-registro)):
+
+1. il Verificatore legge la stesura, mette **la sua chiave al posto di `--`** nella riga `0.1.0` e vi scrive nella review cosa correggere;
+2. voi correggete e aggiungete **in cima** la riga della versione approvata, dicendo cosa avete corretto:
+
+   ```latex
+   \modifica{1.0.0}{2026-10-27}{mazzurana}{--}{Corrette le scadenze delle azioni e approvazione del verbale}
+   \modifica{0.1.0}{2026-10-26}{mazzurana}{corro}{Stesura del verbale}
+   ```
+
+3. il Verificatore ricontrolla, mette la sua chiave al posto di `--` anche lì e fa il merge.
+
+Se alla prima lettura non c'è niente da correggere, il Verificatore mette la sua chiave e cambia direttamente `0.1.0` in `1.0.0`: il verbale avrà una riga sola, ed è giusto così. Un verbale è approvato quando la sua `1.0.0` è verificata; quello esterno poi va anche firmato dall'azienda ([R14](#r14-caricare-un-verbale-esterno-firmato)).
 
 👀 Esempio completo: `template/esempi/esempio-verbale-interno.tex`.
 
@@ -317,15 +329,15 @@ Esempio: nel verbale `VI-2026-10-19` (versione `1.0.0`) c'è un nome sbagliato.
 
 1. Giro dei 7 passi, passi 1–3 (issue, `main` aggiornato, branch `doc/15-correzione-verbale-19-10`).
 2. Correggete il testo.
-3. Aggiungete **in cima** al registro una riga con la versione nuova (regola nella [sezione 5](#5-le-versioni-la-regola-semplice)):
+3. Aggiungete **in cima** al registro una riga con la versione nuova (regole nella [sezione 5](#5-le-versioni-le-regole-del-registro)):
 
    ```latex
-   \modifica{1.0.1}{2026-10-28}{guglielmo}{--}{Corretto il nome del responsabile}
-   \modifica{1.0.0}{2026-10-19}{guglielmo}{corro}{Verifica e approvazione}
-   \modifica{0.1.0}{2026-10-19}{guglielmo}{--}{Prima stesura}
+   \modifica{1.0.1}{2026-10-28}{guglielmo}{--}{Corretto il nome del Responsabile nella sezione Ruoli}
+   \modifica{1.0.0}{2026-10-20}{guglielmo}{corro}{Correzioni formali emerse in verifica e approvazione del verbale}
+   \modifica{0.1.0}{2026-10-19}{guglielmo}{corro}{Stesura del verbale}
    ```
 
-4. Passi 5–7. Il Verificatore controlla e, se va bene, mette la sua chiave al posto di `--` nella riga nuova.
+4. Passi 5–7. Il Verificatore controlla e, se va bene, mette la sua chiave al posto di `--` nella riga nuova (e la data di oggi). La versione `1.0.1` esiste solo da quel momento.
 
 > La versione del PDF (copertina, piè di pagina e nome del file) cambia da sola: è sempre quella della **prima** riga.
 > Non c'è nessun `\versione{}` da aggiornare.
@@ -350,25 +362,26 @@ Nomi suggeriti: `norme-di-progetto`, `piano-di-progetto`, `piano-di-qualifica`, 
 | `\titolo{...}` | il nome del documento: `\titolo{Norme di Progetto}` |
 | `\uso{...}` | `interno` o `esterno`, **come la cartella** (`documenti/interni/` → `interno`). Se non coincidono la PR ve lo segnala |
 | `\responsabile{...}` | la chiave del Responsabile, che approva il documento |
-| `\modifica{0.1.0}{...}` | la prima riga del registro |
+| `\modifica{0.1.0}{...}` | la prima riga del registro, con `--` al posto del verificatore |
 
 **Registro dei documenti: più persone e approvatore.**
 
-- In autore e verificatore potete mettere **più chiavi separate da virgole**: `\modifica{0.2.0}{2026-11-10}{mazzurana, biasini}{cescobolla}{Stesura sezione 2}`. In copertina ognuno compare una volta sola tra *Redattori* e *Verificatori*.
-- Solo nei documenti, chi **approva** si scrive **in fondo alla riga, tra parentesi quadre** (anche più persone):
+- Ogni PR aggiunge **una riga** in cima: cosa avete fatto e dove, la vostra chiave e `--`. Il Verificatore, quando la modifica è a posto, scrive la sua chiave al posto di `--` ([R12](#r12-verificare-il-lavoro-di-un-altro-verificatore)).
+- In autore e verificatore potete mettere **più chiavi separate da virgole**: `\modifica{0.2.0}{2026-11-10}{mazzurana, biasini}{cescobolla}{Stesura della sezione 2, Processi primari}`. In copertina ognuno compare una volta sola tra *Redattori* e *Verificatori*.
+- Quando il documento è pronto, la PR della sua ultima revisione usa la versione `1.0.0` e il **Responsabile**, che approva, si scrive **in fondo alla riga, tra parentesi quadre**:
 
   ```latex
-  \modifica{1.0.0}{2026-11-19}{--}{--}{Approvazione documento}[spagnoli]
-  \modifica{0.3.0}{2026-11-17}{mazzurana}{corro}{Stesura sezione 3}
+  \modifica{1.0.0}{2026-11-19}{mazzurana}{corro}{Revisione finale della sezione 3 e approvazione del documento}[spagnoli]
+  \modifica{0.3.0}{2026-11-17}{mazzurana}{corro}{Stesura della sezione 3, Gestione dei rischi}
   ```
 
-  La colonna **Approvatore** compare nel registro solo se almeno una riga ha le parentesi quadre; nelle altre righe c'è un trattino. Se non le usate mai, il registro resta a cinque colonne. Nei verbali l'approvatore non si usa: la compilazione si ferma e ve lo dice.
+  Le parentesi quadre le aggiunge il Responsabile nella PR, dopo il Verificatore (e approva anche lui la PR). La colonna **Approvatore** compare nel registro solo se almeno una riga ha le parentesi quadre; nelle altre righe c'è un trattino. Nei verbali l'approvatore non si usa: la compilazione si ferma e ve lo dice.
 
 **Si fanno da soli**: copertina (con versione, data dell'ultima modifica, **redattori e verificatori presi dal registro**), registro delle modifiche, **indice**, elenco delle figure e delle tabelle (solo se ce ne sono), intestazioni e numeri di pagina.
 
 **3. Scrivete** con `\section{...}`, `\subsection{...}`, `\subsubsection{...}`: compaiono da sole nell'indice.
 
-**4. Consegnate** con il giro dei 7 passi. A ogni modifica successiva: nuova riga in cima al registro.
+**4. Consegnate** con il giro dei 7 passi. A ogni modifica successiva: nuova riga in cima al registro, con le regole della [sezione 5](#5-le-versioni-le-regole-del-registro).
 
 👀 Esempio completo: `template/esempi/esempio-documento/`.
 
@@ -569,16 +582,18 @@ Vi arriva una richiesta di revisione (mail o campanella di GitHub).
 4. **Se ci sono cose da correggere**: *Review changes* (o *Submit review*) → **Request changes** → spiegate cosa sistemare. L'autore corregge e fa push; voi rileggete.
 5. **Se è tutto a posto**, registrate la verifica nel registro, direttamente dal sito:
     - in *Files changed*, sul file `.tex`, menu **⋯** → **Edit file**;
-    - **prima approvazione** (il documento è a `0.x.0`): in cima al registro aggiungete
+    - nella riga in cima al registro scrivete **la vostra chiave al posto di `--`** e mettete la **data di oggi** (una versione nasce quando è verificata):
 
       ```latex
-      \modifica{1.0.0}{2026-10-27}{mazzurana}{corro}{Verifica e approvazione}
+      \modifica{0.3.0}{2026-11-17}{mazzurana}{--}{Stesura della sezione 3, Gestione dei rischi}      % prima
+      \modifica{0.3.0}{2026-11-18}{mazzurana}{corro}{Stesura della sezione 3, Gestione dei rischi}   % dopo
       ```
 
-      (versione `1.0.0`, data di oggi, chiave dell'autore, **la vostra chiave**);
-    - **modifica a un documento già approvato** (es. riga `1.1.0` con `--`): scrivete la vostra chiave al posto di `--` nella riga in cima;
+    - controllate che la descrizione dica **cosa** è cambiato e **dove** (non "Modifica" o "Fix");
+    - **non aggiungete righe di sola "Verifica"**: la verifica è la vostra chiave nella riga della modifica;
+    - se è un **documento** che arriva a `1.0.0`, dopo di voi il Responsabile aggiunge `[spagnoli]` in fondo alla riga ([R4](#r4-creare-un-documento-norme-piani-analisi));
     - in basso, *Commit changes* (lasciate "Commit directly to the doc/… branch").
-6. Aspettate che il commento automatico torni ✅ con la nuova versione, poi *Review changes* → **Approve** → *Submit review*.
+6. Aspettate che il commento automatico torni ✅ con la nuova versione e **senza avvisi sul registro** (sotto *Da controllare*), poi *Review changes* → **Approve** → *Submit review*.
 7. Cliccate **Merge pull request** → *Confirm merge*. Fatto: il sito si aggiorna da solo e il bot salva il PDF accanto al `.tex`.
 
 ---
@@ -615,7 +630,7 @@ RTB/verbali/esterni/VE-2026-11-05.pdf           <- creato dal bot
 RTB/verbali/esterni/VE-2026-11-05-firmato.pdf   <- la scansione firmata, caricata da voi
 ```
 
-Poi il solito giro (branch, commit, push, PR). Il bot non tocca mai i file `-firmato.pdf`, e la PR non li segnala come errore. Sul sito, accanto al verbale compare il pulsante **Firmato** che apre la copia firmata.
+Poi il solito giro (branch, commit, push, PR). Il bot non tocca mai i file `-firmato.pdf`, e la PR non li segnala come errore. Sul sito, accanto al verbale compare il pulsante **Firmato** che apre la copia firmata. Maiuscole e minuscole non contano: va bene anche `-Firmato.pdf`.
 
 ---
 
@@ -699,7 +714,7 @@ RTB/documenti/esterni/glossario/
    ```
 
 3. Nella definizione potete usare `\emph{}`, `\textbf{}`, `\url{}` e `\glo{}` (se anche quel termine è nel Glossario: sul sito diventa un link). Niente tabelle, immagini o elenchi.
-4. Aggiungete una riga in cima al registro di `glossario.tex`, come per ogni documento.
+4. Aggiungete una riga in cima al registro di `glossario.tex`, come per ogni documento: quali voci avete aggiunto o cambiato, la vostra chiave e `--` per il Verificatore.
 
 **Marcare un termine nei documenti.** Dove il termine compare nel testo:
 
@@ -731,22 +746,31 @@ Come funzionano i controlli:
 
 ---
 
-## 5. Le versioni: la regola semplice
+## 5. Le versioni: le regole del registro
 
-La versione ha tre numeri `X.Y.Z` ed è **sempre quella della prima riga del registro**. Regola proposta (confermatela nelle Norme di Progetto):
+Il registro delle modifiche racconta la storia del documento: il committente lo legge e lo valuta. Le regole vengono dai suoi feedback ai gruppi degli anni scorsi (confermatele nelle Norme di Progetto).
 
-| Quando | Versione nuova | Esempio di riga |
+1. **Una riga = una modifica.** Dice **cosa** è cambiato e **dove** (*"Stesura della sezione 3, Gestione dei rischi"*, non *"Modifica"* o *"Fix"*), **chi** l'ha fatta (autore) e **chi** l'ha controllata (verificatore, **un'altra persona**).
+2. **La versione cambia solo dopo una verifica andata a buon fine.** Chi scrive mette `--` come verificatore, cioè "non ancora verificata". Il Verificatore, quando è tutto a posto, scrive la sua chiave al posto di `--` e mette la data di oggi; solo allora si fa il merge. Su `main` non ci sono mai `--`.
+3. **Niente righe di sola "Verifica"**, senza autore: la verifica è la chiave del verificatore nella riga della modifica.
+4. **`1.0.0` è l'approvazione**: la revisione con cui il documento è pronto per la consegna. Nei **documenti** il Responsabile si scrive in fondo alla riga, tra parentesi quadre (`[spagnoli]`). Nei **verbali** l'approvazione è la verifica della `1.0.0`; quelli esterni poi vanno firmati dall'azienda ([R14](#r14-caricare-un-verbale-esterno-firmato)).
+5. **Le date** sono quelle della verifica, in formato `AAAA-MM-GG`. Salendo nel registro non tornano mai indietro; nei verbali non sono mai prima della riunione.
+
+La versione ha tre numeri `X.Y.Z` ed è **sempre quella della prima riga del registro**:
+
+| Quando | Versione | Esempio di riga (dopo la verifica) |
 | --- | --- | --- |
-| Prima stesura | `0.1.0` | `\modifica{0.1.0}{2026-10-26}{guglielmo}{--}{Prima stesura}` |
-| Ogni modifica prima della verifica | `0.2.0`, `0.3.0`, … | `\modifica{0.2.0}{2026-10-27}{guglielmo}{--}{Aggiunta sezione 2}` |
-| Verifica e approvazione | `1.0.0` | `\modifica{1.0.0}{2026-10-28}{guglielmo}{corro}{Verifica e approvazione}` |
-| Modifica dopo l'approvazione | `1.1.0`, `1.2.0`, … | `\modifica{1.1.0}{2026-11-10}{biasini}{corro}{Aggiunti i casi d'uso}` |
-| Correzione piccolissima (refuso) | `1.1.1` | `\modifica{1.1.1}{2026-11-12}{biasini}{corro}{Corretto un refuso}` |
-| Nuova approvazione per una consegna successiva | `2.0.0` | `\modifica{2.0.0}{2027-03-01}{...}{...}{Approvazione per la PB}` |
+| Prima stesura | `0.1.0` | `\modifica{0.1.0}{2026-11-02}{guglielmo}{corro}{Prima stesura: struttura e introduzione}` |
+| Ogni parte nuova | `0.2.0`, `0.3.0`, … | `\modifica{0.2.0}{2026-11-05}{biasini}{cescobolla}{Stesura della sezione 2, Processi primari}` |
+| Correzione piccola | `0.2.1` | `\modifica{0.2.1}{2026-11-06}{biasini}{corro}{Corretti i refusi della sezione 2}` |
+| Approvazione | `1.0.0` | `\modifica{1.0.0}{2026-11-10}{guglielmo}{corro}{Revisione finale e approvazione del documento}[spagnoli]` |
+| Correzione dopo l'approvazione | `1.0.1` | `\modifica{1.0.1}{2026-11-12}{biasini}{corro}{Corretto un refuso nella sezione 1.2}` |
+| Parte nuova dopo l'approvazione | `1.1.0`, `1.2.0`, … | `\modifica{1.1.0}{2026-11-20}{mazzurana}{cescobolla}{Aggiunta la sezione 4, Verifica}` |
+| Nuova approvazione (consegna successiva) | `2.0.0` | `\modifica{2.0.0}{2027-03-01}{corro}{guglielmo}{Revisione per la PB e approvazione del documento}[spagnoli]` |
 
-Nei **documenti** chi approva si può indicare in fondo alla riga, tra parentesi quadre: `\modifica{1.0.0}{2026-11-19}{--}{--}{Approvazione documento}[spagnoli]` (vedi [R4](#r4-creare-un-documento-norme-piani-analisi)). Autore e verificatore possono essere più persone, separate da virgole.
+Un verbale di solito ha due righe: `0.1.0` *Stesura del verbale* e `1.0.0` con le correzioni chieste dal Verificatore ([R1](#r1-scrivere-un-verbale-interno), passo 4). Autore e verificatore possono essere più persone, separate da virgole.
 
-Cosa controlla la classe da sola: che la versione abbia tre numeri, che la data sia `AAAA-MM-GG`, che **ogni riga sia più vecchia di quella sopra** e che nessuna versione sia ripetuta. Se sbagliate, la compilazione si ferma e vi dice cosa correggere.
+**Cosa si controlla da solo.** La classe ferma la compilazione se la versione non ha tre numeri, se la data non è `AAAA-MM-GG` o se le versioni non scendono dall'alto in basso (la più recente in cima, ognuna una volta sola). Il commento automatico della PR (sotto *Da controllare*) segnala invece le righe con `--`, senza autore o con verificatore uguale all'autore, le date che tornano indietro o sono prima della riunione e le approvazioni dei documenti senza `[approvatore]`: non bloccano, ma vanno sistemate prima del merge.
 
 ---
 
@@ -771,8 +795,8 @@ Cosa controlla la classe da sola: che la versione abbia tre numeri, che la data 
 | `\oggetto{}` `\chiusura{}` | lettere | `\oggetto{Candidatura}` | riga "Oggetto:" e saluto finale |
 | `\capitolato{}` | tutti, facoltativo | `\capitolato{C2 -- NEXUM Concierge}` | riga "Capitolato" in copertina |
 | `\destinatari{}` | tutti, facoltativo | `\destinatari{A\newline B}` | cambia i destinatari predefiniti |
-| `\modifica{}{}{}{}{}` | verbali, documenti | `\modifica{0.1.0}{2026-10-26}{corro, biasini}{--}{Prima stesura}` | una riga del registro (la più recente in cima); più persone separate da virgole |
-| `\modifica{}{}{}{}{}[]` | solo documenti | `\modifica{1.0.0}{2026-11-19}{--}{--}{Approvazione}[spagnoli]` | come sopra, con l'approvatore tra `[ ]`: aggiunge la colonna *Approvatore* |
+| `\modifica{}{}{}{}{}` | verbali, documenti | `\modifica{0.1.0}{2026-10-26}{corro, biasini}{--}{Prima stesura}` | una riga del registro (la più recente in cima): versione, data, autore, verificatore (`--` finché non verifica), cosa è cambiato; più persone separate da virgole |
+| `\modifica{}{}{}{}{}[]` | solo documenti | `\modifica{1.0.0}{2026-11-19}{corro}{guglielmo}{Revisione finale e approvazione del documento}[spagnoli]` | come sopra, con l'approvatore tra `[ ]`: aggiunge la colonna *Approvatore* |
 
 **Nel testo** (dopo `\begin{document}`):
 
@@ -824,6 +848,17 @@ Dove leggere l'errore: nella **PR**, nel commento automatico (righe `file:riga: 
 | `Opzione "verbale=..." non valida` | Prima riga: `[verbale=interno]` o `[verbale=esterno]`. |
 | `\capitolato non va in dati-gruppo.tex` | Scrivetelo nel singolo documento ([R11](#r11-cambiare-i-dati-del-gruppo)). |
 | `L'approvatore [...] si usa solo nei documenti, non nei verbali` | Togliete la parte tra parentesi quadre in fondo alla riga `\modifica` del verbale. |
+
+**Avvisi sul registro** (nel commento della PR, sotto *Da controllare*; non bloccano, ma vanno sistemati prima del merge, [sezione 5](#5-le-versioni-le-regole-del-registro)):
+
+| Avviso (in breve) | Cosa fare |
+| --- | --- |
+| `la riga X non è ancora verificata (--)` | Normale finché il Verificatore non ha controllato: è lui che scrive la sua chiave al posto di `--`. |
+| `nella riga X manca l'autore` | Ogni riga è una modifica di qualcuno: niente righe di sola "Verifica". Mettete la verifica nella riga della modifica. |
+| `nella riga X chi verifica è anche autore` | Serve un'altra persona come verificatore. |
+| `la riga X è più vecchia della riga sotto` | Le date, salendo, non tornano indietro: correggete la data. |
+| `la riga X ha data ..., prima della riunione` | Un verbale non si scrive prima della riunione: correggete la data. |
+| `la riga X è un'approvazione ma manca l'approvatore` | Documento a `1.0.0`, `2.0.0`…: il Responsabile aggiunge `[spagnoli]` in fondo alla riga. |
 
 **Errori classici di LaTeX:**
 
@@ -932,7 +967,14 @@ Poi **cancellate i due file** dal computer: non servono più e la parte segreta 
 
 ## 9. Cosa è cambiato rispetto alla versione precedente
 
-**Ultime novità nel registro delle modifiche.**
+**Ultime novità: le regole delle versioni.**
+
+- Ogni riga del registro ha autore **e** verificatore: `--` vuol dire "non ancora verificata" e lo sostituisce il Verificatore prima del merge. Niente più righe di sola "Verifica"; la `1.0.0` è la revisione approvata, nei documenti con `[spagnoli]` ([sezione 5](#5-le-versioni-le-regole-del-registro)).
+- Il commento automatico della PR segnala i problemi del registro (righe non verificate, date che tornano indietro, approvazioni senza approvatore…): [sezione 7](#7-quando-qualcosa-va-storto).
+- I registri della Candidatura sono stati sistemati con queste regole.
+- Sul sito ogni PDF (documenti, verbali, copie firmate, diapositive) e ogni link esterno si apre in una **scheda nuova**, e la scheda mostra il titolo del documento invece del nome del file.
+
+**Novità precedenti nel registro delle modifiche.**
 
 - Autore e verificatore possono essere più persone, separate da virgole (anche in copertina compaiono i nomi completi).
 - Nei documenti si può indicare l'approvatore in fondo alla riga, tra parentesi quadre: la colonna *Approvatore* compare solo se usata ([R4](#r4-creare-un-documento-norme-piani-analisi)).

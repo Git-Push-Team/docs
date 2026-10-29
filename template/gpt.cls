@@ -113,7 +113,8 @@
 \color{gptinchiostro}
 
 \hypersetup{colorlinks=true,linkcolor=gptaccento,urlcolor=gptaccento,
-            citecolor=gptaccento}
+            citecolor=gptaccento,
+            pdfdisplaydoctitle=true}  % la scheda del browser mostra il titolo, non il nome del file
 
 
 % =====================================================================
@@ -471,7 +472,7 @@
 \def\gpt@righemodifiche{}
 %  Solo nei DOCUMENTI si può aggiungere in fondo, tra parentesi quadre,
 %  chi ha approvato (anche più persone, separate da virgole):
-%    \modifica{1.0.0}{2026-10-29}{--}{--}{Approvazione documento}[spagnoli]
+%    \modifica{1.0.0}{2026-10-29}{guglielmo}{corro}{Revisione finale e approvazione}[spagnoli]
 %  La colonna "Approvatore" compare solo se almeno una riga ce l'ha.
 \newif\ifgpt@conapprovatore
 \NewDocumentCommand{\modifica}{mmmmmo}{%
