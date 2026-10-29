@@ -339,11 +339,15 @@
       { \str_if_eq_p:Vn \l__gpt_tmp_tl { -- } }
       { \clist_if_in:NVF #1 \l__gpt_tmp_tl { \clist_gput_right:NV #1 \l__gpt_tmp_tl } }
   }
+% #1 e #2 possono contenere più chiavi separate da virgole: "spagnoli,corro"
 \cs_new_protected:Npn \gpt@registrapersone #1#2
   {
-    \__gpt_aggiungi_unico:Nn \g__gpt_autori_clist {#1}
-    \__gpt_aggiungi_unico:Nn \g__gpt_verificatori_clist {#2}
+    \clist_map_inline:nn {#1} { \__gpt_aggiungi_unico:Nn \g__gpt_autori_clist {##1} }
+    \clist_map_inline:nn {#2} { \__gpt_aggiungi_unico:Nn \g__gpt_verificatori_clist {##1} }
   }
+% controlla ogni chiave di un elenco separato da virgole
+\cs_new_protected:Npn \gpt@controllachiavi #1
+  { \clist_map_inline:nn {#1} { \gpt@controllachiave {##1} } }
 % stampa le persone nell'ordine di dati-gruppo.tex (poi gli eventuali esterni)
 \cs_new_protected:Npn \__gpt_stampa_persone:N #1
   {
@@ -465,16 +469,29 @@
 \def\gpt@dataversione{}
 \def\gpt@versioneletta{}
 \def\gpt@righemodifiche{}
-\newcommand{\modifica}[5]{%
+%  Solo nei DOCUMENTI si può aggiungere in fondo, tra parentesi quadre,
+%  chi ha approvato (anche più persone, separate da virgole):
+%    \modifica{1.0.0}{2026-10-29}{--}{--}{Approvazione documento}[spagnoli]
+%  La colonna "Approvatore" compare solo se almeno una riga ce l'ha.
+\newif\ifgpt@conapprovatore
+\NewDocumentCommand{\modifica}{mmmmmo}{%
   \gpt@controllaversione{#1}%
   \gpt@controlladata{#2}{#1}%
-  \gpt@controllachiave{#3}%
-  \gpt@controllachiave{#4}%
+  \gpt@controllachiavi{#3}%
+  \gpt@controllachiavi{#4}%
   \ifdefempty{\gpt@versione}{%
     \xdef\gpt@versione{\gpt@versioneletta}%
     \gdef\gpt@dataversione{#2}}{}%
   \gpt@registrapersone{#3}{#4}%
-  \gappto\gpt@righemodifiche{#1 & #2 & \nomi{#3} & \nomi{#4} & #5 \\}}
+  \IfValueTF{#6}{%
+    \ifgpt@documento\else
+      \ClassError{gpt}{L'approvatore [#6] si usa solo nei documenti, non nei
+        verbali: togliete la parte tra parentesi quadre}{}%
+    \fi
+    \gpt@controllachiavi{#6}%
+    \global\gpt@conapprovatoretrue
+    \gappto\gpt@righemodifiche{\gpt@rigamodifica{#1}{#2}{#3}{#4}{#5}{#6}}}{%
+    \gappto\gpt@righemodifiche{\gpt@rigamodifica{#1}{#2}{#3}{#4}{#5}{--}}}}
 
 
 % =====================================================================
@@ -652,15 +669,35 @@
 \newcommand{\gpt@intestregistro}{%
   \gpt@intest{Versione} & \gpt@intest{Data} & \gpt@intest{Autore}
     & \gpt@intest{Verificatore} & \gpt@intest{Descrizione} \\}
+\newcommand{\gpt@intestregistroapprovatore}{%
+  \gpt@intest{Versione} & \gpt@intest{Data} & \gpt@intest{Autore}
+    & \gpt@intest{Verificatore} & \gpt@intest{Descrizione}
+    & \gpt@intest{Approvatore} \\}
 \newcommand{\gpt@registro}{%
   \pdfbookmark[1]{Registro delle modifiche}{gpt-registro}%
   \section*{Registro delle modifiche}
   \begingroup
   \gpt@primalt
   \setlength{\LTpost}{0pt}%
-  \begin{longtable}{@{}p{1.6cm}p{2cm}>{\raggedright\arraybackslash}p{3.3cm}
+  \ifgpt@conapprovatore
+    % sei colonne: carattere un po' più piccolo per farle stare
+    \small
+    \let\gpt@intestregistro\gpt@intestregistroapprovatore
+    \def\gpt@rigamodifica##1##2##3##4##5##6{%
+      ##1 & ##2 & \nomi{##3} & \nomi{##4} & ##5 & \nomi{##6} \\}%
+    \def\gpt@colonneregistro{@{}p{1.35cm}p{1.8cm}>{\raggedright\arraybackslash}p{2.45cm}
+      >{\raggedright\arraybackslash}p{2.45cm}
+      >{\raggedright\arraybackslash}p{\dimexpr\linewidth-10.5cm-10\tabcolsep\relax}
+      >{\raggedright\arraybackslash}p{2.45cm}@{}}%
+  \else
+    \def\gpt@rigamodifica##1##2##3##4##5##6{%
+      ##1 & ##2 & \nomi{##3} & \nomi{##4} & ##5 \\}%
+    \def\gpt@colonneregistro{@{}p{1.6cm}p{2cm}>{\raggedright\arraybackslash}p{3.3cm}
       >{\raggedright\arraybackslash}p{3.3cm}
-      >{\raggedright\arraybackslash}p{\dimexpr\linewidth-10.2cm-8\tabcolsep\relax}@{}}
+      >{\raggedright\arraybackslash}p{\dimexpr\linewidth-10.2cm-8\tabcolsep\relax}@{}}%
+  \fi
+  \edef\gpt@iniziotabella{\noexpand\begin{longtable}{\unexpanded\expandafter{\gpt@colonneregistro}}}%
+  \gpt@iniziotabella
     \toprule\gpt@intestregistro\midrule\endfirsthead
     \toprule\gpt@intestregistro\midrule\endhead
     \bottomrule\endfoot

@@ -352,6 +352,18 @@ Nomi suggeriti: `norme-di-progetto`, `piano-di-progetto`, `piano-di-qualifica`, 
 | `\responsabile{...}` | la chiave del Responsabile, che approva il documento |
 | `\modifica{0.1.0}{...}` | la prima riga del registro |
 
+**Registro dei documenti: più persone e approvatore.**
+
+- In autore e verificatore potete mettere **più chiavi separate da virgole**: `\modifica{0.2.0}{2026-11-10}{mazzurana, biasini}{cescobolla}{Stesura sezione 2}`. In copertina ognuno compare una volta sola tra *Redattori* e *Verificatori*.
+- Solo nei documenti, chi **approva** si scrive **in fondo alla riga, tra parentesi quadre** (anche più persone):
+
+  ```latex
+  \modifica{1.0.0}{2026-11-19}{--}{--}{Approvazione documento}[spagnoli]
+  \modifica{0.3.0}{2026-11-17}{mazzurana}{corro}{Stesura sezione 3}
+  ```
+
+  La colonna **Approvatore** compare nel registro solo se almeno una riga ha le parentesi quadre; nelle altre righe c'è un trattino. Se non le usate mai, il registro resta a cinque colonne. Nei verbali l'approvatore non si usa: la compilazione si ferma e ve lo dice.
+
 **Si fanno da soli**: copertina (con versione, data dell'ultima modifica, **redattori e verificatori presi dal registro**), registro delle modifiche, **indice**, elenco delle figure e delle tabelle (solo se ce ne sono), intestazioni e numeri di pagina.
 
 **3. Scrivete** con `\section{...}`, `\subsection{...}`, `\subsubsection{...}`: compaiono da sole nell'indice.
@@ -732,6 +744,8 @@ La versione ha tre numeri `X.Y.Z` ed è **sempre quella della prima riga del reg
 | Correzione piccolissima (refuso) | `1.1.1` | `\modifica{1.1.1}{2026-11-12}{biasini}{corro}{Corretto un refuso}` |
 | Nuova approvazione per una consegna successiva | `2.0.0` | `\modifica{2.0.0}{2027-03-01}{...}{...}{Approvazione per la PB}` |
 
+Nei **documenti** chi approva si può indicare in fondo alla riga, tra parentesi quadre: `\modifica{1.0.0}{2026-11-19}{--}{--}{Approvazione documento}[spagnoli]` (vedi [R4](#r4-creare-un-documento-norme-piani-analisi)). Autore e verificatore possono essere più persone, separate da virgole.
+
 Cosa controlla la classe da sola: che la versione abbia tre numeri, che la data sia `AAAA-MM-GG`, che **ogni riga sia più vecchia di quella sopra** e che nessuna versione sia ripetuta. Se sbagliate, la compilazione si ferma e vi dice cosa correggere.
 
 ---
@@ -757,7 +771,8 @@ Cosa controlla la classe da sola: che la versione abbia tre numeri, che la data 
 | `\oggetto{}` `\chiusura{}` | lettere | `\oggetto{Candidatura}` | riga "Oggetto:" e saluto finale |
 | `\capitolato{}` | tutti, facoltativo | `\capitolato{C2 -- NEXUM Concierge}` | riga "Capitolato" in copertina |
 | `\destinatari{}` | tutti, facoltativo | `\destinatari{A\newline B}` | cambia i destinatari predefiniti |
-| `\modifica{}{}{}{}{}` | verbali, documenti | `\modifica{0.1.0}{2026-10-26}{corro}{--}{Prima stesura}` | una riga del registro (la più recente in cima) |
+| `\modifica{}{}{}{}{}` | verbali, documenti | `\modifica{0.1.0}{2026-10-26}{corro, biasini}{--}{Prima stesura}` | una riga del registro (la più recente in cima); più persone separate da virgole |
+| `\modifica{}{}{}{}{}[]` | solo documenti | `\modifica{1.0.0}{2026-11-19}{--}{--}{Approvazione}[spagnoli]` | come sopra, con l'approvatore tra `[ ]`: aggiunge la colonna *Approvatore* |
 
 **Nel testo** (dopo `\begin{document}`):
 
@@ -808,6 +823,7 @@ Dove leggere l'errore: nella **PR**, nel commento automatico (righe `file:riga: 
 | `\uso: scrivete interno oppure esterno` | Solo queste due parole. |
 | `Opzione "verbale=..." non valida` | Prima riga: `[verbale=interno]` o `[verbale=esterno]`. |
 | `\capitolato non va in dati-gruppo.tex` | Scrivetelo nel singolo documento ([R11](#r11-cambiare-i-dati-del-gruppo)). |
+| `L'approvatore [...] si usa solo nei documenti, non nei verbali` | Togliete la parte tra parentesi quadre in fondo alla riga `\modifica` del verbale. |
 
 **Errori classici di LaTeX:**
 
@@ -916,7 +932,13 @@ Poi **cancellate i due file** dal computer: non servono più e la parte segreta 
 
 ## 9. Cosa è cambiato rispetto alla versione precedente
 
-**Ultima novità: le cartelle per milestone.**
+**Ultime novità nel registro delle modifiche.**
+
+- Autore e verificatore possono essere più persone, separate da virgole (anche in copertina compaiono i nomi completi).
+- Nei documenti si può indicare l'approvatore in fondo alla riga, tra parentesi quadre: la colonna *Approvatore* compare solo se usata ([R4](#r4-creare-un-documento-norme-piani-analisi)).
+- Copertine senza ripetizioni: la versione dei documenti è sotto il titolo, l'uso nella scritta in alto.
+
+**Le cartelle per milestone.**
 
 - I documenti stanno in `Candidatura/`, `RTB/` e `PB/`, ognuna con `documenti/` e `verbali/`, a loro volta divise in `interni/` ed `esterni/` ([sezione 2](#2-mappa-del-repository-cosa-si-tocca-e-cosa-no)). Le vecchie cartelle `verbali/`, `documenti/`, `lettere/` e `candidatura/` non ci sono più; i tre verbali di ottobre sono in `Candidatura/verbali/interni/`.
 - Dopo il merge il bot **salva il PDF accanto a ogni `.tex`** cambiato. Serve la configurazione della [sezione 8](#8-impostazioni-da-fare-una-volta-sola-amministratori).
