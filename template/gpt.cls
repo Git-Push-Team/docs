@@ -335,10 +335,17 @@
 \cs_new_protected:Npn \__gpt_aggiungi_unico:Nn #1#2
   {
     \tl_set:Nx \l__gpt_tmp_tl { \tl_trim_spaces:n {#2} }
-    \bool_lazy_or:nnF
-      { \tl_if_empty_p:N \l__gpt_tmp_tl }
-      { \str_if_eq_p:Vn \l__gpt_tmp_tl { -- } }
-      { \clist_if_in:NVF #1 \l__gpt_tmp_tl { \clist_gput_right:NV #1 \l__gpt_tmp_tl } }
+    \tl_if_empty:NF \l__gpt_tmp_tl
+      {
+        \str_if_eq:VnF \l__gpt_tmp_tl { -- }
+          {
+            \str_if_eq:VnF \l__gpt_tmp_tl { - }
+              {
+                \clist_if_in:NVF #1 \l__gpt_tmp_tl 
+                  { \clist_gput_right:NV #1 \l__gpt_tmp_tl }
+              }
+          }
+      }
   }
 % #1 e #2 possono contenere più chiavi separate da virgole: "spagnoli,corro"
 \cs_new_protected:Npn \gpt@registrapersone #1#2
