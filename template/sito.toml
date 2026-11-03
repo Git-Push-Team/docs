@@ -31,11 +31,11 @@ descrizione = ""
 #  es.  link = [ { testo = "Proof of Concept", url = "https://..." } ]
 # ---------------------------------------------------------------------
 [milestone.Candidatura]
-stato = "in corso"
+stato = "conclusa"
 link = []
 
 [milestone.RTB]
-stato = "da iniziare"
+stato = "in corso"
 link = []
 
 [milestone.PB]
