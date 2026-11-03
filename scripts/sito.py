@@ -6,8 +6,9 @@ a mano. Cosa mostra la pagina:
 
   - in alto il "grafo" delle milestone (Candidatura -> RTB -> PB), con un
     pallino per ogni verbale, che porta alle sezioni;
-  - la milestone in corso: lettera di presentazione in evidenza, documenti
-    esterni e interni con l'anteprima della prima pagina, verbali;
+  - la milestone in corso: lettera di presentazione in evidenza (con
+    l'anteprima della prima pagina), poi documenti e verbali, esterni e
+    interni, in scaletta dal più recente (i verbali col codice VE-/VI-data);
   - le diapositive (PDF in <Milestone>/diapositive/);
   - l'archivio delle milestone precedenti;
   - il gruppo (membri, capitolato) e i contatti;
@@ -165,15 +166,19 @@ def scheda_documento(d, site: Path, grande: bool = False) -> str:
             f'<span class="meta">{"".join(meta)}</span>{azione}</span></a>')
 
 
-def riga_verbale(d, site: Path, firmato: str) -> str:
+def riga_verbale(d, site: Path, firmato: str, etichetta: str = "") -> str:
+    """Una riga della scaletta: data, nome (link al PDF), copia firmata, versione.
+    Per i verbali il nome è il codice del file (VE-AAAA-MM-GG / VI-AAAA-MM-GG),
+    con il titolo come suggerimento; per i documenti è il titolo."""
     giorno, mese = data_breve(d.data)
+    etichetta = etichetta or d.titolo
     href = d.pdf_sito.relative_to(site).as_posix()
     firma = (f'<a class="firmato" href="{e(firmato)}" {NUOVA_SCHEDA} title="Copia firmata dal proponente">'
              "Firmato</a>") if firmato else ""
     ver = f'<span class="ver">v{e(d.versione)}</span>' if d.versione else ""
-    return (f'<li data-cerca="{testo_cerca(d.titolo, d.data, data_lunga(d.data), d.milestone)}">'
+    return (f'<li data-cerca="{testo_cerca(etichetta, d.titolo, d.data, data_lunga(d.data), d.milestone)}">'
             f'<time datetime="{e(d.data)}"><b>{e(giorno)}</b><span>{e(mese)}</span></time>'
-            f'<a class="titolo" href="{e(href)}" {NUOVA_SCHEDA}>{e(d.titolo)}</a>'
+            f'<a class="titolo" href="{e(href)}" {NUOVA_SCHEDA} title="{e(d.titolo)}">{e(etichetta)}</a>'
             f'<span class="coda">{firma}{ver}</span></li>')
 
 
@@ -193,19 +198,24 @@ def blocco_milestone(chiave: str, voci: list, site: Path, firmati: dict,
         parti.append(f'<div class="evidenza">{in_evidenza}'
                      f'{f"<div class=pulsanti>{pulsanti}</div>" if pulsanti else ""}</div>')
 
+    colonne_documenti = []
     for visibilita, titolo in (("esterni", "Documenti esterni"), ("interni", "Documenti interni")):
         gruppo = sorted((d for d in documenti if d.visibilita == visibilita),
-                        key=lambda d: d.titolo.lower())
+                        key=lambda d: (d.data, d.titolo.lower()), reverse=True)
         if gruppo:
-            parti.append(f'<div class="gruppo"><h3>{titolo}</h3><div class="schede">'
-                         f'{"".join(scheda_documento(d, site) for d in gruppo)}</div></div>')
+            righe = "".join(riga_verbale(d, site, "") for d in gruppo)
+            colonne_documenti.append(f'<div class="gruppo"><h3>{titolo} <small>{len(gruppo)}</small></h3>'
+                                     f'<ol class="verbali">{righe}</ol></div>')
+    if colonne_documenti:
+        parti.append(f'<div class="colonne">{"".join(colonne_documenti)}</div>')
 
     colonne = []
     for visibilita, titolo in (("esterni", "Verbali esterni"), ("interni", "Verbali interni")):
         gruppo = sorted((d for d in voci if d.categoria == "verbali" and d.visibilita == visibilita),
                         key=lambda d: d.data, reverse=True)
         if gruppo:
-            righe = "".join(riga_verbale(d, site, firmati.get(d.sorgente, "")) for d in gruppo)
+            righe = "".join(riga_verbale(d, site, firmati.get(d.sorgente, ""), d.sorgente.stem)
+                            for d in gruppo)
             colonne.append(f'<div class="gruppo"><h3>{titolo} <small>{len(gruppo)}</small></h3>'
                            f'<ol class="verbali">{righe}</ol></div>')
     if colonne:

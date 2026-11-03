@@ -76,7 +76,7 @@ Su Linux, TeX Live si installa così:
 sudo apt install latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-lang-italian texlive-pictures poppler-utils
 ```
 
-(`poppler-utils` serve solo a vedere, nel sito di prova, l'anteprima della prima pagina dei documenti. Su Windows e macOS se ne può fare a meno: al posto dell'anteprima compare un riquadro con le iniziali. Sul sito vero le anteprime ci sono sempre.)
+(`poppler-utils` serve solo a vedere, nel sito di prova, l'anteprima della prima pagina della lettera di presentazione e delle diapositive. Su Windows e macOS se ne può fare a meno: al posto dell'anteprima compare un riquadro con le iniziali. Sul sito vero le anteprime ci sono sempre.)
 
 > ⚠️ Su Windows usate **TeX Live**, non MiKTeX: TeX Live include già Perl, che serve a `latexmk`.
 > Se usate MiKTeX dovete installare anche [Strawberry Perl](https://strawberryperl.com/).
@@ -641,7 +641,7 @@ Il sito si costruisce da solo dai documenti. Le poche cose che nei documenti non
 **Cosa mostra il sito**, dall'alto:
 
 1. il **grafo delle milestone**: Candidatura → RTB → PB, con un pallino per ogni verbale. Cliccando una milestone si va ai suoi documenti;
-2. la **milestone in corso**: la lettera di presentazione in evidenza, poi documenti esterni e interni con l'anteprima della prima pagina, poi i verbali esterni e interni;
+2. la **milestone in corso**: la lettera di presentazione in evidenza (con l'anteprima della prima pagina), poi documenti e verbali, esterni e interni, in scaletta dal più recente: i documenti con il titolo, i verbali con il loro codice (`VE-2026-10-26`, `VI-2026-10-29`; passando col mouse compare il titolo);
 3. le **diapositive**, se ce ne sono;
 4. l'**archivio**: le altre milestone con documenti, ognuna in un riquadro che si apre;
 5. **il gruppo** (membri, capitolato) e i **contatti**.
