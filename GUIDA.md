@@ -31,6 +31,7 @@ Non serve conoscere LaTeX né Git: seguite le ricette e copiate i comandi così 
     - [R14. Caricare un verbale esterno firmato](#r14-caricare-un-verbale-esterno-firmato)
     - [R15. Aggiornare il sito: milestone, diapositive, gruppo](#r15-aggiornare-il-sito-milestone-diapositive-gruppo)
     - [R16. Il Glossario: crearlo, aggiungere termini, marcarli](#r16-il-glossario-crearlo-aggiungere-termini-marcarli)
+    - [R17. Segnare le ore (comando `/ore`)](#r17-segnare-le-ore-comando-ore)
 5. [Le versioni: le regole del registro](#5-le-versioni-le-regole-del-registro)
 6. [Prontuario dei comandi](#6-prontuario-dei-comandi)
 7. [Quando qualcosa va storto](#7-quando-qualcosa-va-storto)
@@ -76,7 +77,7 @@ Su Linux, TeX Live si installa così:
 sudo apt install latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-lang-italian texlive-pictures poppler-utils
 ```
 
-(`poppler-utils` serve solo a vedere, nel sito di prova, l'anteprima della prima pagina della lettera di presentazione e delle diapositive. Su Windows e macOS se ne può fare a meno: al posto dell'anteprima compare un riquadro con le iniziali. Sul sito vero le anteprime ci sono sempre.)
+(`poppler-utils` serve solo a vedere, nel sito di prova, l'anteprima della prima pagina dei documenti. Su Windows e macOS se ne può fare a meno: al posto dell'anteprima compare un riquadro con le iniziali. Sul sito vero le anteprime ci sono sempre.)
 
 > ⚠️ Su Windows usate **TeX Live**, non MiKTeX: TeX Live include già Perl, che serve a `latexmk`.
 > Se usate MiKTeX dovete installare anche [Strawberry Perl](https://strawberryperl.com/).
@@ -641,7 +642,7 @@ Il sito si costruisce da solo dai documenti. Le poche cose che nei documenti non
 **Cosa mostra il sito**, dall'alto:
 
 1. il **grafo delle milestone**: Candidatura → RTB → PB, con un pallino per ogni verbale. Cliccando una milestone si va ai suoi documenti;
-2. la **milestone in corso**: la lettera di presentazione in evidenza (con l'anteprima della prima pagina), poi documenti e verbali, esterni e interni, in scaletta dal più recente: i documenti con il titolo, i verbali con il loro codice (`VE-2026-10-26`, `VI-2026-10-29`; passando col mouse compare il titolo);
+2. la **milestone in corso**: la lettera di presentazione in evidenza, poi documenti esterni e interni con l'anteprima della prima pagina, poi i verbali esterni e interni;
 3. le **diapositive**, se ce ne sono;
 4. l'**archivio**: le altre milestone con documenti, ognuna in un riquadro che si apre;
 5. **il gruppo** (membri, capitolato) e i **contatti**.
@@ -743,6 +744,27 @@ Come funzionano i controlli:
 - **per ora gli avvisi non bloccano la PR.** Quando il Glossario è a regime, per esempio prima dell'RTB, un Amministratore può renderli bloccanti: in `scripts/glossario.py` cambia `BLOCCANTE = False` in `BLOCCANTE = True`. Da quel momento termini mancanti, voci ripetute e Glossari doppi rendono rossa la PR.
 
 **Sul sito**: appena il Glossario esiste, nella barra in alto compare **Glossario**. È una pagina con le lettere, le voci in ordine, la ricerca e il link al PDF. Ogni voce ha il suo indirizzo, per esempio `…/glossario.html#pull-request`: si può mandare il link a un termine preciso.
+
+---
+
+### R17. Segnare le ore (comando `/ore`)
+
+Le ore di lavoro si registrano **nei commenti** della issue su cui avete lavorato (o della PR che la chiude), mentre lavorate:
+
+| Commento | Significato |
+| --- | --- |
+| `/ore 2` | 2 ore, nel ruolo che avete nello sprint in corso |
+| `/ore 1,5 verificatore` | 1 ora e mezza da Verificatore |
+| `/ore 1h30 analista 2026-11-05` | lavoro fatto in un altro giorno |
+| `/ore 45m` | 45 minuti |
+
+- Le ore sono di **chi scrive il commento**: nessuno le segna per un altro. Più righe `/ore` nello stesso commento vanno bene.
+- Il bot mette 👍 se il comando è valido, 😕 se c'è un errore, e tiene aggiornato un commento di riepilogo nella issue. Nel Project il campo *Ore effettive* della issue è il totale.
+- **Per correggere** modificate o cancellate il vostro commento: tutto si ricalcola.
+- **Verificatore**: scrivete `/ore 1 verificatore` in un commento della PR (nella conversazione, non nel riquadro della review): le ore vanno alla issue che la PR chiude con `Closes #numero`.
+- **Riunioni**: ogni riunione ha la sua issue (modello **Riunione**); dopo la riunione ogni partecipante ci scrive `/ore 1,5`.
+
+Il ruolo di ognuno nello sprint, gli obiettivi e il preventivo sono nel file `gestione/pianificazione.toml` del repository [`.github`](https://github.com/Git-Push-Team/.github); il cruscotto con tutti i totali si vede, da membri, sulla pagina dell'organizzazione.
 
 ---
 
