@@ -9,7 +9,8 @@ a mano. Cosa mostra la pagina:
   - la milestone in corso: lettera di presentazione in evidenza (con
     l'anteprima della prima pagina), poi documenti e verbali, esterni e
     interni, in scaletta dal più recente (i verbali col codice VE-/VI-data);
-  - le diapositive (PDF in <Milestone>/diapositive/);
+  - le diapositive (PDF in <Milestone>/diapositive/), con i diari di bordo
+    indicati dal codice DDB-data;
   - l'archivio delle milestone precedenti;
   - il gruppo (membri, capitolato) e i contatti;
   - se c'è il Glossario, una pagina a parte: glossario.html.
@@ -114,15 +115,6 @@ def data_lunga(iso: str) -> str:
         return iso
 
 
-def data_breve(iso: str) -> tuple[str, str]:
-    """('19', 'ott 2026') per la colonna data dei verbali."""
-    try:
-        a, m, g = (int(x) for x in iso.split("-"))
-        return str(g), f"{MESI[m - 1][:3]} {a}"
-    except (ValueError, IndexError):
-        return iso, ""
-
-
 def titolo_da_nome(nome: str) -> str:
     """'presentazione-rtb' -> 'Presentazione RTB'; 'diario-2026-11-10' ->
     'Diario di bordo, 10 novembre 2026'."""
@@ -167,17 +159,15 @@ def scheda_documento(d, site: Path, grande: bool = False) -> str:
 
 
 def riga_verbale(d, site: Path, firmato: str, etichetta: str = "") -> str:
-    """Una riga della scaletta: data, nome (link al PDF), copia firmata, versione.
+    """Una riga della scaletta: nome (link al PDF), copia firmata, versione.
     Per i verbali il nome è il codice del file (VE-AAAA-MM-GG / VI-AAAA-MM-GG),
     con il titolo come suggerimento; per i documenti è il titolo."""
-    giorno, mese = data_breve(d.data)
     etichetta = etichetta or d.titolo
     href = d.pdf_sito.relative_to(site).as_posix()
     firma = (f'<a class="firmato" href="{e(firmato)}" {NUOVA_SCHEDA} title="Copia firmata dal proponente">'
              "Firmato</a>") if firmato else ""
     ver = f'<span class="ver">v{e(d.versione)}</span>' if d.versione else ""
     return (f'<li data-cerca="{testo_cerca(etichetta, d.titolo, d.data, data_lunga(d.data), d.milestone)}">'
-            f'<time datetime="{e(d.data)}"><b>{e(giorno)}</b><span>{e(mese)}</span></time>'
             f'<a class="titolo" href="{e(href)}" {NUOVA_SCHEDA} title="{e(d.titolo)}">{e(etichetta)}</a>'
             f'<span class="coda">{firma}{ver}</span></li>')
 
@@ -350,10 +340,10 @@ def scrivi(documenti: list, root: Path, site: Path, glossario=None) -> None:
         if diari:
             righe = []
             for dd in sorted(diari, key=lambda x: x["data"], reverse=True):
-                giorno, mese = data_breve(dd["data"])
-                righe.append(f'<li data-cerca="{testo_cerca(dd["titolo"], dd["milestone"])}">'
-                             f'<time datetime="{e(dd["data"])}"><b>{e(giorno)}</b><span>{e(mese)}</span></time>'
-                             f'<a class="titolo" href="{e(dd["href"])}" {NUOVA_SCHEDA}>{e(dd["titolo"])}</a>'
+                # sul sito solo il codice DDB-AAAA-MM-GG; il titolo resta come suggerimento
+                codice = f'DDB-{dd["data"]}' if dd["data"] else dd["titolo"]
+                righe.append(f'<li data-cerca="{testo_cerca(codice, dd["titolo"], dd["data"], dd["milestone"])}">'
+                             f'<a class="titolo" href="{e(dd["href"])}" {NUOVA_SCHEDA} title="{e(dd["titolo"])}">{e(codice)}</a>'
                              f'<span class="coda"><span class="ver">{e(dd["milestone"])}</span></span></li>')
             parti.append(f'<div class="gruppo"><h3>Diari di bordo <small>{len(diari)}</small></h3>'
                          f'<ol class="verbali">{"".join(righe)}</ol></div>')
@@ -780,16 +770,13 @@ h3 small { font: 600 14px var(--testo); color: var(--tenue); margin-left: 6px; }
             border: 1px solid var(--linea); background: var(--superficie); transition: border-color .2s; }
 .pulsante:hover { border-color: var(--blu); color: var(--blu); }
 
-/* verbali: un registro con la data a sinistra */
+/* verbali, documenti e diari: un registro a righe */
 .colonne { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 0 44px; }
 .verbali { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--linea); }
-.verbali li { display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: 14px;
+.verbali li { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 14px;
               padding: 12px 6px; border-bottom: 1px solid var(--linea); position: relative;
               transition: background .2s; }
 .verbali li:hover { background: color-mix(in srgb, var(--blu-chiaro) 55%, transparent); }
-.verbali time { display: grid; line-height: 1.05; }
-.verbali time b { font: 700 24px var(--display); letter-spacing: -0.02em; }
-.verbali time span { font-size: 13px; color: var(--tenue); }
 .verbali .titolo { text-decoration: none; }
 .verbali .titolo::after { content: ""; position: absolute; inset: 0; }
 .verbali .titolo:hover { color: var(--blu); }
@@ -875,8 +862,6 @@ dl.glossario { margin: 0; border-top: 1px solid var(--linea); }
   .scheda.grande .titolo { font-size: 21px; }
   .schede { grid-template-columns: repeat(2, 1fr); gap: 22px 16px; }
   .colonne { grid-template-columns: 1fr; }
-  .verbali li { grid-template-columns: 52px 1fr; }
-  .coda { grid-column: 2; }
 }
 """
 
