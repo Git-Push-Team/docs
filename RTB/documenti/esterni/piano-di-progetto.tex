@@ -24,6 +24,7 @@
 % La riga più recente va messa in cima.
 %  Quando il Responsabile approva, aggiunge lui IN CIMA questa riga:
 %  \modifica{1.0.0}{2026-10-23}{corro}{--}{Approvazione}
+\modifica{0.2.1}{2026-11-07}{spagnoli}{corro}{Aggiunte parole nel Glossario}
 \modifica{0.2.0}{2026-11-04}{spagnoli, guglielmo}{corro}{Stesura della sezione Pianificazione e dello sprint 1}
 \modifica{0.1.0}{2026-11-04}{spagnoli, guglielmo}{corro}{Prima stesura del documento}
 
@@ -67,15 +68,15 @@ Per pianificare il lavoro in modo chiaro e puntuale, garantendo il controllo dei
 \item Identificazione dei rischi potenziali e pianificazione delle misure di mitigazione atte a minimizzarne l'impatto;
 \item Definizione del modello di sviluppo adottato per la realizzazione del software;
 \item Stime temporali ed economiche, attraverso un calendario di massima e un'analisi dei costi preventivati;
-\item Pianificazione dettagliata delle attività da svolgere all'interno dei vari periodi di lavoro (sprint);
+\item Pianificazione dettagliata delle attività da svolgere all'interno dei vari periodi di lavoro (\glo[Sprint]{\textit{sprint}});
 \item Rendicontazione economica e stesura dei consuntivi di periodo per monitorare il budget speso.
 \end{itemize}
 
 \subsection{Scopo del prodotto}
-Il progetto, basato sul capitolato C2 denominato \textit{NEXUM Concierge}, ha come obiettivo l'introduzione di un assistente conversazionale all'interno della piattaforma aziendale NEXUM. Tale piattaforma, realizzata come \textit{Progressive Web App} (PWA), è pensata per avvicinare aziende e personale, semplificando le attività quotidiane legate alla comunicazione e alla gestione dei processi HR.
+Il progetto, basato sul \glo{capitolato} C2 denominato \textit{NEXUM Concierge}, ha come obiettivo l'introduzione di un assistente conversazionale all'interno della piattaforma aziendale NEXUM. Tale piattaforma, realizzata come \glo[PWA]{\textit{Progressive Web App}} (PWA), è pensata per avvicinare aziende e personale, semplificando le attività quotidiane legate alla comunicazione e alla gestione dei processi \glo{HR}.
 
 L'assistente permetterà agli utenti di cercare informazioni, comprendere le procedure aziendali e accedere ai servizi utilizzando direttamente il linguaggio naturale. Il \textit{Concierge} si occuperà di collegare la conoscenza aziendale alle funzionalità operative, mantenendo il contesto del dialogo e coordinando le interrogazioni alle fonti documentali o l'inoltro di operazioni tramite i servizi applicativi.
-Per garantire un approccio graduale e verificabile, il dominio del \textit{Minimum Viable Product} (MVP) sarà focalizzato unicamente sull'area ferie e permessi.
+Per garantire un approccio graduale e verificabile, il dominio del \glo[MVP]{\textit{Minimum Viable Product}} (MVP) sarà focalizzato unicamente sull'area ferie e permessi.
 
 \subsection{Glossario}
 Al fine di evitare ambiguità e incomprensioni, e per massimizzare la chiarezza formale del testo, i termini tecnici, gli acronimi e le parole che necessitano di una definizione rigorosa sono raccolti all'interno del documento \textit{Glossario}. Tali termini sono contrassegnati all'interno dei testi di progetto tramite l'apposito pedice \ped{G}.
@@ -103,9 +104,9 @@ Al fine di evitare ambiguità e incomprensioni, e per massimizzare la chiarezza 
 L'analisi dei rischi individua in anticipo le situazioni che possono
 compromettere il rispetto dei tempi, dei costi o della qualità, e stabilisce
 per ognuna come accorgersene e come reagire. Il gruppo la svolge in
-quattro passi, ripetuti a ogni \textit{sprint}:
+quattro passi, ripetuti a ogni \glo[Sprint]{\textit{sprint}}:
 \begin{enumerate}
-  \item \textbf{identificazione}: i rischi sono ricavati dal capitolato C2,
+  \item \textbf{identificazione}: i rischi sono ricavati dal \glo{capitolato} C2,
         dall'incontro con il \glo{Proponente} del 2026-10-26 e
         dall'esperienza dei gruppi degli anni precedenti;
   \item \textbf{analisi}: a ogni rischio sono assegnati una probabilità e un
@@ -113,7 +114,7 @@ quattro passi, ripetuti a ogni \textit{sprint}:
   \item \textbf{pianificazione}: per ogni rischio si definiscono gli
         indicatori che ne segnalano l'insorgere, le misure preventive e il
         piano di contingenza da attuare se si verifica;
-  \item \textbf{controllo}: nella retrospettiva di fine \textit{sprint} il
+  \item \textbf{controllo}: nella retrospettiva di fine \glo[Sprint]{\textit{sprint}} il
         gruppo verifica quali rischi si sono presentati e quanto sono state
         efficaci le misure; il consuntivo di ogni periodo li riporta e
         questa sezione viene aggiornata di conseguenza.
@@ -144,8 +145,8 @@ cui il rischio viene sorvegliato.
     Basso & poco probabile nell'intero progetto &
       ritardo inferiore a un giorno, nessun effetto sui documenti o sul prodotto \\
     Medio & può presentarsi una o due volte nel progetto &
-      ritardo di alcuni giorni, recuperabile nello \textit{sprint} in corso o nel successivo \\
-    Alto & atteso in più \textit{sprint} &
+      ritardo di alcuni giorni, recuperabile nello \glo[Sprint]{\textit{sprint}} in corso o nel successivo \\
+    Alto & atteso in più \glo[Sprint]{\textit{sprint}} &
       mette a rischio una revisione (RTB o PB), il preventivo o un criterio di accettazione \\
     \bottomrule
   \end{tabularx}
@@ -179,14 +180,14 @@ ruolo, obiettivi raggiunti e scostamento delle stime.
 {Il capitolato richiede tecnologie che il gruppo non ha mai usato in un
  progetto: modelli linguistici (\glo{LLM}) e la loro integrazione,
  \glo{RAG} con \glo{Embedding} e ricerca vettoriale, il protocollo
- \glo{MCP}, e lo \glo{Stack tecnologico} suggerito da Eggon (Ruby on Rails,
- Angular, RubyLLM, servizi AWS). A queste si aggiungono gli strumenti del
- modo di lavorare (\LaTeX{}, GitHub Actions). Lo studio necessario rallenta
+ \glo{MCP}, e lo \glo{Stack tecnologico} suggerito da Eggon (\glo{Ruby on Rails},
+ \glo{Angular}, RubyLLM, servizi \glo{AWS}). A queste si aggiungono gli strumenti del
+ modo di lavorare (\LaTeX{}, \glo{GitHub Actions}). Lo studio necessario rallenta
  le prime attività e può portare a scelte poco consapevoli.}
 {Stime superate in modo sistematico sulle attività tecniche (scostamento
  delle stime); attività ferme in \textit{In Progress} oltre la metà dello
- \textit{sprint}; domande ricorrenti sullo stesso argomento nelle riunioni.}
-{Studio mirato a coppie nei primi \textit{sprint}, usando i \glo{PoC} come
+ \glo[Sprint]{\textit{sprint}}; domande ricorrenti sullo stesso argomento nelle riunioni.}
+{Studio mirato a coppie nei primi \glo[Sprint]{\textit{sprint}}, usando i \glo{PoC} come
  strumento di apprendimento.
  Brevi sessioni interne in cui chi ha studiato una tecnologia la presenta
  agli altri. Uso del materiale dei gruppi che hanno lavorato al capitolato
@@ -194,7 +195,7 @@ ruolo, obiettivi raggiunti e scostamento delle stime.
  incontri di approfondimento con il \glo{Proponente}, che si è reso
  disponibile.}
 {Affiancamento del membro in difficoltà da parte di chi conosce già la
- tecnologia; ridistribuzione delle attività nello \textit{sprint}; incontro
+ tecnologia; ridistribuzione delle attività nello \glo[Sprint]{\textit{sprint}}; incontro
  tecnico straordinario con Eggon; se necessario, adozione della soluzione
  più semplice tra quelle confrontate, concordata con il proponente.}
 
@@ -202,17 +203,17 @@ ruolo, obiettivi raggiunti e scostamento delle stime.
 {Un modello linguistico può dare risposte non supportate dalle fonti,
  citare la fonte sbagliata o non astenersi quando le informazioni non
  bastano; il suo comportamento non è deterministico e cambia con il
- \textit{prompt} e con il modello usato. Il capitolato chiede di dimostrare
+ \glo[Prompt]{\textit{prompt}} e con il modello usato. Il capitolato chiede di dimostrare
  proprio citazioni, astensione e chiarimenti: una qualità insufficiente fa
  fallire i criteri di accettazione dell'\glo{MVP}.}
 {Insieme di domande di prova con le risposte attese, costruito con Eggon a
  partire dal regolamento ferie e permessi e rieseguito a ogni modifica di
- \textit{prompt}, modello o catena di recupero delle fonti; metriche di
+ \glo[Prompt]{\textit{prompt}}, modello o catena di recupero delle fonti; metriche di
  qualità delle risposte (correttezza, citazioni corrette, astensioni
  corrette) definite nel Piano di Qualifica.}
 {Risposte vincolate alle fonti recuperate, con citazione obbligatoria e
- astensione esplicita sotto una soglia di pertinenza; \textit{prompt}
- versionati nel repository come il codice; separazione netta tra
+ astensione esplicita sotto una soglia di pertinenza; \glo[Prompt]{\textit{prompt}}
+ versionati nel \glo{repository} come il codice; separazione netta tra
  conoscenza documentale e dati personali, che arrivano solo dai servizi
  di NEXUM: il modello non calcola né inventa dati. Confronto
  sperimentale tra documento intero nel contesto e \glo{RAG}, come chiesto
@@ -225,7 +226,7 @@ ruolo, obiettivi raggiunti e scostamento delle stime.
  registrazione di una richiesta) passano dai servizi di NEXUM, secondo un
  contratto di integrazione definito da Eggon. Un contratto definito tardi,
  incompleto o modificato blocca lo sviluppo delle capacità operative, che
- sono il nucleo dell'MVP.}
+ sono il nucleo dell'\glo{MVP}.}
 {Stato del contratto di integrazione verificato a ogni incontro e
  riportato nei verbali esterni; attività bloccate in attesa di risposte
  del proponente.}
@@ -234,33 +235,33 @@ ruolo, obiettivi raggiunti e scostamento delle stime.
  componente dedicato, così che il passaggio dal simulatore al servizio
  reale non tocchi il resto del sistema; prove automatiche sul rispetto del
  contratto.}
-{Dimostrare il percorso completo dell'MVP sui simulatori conformi,
+{Dimostrare il percorso completo dell'\glo{MVP} sui simulatori conformi,
  documentando lo scostamento; ripianificare le attività dipendenti nello
- \textit{sprint} successivo.}
+ \glo[Sprint]{\textit{sprint}} successivo.}
 
 \rischio{RT4}{Scelta tecnologica inadeguata}{Media}{Medio}{Medio}
 {Il capitolato non impone tecnologie e chiede scelte motivate da
  esperimenti. Una scelta che si rivela inadatta (prestazioni, curva di
  apprendimento, compatibilità) dopo l'avvio dello sviluppo costringe a
  rifare parte del lavoro.}
-{Esiti dei PoC valutati rispetto a criteri di successo scritti prima di
+{Esiti dei \glo{PoC} valutati rispetto a criteri di successo scritti prima di
  iniziare; problemi ricorrenti con una libreria o un servizio durante lo
  sviluppo.}
 {Decisioni prese solo dopo esperimenti comparativi documentati; architettura a componenti con interfacce chiare (fornitore del
- modello, registro delle abilità MCP, accesso ai servizi), così che un
+ modello, registro delle abilità \glo{MCP}, accesso ai servizi), così che un
  componente si possa sostituire da solo.}
 {Sostituzione del solo componente interessato dietro la sua interfaccia e
- ripianificazione dello \textit{sprint}.}
+ ripianificazione dello \glo[Sprint]{\textit{sprint}}.}
 
 \rischio{RT5}{Malfunzionamenti di strumenti e infrastruttura}{Media}{Basso}{Basso}
-{Servizi esterni del modo di lavorare (GitHub, GitHub Actions) in ritardo o
+{Servizi esterni del modo di lavorare (GitHub, \glo{GitHub Actions}) in ritardo o
  non disponibili, errori nella compilazione automatica dei documenti,
  guasti dei computer personali o perdita di lavoro non salvato.}
 {Esecuzioni automatiche in errore o ferme in coda; segnalazioni dei membri
  nei canali del gruppo.}
-{Tutto il lavoro è versionato su GitHub con \textit{push} frequenti;
+{Tutto il lavoro è versionato su GitHub con \glo[Push]{\textit{push}} frequenti;
  documenti compilabili anche in locale; installazione degli strumenti
- della compilazione automatica conservata in cache.}
+ della compilazione automatica conservata in \glo{cache}.}
 {Rilancio delle esecuzioni automatiche; compilazione locale; uso
  temporaneo di un altro computer o di un editor online.}
 
@@ -274,18 +275,18 @@ ruolo, obiettivi raggiunti e scostamento delle stime.
  il percorso completo dalla domanda all'invio della richiesta.}
 {Nuove richieste emerse negli incontri esterni; crescita dei requisiti
  desiderabili e opzionali nell'Analisi dei Requisiti; ore registrate su
- attività fuori dal perimetro dell'MVP.}
-{Perimetro dell'MVP fissato e confermato con Eggon il 2026-10-26: solo
+ attività fuori dal perimetro dell'\glo{MVP}.}
+{Perimetro dell'\glo{MVP} fissato e confermato con Eggon il 2026-10-26: solo
  ferie e permessi, solo lingua italiana, regolamento aziendale in PDF come
  prima fonte. Requisiti classificati in obbligatori, desiderabili e
  opzionali; ogni nuova richiesta viene stimata in ore prima di essere
  accettata e la decisione è registrata a verbale.}
-{Rinvio delle richieste non essenziali a dopo il completamento dell'MVP;
+{Rinvio delle richieste non essenziali a dopo il completamento dell'\glo{MVP};
  negoziazione con il proponente delle priorità.}
 
 \rischio{RR2}{Requisiti incompresi o incompleti}{Media}{Alto}{Alto}
 {I sedici requisiti di business del capitolato vanno tradotti in
- requisiti di sistema verificabili. Interpretazioni errate (per esempio
+ \glo[Requisito]{requisiti} di sistema verificabili. Interpretazioni errate (per esempio
  sulla differenza tra richiesta registrata e approvata, sui due profili
  utente o sulla separazione tra aziende) emergono tardi e costano
  rifacimenti.}
@@ -324,7 +325,7 @@ ruolo, obiettivi raggiunti e scostamento delle stime.
  sicurezza del codice nella verifica, con riferimento alle linee guida
  OWASP indicate da Eggon.}
 {Solo dati fittizi nella sperimentazione; autorizzazioni applicate dai
- servizi e non dal modello; abilità esposte tramite MCP con ingressi e
+ servizi e non dal modello; abilità esposte tramite \glo{MCP} con ingressi e
  uscite validati e privilegi minimi; il codice generato con strumenti
  automatici viene compreso e verificato come qualsiasi altro codice.}
 {Blocco della funzionalità interessata, correzione con priorità massima e
@@ -336,11 +337,11 @@ ruolo, obiettivi raggiunti e scostamento delle stime.
 \rischio{RO1}{Sovrapposizione con lezioni, esami e festività}{Alta}{Medio}{Alto}
 {La sessione d'esami invernale (gennaio e febbraio) coincide con la
  preparazione della RTB e con l'avvio della PB, e le festività natalizie
- cadono negli \textit{sprint} 4 e 5. La disponibilità del gruppo cala
+ cadono negli \glo[Sprint]{\textit{sprint}} 4 e 5. La disponibilità del gruppo cala
  proprio in periodi decisivi.}
-{Indisponibilità comunicate da ciascuno all'inizio dello \textit{sprint};
+{Indisponibilità comunicate da ciascuno all'inizio dello \glo[Sprint]{\textit{sprint}};
  ore svolte inferiori a quelle pianificate nel cruscotto.}
-{Calendario con ore ridotte negli \textit{sprint} delle festività
+{Calendario con ore ridotte negli \glo[Sprint]{\textit{sprint}} delle festività
  (Sezione~\ref{sec:calendario}); lavoro documentale anticipato a novembre e
  dicembre; candidatura alla RTB a fine gennaio con margine; incontro
  settimanale con Eggon mantenuto anche nei periodi d'esame, come chiesto
@@ -351,28 +352,28 @@ ruolo, obiettivi raggiunti e scostamento delle stime.
 \rischio{RO2}{Sottostima delle attività e ritardi}{Alta}{Alto}{Alto}
 {Per tutti è il primo progetto di queste dimensioni: le stime tendono a
  essere ottimistiche e i ritardi si accumulano verso le revisioni.}
-{Scostamento tra ore stimate ed effettive; obiettivi dello \textit{sprint}
- non raggiunti; attività riportate allo \textit{sprint} successivo.}
-{Attività piccole, che stanno dentro uno \textit{sprint} (indicativamente
+{Scostamento tra ore stimate ed effettive; obiettivi dello \glo[Sprint]{\textit{sprint}}
+ non raggiunti; attività riportate allo \glo[Sprint]{\textit{sprint}} successivo.}
+{Attività piccole, che stanno dentro uno \glo[Sprint]{\textit{sprint}} (indicativamente
  non più di 8 ore); stime riviste in ogni retrospettiva alla luce dei
- consuntivi; priorità esplicite per gli obiettivi di ogni \textit{sprint};
+ consuntivi; priorità esplicite per gli obiettivi di ogni \glo[Sprint]{\textit{sprint}};
  margine prima di ogni revisione.}
-{Ripianificazione dello \textit{sprint}, riduzione degli obiettivi meno
+{Ripianificazione dello \glo[Sprint]{\textit{sprint}}, riduzione degli obiettivi meno
  importanti e, se serve, spostamento della data di revisione comunicato
  per tempo al \glo{Committente}.}
 
 \rischio{RO3}{Rotazione dei ruoli e passaggio di consegne}{Media}{Medio}{Medio}
 {Ogni due settimane ogni membro cambia ruolo. Chi subentra può non
  conoscere lo stato delle attività, e il lavoro a cavallo tra due
- \textit{sprint} rischia di restare senza responsabile.}
-{Attività senza assegnatario a inizio \textit{sprint}; domande ricorrenti
+ \glo[Sprint]{\textit{sprint}} rischia di restare senza responsabile.}
+{Attività senza assegnatario a inizio \glo[Sprint]{\textit{sprint}}; domande ricorrenti
  sullo stato del lavoro nei primi giorni dopo il cambio.}
 {Piano di rotazione fissato in anticipo per l'intero progetto; passaggio
- di consegne nella riunione di fine \textit{sprint}, riportato nel
- verbale; ogni attività descritta nella sua issue con lo stato aggiornato;
+ di consegne nella riunione di fine \glo[Sprint]{\textit{sprint}}, riportato nel
+ verbale; ogni attività descritta nella sua \glo[Issue]{\textit{issue}} con lo stato aggiornato;
  procedure scritte nelle Norme di Progetto.}
 {Affiancamento da parte del membro uscente nei primi giorni del nuovo
- \textit{sprint}.}
+ \glo[Sprint]{\textit{sprint}}.}
 
 \rischio{RO4}{Superamento del preventivo}{Media}{Alto}{Alto}
 {Il preventivo fissa 92 ore per persona, ripartite per ruolo. Consumare
@@ -382,10 +383,10 @@ ruolo, obiettivi raggiunti e scostamento delle stime.
 {Ore consumate e residue per persona e per ruolo nel cruscotto, aggiornato
  ogni notte; consumo del budget rispetto al tempo trascorso; consuntivo di
  ogni periodo.}
-{Pianificazione degli \textit{sprint} coerente con il preventivo
+{Pianificazione degli \glo[Sprint]{\textit{sprint}} coerente con il preventivo
  (Sezione~\ref{sec:impegno}); registrazione puntuale delle ore su ogni
  attività; controllo del consumo a ogni retrospettiva.}
-{Riequilibrio dei ruoli negli \textit{sprint} successivi; revisione del
+{Riequilibrio dei ruoli negli \glo[Sprint]{\textit{sprint}} successivi; revisione del
  preventivo a finire; riduzione del perimetro concordata con il
  proponente.}
 
@@ -411,7 +412,7 @@ ruolo, obiettivi raggiunti e scostamento delle stime.
 {Comunicazioni di indisponibilità; ore registrate assenti per più giorni;
  attività assegnate ferme.}
 {Nessuna competenza in mano a una sola persona: studio a coppie,
- documentazione delle scelte, attività descritte nelle issue; ore e
+ documentazione delle scelte, attività descritte nelle \glo[Issue]{\textit{issue}}; ore e
  attività riassegnabili grazie al tracciamento sul Project.}
 {Ridistribuzione temporanea delle attività; in caso di abbandono,
  comunicazione immediata al committente e rinegoziazione del perimetro con
@@ -433,9 +434,9 @@ ruolo, obiettivi raggiunti e scostamento delle stime.
 {Due persone che lavorano alla stessa cosa; decisioni ignorate da parte
  del gruppo.}
 {Canali e loro uso definiti nelle Norme di Progetto; ogni attività ha una
- issue, che è il riferimento per il suo stato; verbale dopo ogni
+ \glo[Issue]{\textit{issue}}, che è il riferimento per il suo stato; verbale dopo ogni
  riunione.}
-{Riunione di riallineamento e aggiornamento delle issue interessate.}
+{Riunione di riallineamento e aggiornamento delle \glo[Issue]{\textit{issue}} interessate.}
 
 % ---------------------------------------------------------------------
 \subsection{Riepilogo}
@@ -500,16 +501,16 @@ coincide con l'impegno assunto nella Dichiarazione di Impegni
     \toprule
     \intestazione{Revisione} & \intestazione{Contenuto} & \intestazione{Candidatura prevista} \\
     \midrule
-    RTB & requisiti, tecnologie scelte e PoC & 2027-01-25 \\
-    PB  & MVP completo e verificato          & 2027-03-23 \\
+    RTB & requisiti, tecnologie scelte e \glo{PoC} & 2027-01-25 \\
+    PB  & \glo{MVP} completo e verificato          & 2027-03-23 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-Il lavoro è diviso in dieci \textit{sprint} di due settimane, da lunedì a
+Il lavoro è diviso in dieci \glo[Sprint]{\textit{sprint}} di due settimane, da lunedì a
 domenica, allineati alla rotazione dei ruoli
 (Tabella~\ref{tab:calendario}). I primi sei portano alla RTB, gli ultimi
-quattro alla PB. Gli \textit{sprint} 4 e 5 comprendono le festività
+quattro alla PB. Gli \glo[Sprint]{\textit{sprint}} 4 e 5 comprendono le festività
 natalizie e prevedono circa un quarto di ore in meno degli altri; la RTB
 cade all'inizio della sessione d'esami invernale, che il calendario tiene
 in conto (rischio RO1, sezione~\ref{rischio:RO1}).
@@ -526,13 +527,13 @@ in conto (rischio RO1, sezione~\ref{rischio:RO1}).
     1  & 2026-11-02 & 2026-11-15 & RTB & avvio: pianificazione, norme, infrastruttura, primo incontro di analisi \\
     2  & 2026-11-16 & 2026-11-29 & RTB & casi d'uso delle quattro capacità; primi esperimenti con i modelli \\
     3  & 2026-11-30 & 2026-12-13 & RTB & requisiti completi e tracciati; esperimento sulla conoscenza documentale \\
-    4  & 2026-12-14 & 2026-12-27 & RTB & PoC delle abilità MCP su servizi simulati (festività) \\
-    5  & 2026-12-28 & 2027-01-10 & RTB & PoC del percorso completo; bozza della \textit{Technology Baseline} (festività) \\
+    4  & 2026-12-14 & 2026-12-27 & RTB & \glo{PoC} delle abilità \glo{MCP} su servizi simulati (festività) \\
+    5  & 2026-12-28 & 2027-01-10 & RTB & \glo{PoC} del percorso completo; bozza della \textit{Technology Baseline} (festività) \\
     6  & 2027-01-11 & 2027-01-24 & RTB & verifica e approvazione dei documenti; preparazione della RTB \\
     \midrule
-    7  & 2027-01-25 & 2027-02-07 & PB  & revisione RTB e correzioni; architettura dell'MVP; avvio dello sviluppo \\
-    8  & 2027-02-08 & 2027-02-21 & PB  & MVP: conoscenza documentale, gestione delle fonti, conversazione \\
-    9  & 2027-02-22 & 2027-03-07 & PB  & MVP: dati personali, richiesta con conferma, autorizzazioni \\
+    7  & 2027-01-25 & 2027-02-07 & PB  & revisione RTB e correzioni; architettura dell'\glo{MVP}; avvio dello sviluppo \\
+    8  & 2027-02-08 & 2027-02-21 & PB  & \glo{MVP}: conoscenza documentale, gestione delle fonti, conversazione \\
+    9  & 2027-02-22 & 2027-03-07 & PB  & \glo{MVP}: dati personali, richiesta con conferma, autorizzazioni \\
     10 & 2027-03-08 & 2027-03-21 & PB  & collaudo sui criteri di accettazione; documenti finali; preparazione della PB \\
     \bottomrule
   \end{tabularx}
@@ -602,10 +603,10 @@ ore e costi per ruolo.
 La ripartizione tra le due fasi segue la natura del lavoro
 (Tabella~\ref{tab:ore-fase}). Verso la RTB prevalgono analisi,
 amministrazione e verifica dei documenti, oltre alla prima progettazione e
-al codice del PoC; verso la PB prevalgono progettazione di dettaglio,
+al codice del \glo{PoC}; verso la PB prevalgono progettazione di dettaglio,
 programmazione e verifica del prodotto. Poco più della metà delle ore è
 destinata alla RTB, perché in questa fase si producono quasi tutti i
-documenti e si sceglie lo stack tecnologico.
+documenti e si sceglie lo \glo{Stack tecnologico}.
 
 \begin{table}[H]
   \centering
@@ -625,7 +626,7 @@ documenti e si sceglie lo stack tecnologico.
   \end{tabular}
 \end{table}
 
-La suddivisione di dettaglio per \textit{sprint}, membro e ruolo è
+La suddivisione di dettaglio per \glo[Sprint]{\textit{sprint}}, membro e ruolo è
 riportata nella pianificazione di ogni periodo. Il consumo effettivo è
 tracciato con le ore registrate su ogni attività e confrontato con il
 preventivo nel consuntivo di ogni periodo (rischio RO4, sezione~\ref{rischio:RO4}).
@@ -635,12 +636,12 @@ preventivo nel consuntivo di ogni periodo (rischio RO4, sezione~\ref{rischio:RO4
 % =====================================================================
 
 \subsection{Introduzione}
-Questa sezione raccoglie, per ogni \textit{sprint}, la pianificazione
+Questa sezione raccoglie, per ogni \glo[Sprint]{\textit{sprint}}, la pianificazione
 decisa nella riunione di apertura e il resoconto scritto alla chiusura.
-Ogni \textit{sprint} è descritto con la stessa struttura:
+Ogni \glo[Sprint]{\textit{sprint}} è descritto con la stessa struttura:
 \begin{itemize}
   \item \textbf{Panoramica e obiettivi}: il contesto del periodo e i
-        risultati attesi, ognuno tracciato da una o più \textit{issue};
+        risultati attesi, ognuno tracciato da una o più \glo[Issue]{\textit{issue}};
   \item \textbf{Rischi attesi}: i rischi della sezione~\ref{sec:rischi}
         più probabili nel periodo e come vengono mitigati;
   \item \textbf{Ruoli assegnati}: il ruolo di ogni membro, uno per
@@ -649,17 +650,17 @@ Ogni \textit{sprint} è descritto con la stessa struttura:
   \item \textbf{Consuntivo}: ore e costi effettivi, con lo scarto rispetto
         al preventivo;
   \item \textbf{Risorse rimanenti}: ore e budget ancora disponibili dopo
-        lo \textit{sprint};
+        lo \glo[Sprint]{\textit{sprint}};
   \item \textbf{Retrospettiva}: rischi incontrati, cosa ha funzionato,
         cosa migliorare e come cambia la pianificazione successiva.
 \end{itemize}
 
 Le ore del consuntivo non sono stimate a posteriori: ogni membro le
-registra durante il lavoro sulla \textit{issue} dell'attività svolta, con
+registra durante il lavoro sulla \glo[Issue]{\textit{issue}} dell'attività svolta, con
 il comando \texttt{/ore} descritto nelle \textit{Norme di Progetto}. Le
 registrazioni vengono sommate automaticamente per persona, ruolo e
-\textit{sprint}, e da queste derivano le tabelle di consuntivo. Ruoli,
-ore pianificate e obiettivi di ogni \textit{sprint} sono gli stessi
+\glo[Sprint]{\textit{sprint}}, e da queste derivano le tabelle di consuntivo. Ruoli,
+ore pianificate e obiettivi di ogni \glo[Sprint]{\textit{sprint}} sono gli stessi
 riportati nel file di pianificazione del gruppo, da cui il cruscotto
 confronta ogni giorno ore pianificate ed effettive.
 
@@ -677,8 +678,8 @@ Tabella~\ref{tab:costi-ruolo}.
 % ---------------------------------------------------------------------
 
 \subsubsubsection{Panoramica e obiettivi}
-Il primo \textit{sprint} si apre con la presentazione del Diario di Bordo
-del 2026-11-02 e con l'aggiudicazione del capitolato C2
+Il primo \glo[Sprint]{\textit{sprint}} si apre con la presentazione del Diario di Bordo
+del 2026-11-02 e con l'aggiudicazione del \glo{capitolato} C2
 \textit{NEXUM Concierge}, presa in esame dal gruppo nella riunione interna
 del 2026-11-03. Il periodo ha un carattere soprattutto organizzativo: il
 gruppo imposta i processi e gli strumenti che userà per tutto il progetto,
@@ -688,20 +689,20 @@ successivi. Gli obiettivi fissati sono:
 \begin{itemize}
   \item \textbf{Piano di Progetto}: prima stesura di rischi attesi e
         mitigazione, calendario di massima, impegno orario e
-        pianificazione del primo \textit{sprint};
+        pianificazione del primo \glo[Sprint]{\textit{sprint}};
   \item \textbf{Norme di Progetto}: prima stesura, con i processi di
         gestione, di documentazione e di verifica già adottati dal gruppo;
   \item \textbf{Infrastruttura di gestione}: organizzazione del GitHub
-        Project con i campi per \textit{sprint}, ruolo e ore;
-        collegamento automatico tra \textit{issue}, \textit{pull request}
+        Project con i campi per \glo[Sprint]{\textit{sprint}}, ruolo e ore;
+        collegamento automatico tra \glo[Issue]{\textit{issue}}, \glo[Pull request]{\textit{pull request}}
         e Project; registrazione delle ore con il comando \texttt{/ore};
-        cruscotto di avanzamento; creazione del repository per i
+        cruscotto di avanzamento; creazione del \glo{repository} per i
         \glo{PoC};
   \item \textbf{Glossario}: riorganizzazione per lettere e inserimento dei
         primi termini del dominio del capitolato;
   \item \textbf{Rapporti con la proponente}: primo incontro con Eggon per
         concordare canali e cadenza di comunicazione e per chiarire il
-        perimetro dell'MVP;
+        perimetro dell'\glo{MVP};
   \item \textbf{Analisi dei Requisiti}: studio del capitolato,
         individuazione degli attori e delle quattro capacità del
         \textit{Concierge}, prima bozza dei casi d'uso;
@@ -713,7 +714,7 @@ successivi. Gli obiettivi fissati sono:
 \end{itemize}
 
 \subsubsubsection{Rischi attesi}
-Per il primo \textit{sprint} il gruppo prevede i seguenti rischi:
+Per il primo \glo[Sprint]{\textit{sprint}} il gruppo prevede i seguenti rischi:
 \begin{itemize}
   \item \textbf{RT1 -- Inesperienza con le tecnologie del capitolato}
         (sezione~\ref{rischio:RT1}): nessun membro ha ancora lavorato con
@@ -729,7 +730,7 @@ Per il primo \textit{sprint} il gruppo prevede i seguenti rischi:
 \end{itemize}
 
 \subsubsubsection{Ruoli assegnati}
-I ruoli del primo \textit{sprint} sono riportati nella
+I ruoli del primo \glo[Sprint]{\textit{sprint}} sono riportati nella
 Tabella~\ref{tab:ruoli-sprint-1}. I ruoli seguono la rotazione pianificata, che
 garantisce a ogni membro le ore previste per ciascun ruolo entro la fine
 del progetto.
