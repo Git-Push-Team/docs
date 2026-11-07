@@ -1,0 +1,951 @@
+\documentclass[documento]{gpt}
+\newcommand{\subsubsubsection}[1]{\paragraph{#1}}
+\setcounter{secnumdepth}{4} 
+\setcounter{tocdepth}{4}
+\usepackage{titlesec}
+\titleformat{\paragraph}
+  {\normalfont\normalsize\bfseries}
+  {\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+  {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+
+% ---------------------------------------------------------------------
+% Dati specifici del documento
+% ---------------------------------------------------------------------
+\titolo{Piano di progetto}
+\uso{esterno}
+\destinatari{Prof.~Tullio Vardanega\newline Prof.~Riccardo Cardin}
+
+% ---------------------------------------------------------------------
+% Registro delle modifiche
+% ---------------------------------------------------------------------
+% Sintassi: \modifica{versione}{AAAA-MM-GG}{autore}{verificatore}{descrizione}
+% La riga più recente va messa in cima.
+%  Quando il Responsabile approva, aggiunge lui IN CIMA questa riga:
+%  \modifica{1.0.0}{2026-10-23}{corro}{--}{Approvazione}
+\modifica{0.2.1}{2026-11-07}{spagnoli}{corro}{Aggiunte parole nel Glossario}
+\modifica{0.2.0}{2026-11-04}{spagnoli, guglielmo}{corro}{Stesura della sezione Pianificazione e dello sprint 1}
+\modifica{0.1.0}{2026-11-04}{spagnoli, guglielmo}{corro}{Prima stesura del documento}
+
+
+
+% Scheda di un rischio:
+% \rischio{codice}{titolo}{probabilità}{impatto}{livello}{descrizione}{rilevamento}{mitigazione}{contingenza}
+\newcommand{\rischio}[9]{%
+  \subsubsection{#1 -- #2}\label{rischio:#1}
+  \noindent
+  \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash\bfseries}p{2.7cm}>{\raggedright\arraybackslash}X@{}}
+    \toprule
+    Probabilità & #3 \\
+    Impatto     & #4 \\
+    Livello     & #5 \\
+    \midrule
+    Descrizione & #6 \\
+    \addlinespace
+    Rilevamento & #7 \\
+    \addlinespace
+    Mitigazione & #8 \\
+    \addlinespace
+    Contingenza & #9 \\
+    \bottomrule
+  \end{tabularx}
+  \medskip
+}
+
+\begin{document}
+
+% ---------------------------------------------------------------------
+% Contenuto del Documento
+% ---------------------------------------------------------------------
+\section{Introduzione}
+
+\subsection{Scopo del documento}
+Il presente documento ha lo scopo di pianificare, gestire e tracciare l'avanzamento delle attività necessarie allo sviluppo del progetto software. Il \textit{Piano di Progetto} fornisce una visione d'insieme sia a livello operativo che amministrativo, definendo la ripartizione dei compiti tra i membri del gruppo, le scadenze e l'impiego delle risorse.
+
+Per pianificare il lavoro in modo chiaro e puntuale, garantendo il controllo dei costi e la gestione dei rischi, il documento tratta i seguenti argomenti:
+\begin{itemize}
+\item Identificazione dei rischi potenziali e pianificazione delle misure di mitigazione atte a minimizzarne l'impatto;
+\item Definizione del modello di sviluppo adottato per la realizzazione del software;
+\item Stime temporali ed economiche, attraverso un calendario di massima e un'analisi dei costi preventivati;
+\item Pianificazione dettagliata delle attività da svolgere all'interno dei vari periodi di lavoro (\glo[Sprint]{\textit{sprint}});
+\item Rendicontazione economica e stesura dei consuntivi di periodo per monitorare il budget speso.
+\end{itemize}
+
+\subsection{Scopo del prodotto}
+Il progetto, basato sul \glo{capitolato} C2 denominato \textit{NEXUM Concierge}, ha come obiettivo l'introduzione di un assistente conversazionale all'interno della piattaforma aziendale NEXUM. Tale piattaforma, realizzata come \glo[PWA]{\textit{Progressive Web App}} (PWA), è pensata per avvicinare aziende e personale, semplificando le attività quotidiane legate alla comunicazione e alla gestione dei processi \glo{HR}.
+
+L'assistente permetterà agli utenti di cercare informazioni, comprendere le procedure aziendali e accedere ai servizi utilizzando direttamente il linguaggio naturale. Il \textit{Concierge} si occuperà di collegare la conoscenza aziendale alle funzionalità operative, mantenendo il contesto del dialogo e coordinando le interrogazioni alle fonti documentali o l'inoltro di operazioni tramite i servizi applicativi.
+Per garantire un approccio graduale e verificabile, il dominio del \glo[MVP]{\textit{Minimum Viable Product}} (MVP) sarà focalizzato unicamente sull'area ferie e permessi.
+
+\subsection{Glossario}
+Al fine di evitare ambiguità e incomprensioni, e per massimizzare la chiarezza formale del testo, i termini tecnici, gli acronimi e le parole che necessitano di una definizione rigorosa sono raccolti all'interno del documento \textit{Glossario}. Tali termini sono contrassegnati all'interno dei testi di progetto tramite l'apposito pedice \ped{G}.
+
+\subsection{Riferimenti}
+% \subsubsection{Riferimenti normativi}
+% \begin{itemize}
+% \item \textbf{Capitolato d'appalto C2}: \textit{[NEXUM] BRD-AI-CONCIERGE-2026 - Business Requirements Document};
+% \item \textbf{Norme di Progetto}: documento interno per la definizione delle regole e delle linee guida di gruppo.
+% \end{itemize}
+
+% \subsubsection{Riferimenti informativi}
+% \begin{itemize}
+% \item \textbf{Analisi dei Requisiti}: documento esterno \textit{Analisi dei Requisiti};
+% \item Slide del corso di \textit{Ingegneria del Software} - Processi di ciclo di vita del Software;
+% \item Slide del corso di \textit{Ingegneria del Software} - Modelli di sviluppo del Software;
+% \item Slide del corso di \textit{Ingegneria del Software} - Gestione di Progetto.
+% \end{itemize}
+
+% =====================================================================
+\section{Rischi attesi e mitigazione}\label{sec:rischi}
+% =====================================================================
+
+\subsection{Metodo}
+L'analisi dei rischi individua in anticipo le situazioni che possono
+compromettere il rispetto dei tempi, dei costi o della qualità, e stabilisce
+per ognuna come accorgersene e come reagire. Il gruppo la svolge in
+quattro passi, ripetuti a ogni \glo[Sprint]{\textit{sprint}}:
+\begin{enumerate}
+  \item \textbf{identificazione}: i rischi sono ricavati dal \glo{capitolato} C2,
+        dall'incontro con il \glo{Proponente} del 2026-10-26 e
+        dall'esperienza dei gruppi degli anni precedenti;
+  \item \textbf{analisi}: a ogni rischio sono assegnati una probabilità e un
+        impatto, da cui deriva il livello;
+  \item \textbf{pianificazione}: per ogni rischio si definiscono gli
+        indicatori che ne segnalano l'insorgere, le misure preventive e il
+        piano di contingenza da attuare se si verifica;
+  \item \textbf{controllo}: nella retrospettiva di fine \glo[Sprint]{\textit{sprint}} il
+        gruppo verifica quali rischi si sono presentati e quanto sono state
+        efficaci le misure; il consuntivo di ogni periodo li riporta e
+        questa sezione viene aggiornata di conseguenza.
+\end{enumerate}
+
+Ogni rischio ha un codice \texttt{R\textit{XN}}, dove \texttt{\textit{X}}
+indica la categoria e \texttt{\textit{N}} è un numero progressivo:
+\begin{itemize}
+  \item \textbf{RT}: rischi tecnologici;
+  \item \textbf{RR}: rischi legati ai \glo[Requisito]{requisiti} e al prodotto;
+  \item \textbf{RO}: rischi organizzativi;
+  \item \textbf{RP}: rischi personali e interpersonali.
+\end{itemize}
+
+La probabilità e l'impatto si misurano su tre livelli
+(Tabella~\ref{tab:scale-rischi}); la loro combinazione dà il livello del
+rischio (Tabella~\ref{tab:matrice-rischi}), che stabilisce la priorità con
+cui il rischio viene sorvegliato.
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Scale di probabilità e impatto\label{tab:scale-rischi}}
+  \begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \intestazione{Valore} & \intestazione{Probabilità} & \intestazione{Impatto} \\
+    \midrule
+    Basso & poco probabile nell'intero progetto &
+      ritardo inferiore a un giorno, nessun effetto sui documenti o sul prodotto \\
+    Medio & può presentarsi una o due volte nel progetto &
+      ritardo di alcuni giorni, recuperabile nello \glo[Sprint]{\textit{sprint}} in corso o nel successivo \\
+    Alto & atteso in più \glo[Sprint]{\textit{sprint}} &
+      mette a rischio una revisione (RTB o PB), il preventivo o un criterio di accettazione \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Livello del rischio in base a probabilità e impatto\label{tab:matrice-rischi}}
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+    \intestazione{Probabilità \textbackslash{} Impatto} & \intestazione{Basso} &
+      \intestazione{Medio} & \intestazione{Alto} \\
+    \midrule
+    Alta  & Medio & Alto  & Alto  \\
+    Media & Basso & Medio & Alto  \\
+    Bassa & Basso & Basso & Medio \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Come strumenti di rilevamento il gruppo usa, oltre ai verbali e alle
+retrospettive, il cruscotto interno alimentato dal GitHub Project: ore
+svolte rispetto a quelle pianificate, consumo del preventivo per persona e
+ruolo, obiettivi raggiunti e scostamento delle stime. 
+
+% ---------------------------------------------------------------------
+\subsection{Rischi tecnologici}
+
+\rischio{RT1}{Inesperienza con le tecnologie del capitolato}{Alta}{Alto}{Alto}
+{Il capitolato richiede tecnologie che il gruppo non ha mai usato in un
+ progetto: modelli linguistici (\glo{LLM}) e la loro integrazione,
+ \glo{RAG} con \glo{Embedding} e ricerca vettoriale, il protocollo
+ \glo{MCP}, e lo \glo{Stack tecnologico} suggerito da Eggon (\glo{Ruby on Rails},
+ \glo{Angular}, RubyLLM, servizi \glo{AWS}). A queste si aggiungono gli strumenti del
+ modo di lavorare (\LaTeX{}, \glo{GitHub Actions}). Lo studio necessario rallenta
+ le prime attività e può portare a scelte poco consapevoli.}
+{Stime superate in modo sistematico sulle attività tecniche (scostamento
+ delle stime); attività ferme in \textit{In Progress} oltre la metà dello
+ \glo[Sprint]{\textit{sprint}}; domande ricorrenti sullo stesso argomento nelle riunioni.}
+{Studio mirato a coppie nei primi \glo[Sprint]{\textit{sprint}}, usando i \glo{PoC} come
+ strumento di apprendimento.
+ Brevi sessioni interne in cui chi ha studiato una tecnologia la presenta
+ agli altri. Uso del materiale dei gruppi che hanno lavorato al capitolato
+ negli anni precedenti, messo a disposizione da Eggon, e richiesta di
+ incontri di approfondimento con il \glo{Proponente}, che si è reso
+ disponibile.}
+{Affiancamento del membro in difficoltà da parte di chi conosce già la
+ tecnologia; ridistribuzione delle attività nello \glo[Sprint]{\textit{sprint}}; incontro
+ tecnico straordinario con Eggon; se necessario, adozione della soluzione
+ più semplice tra quelle confrontate, concordata con il proponente.}
+
+\rischio{RT2}{Qualità e affidabilità delle risposte del modello}{Alta}{Alto}{Alto}
+{Un modello linguistico può dare risposte non supportate dalle fonti,
+ citare la fonte sbagliata o non astenersi quando le informazioni non
+ bastano; il suo comportamento non è deterministico e cambia con il
+ \glo[Prompt]{\textit{prompt}} e con il modello usato. Il capitolato chiede di dimostrare
+ proprio citazioni, astensione e chiarimenti: una qualità insufficiente fa
+ fallire i criteri di accettazione dell'\glo{MVP}.}
+{Insieme di domande di prova con le risposte attese, costruito con Eggon a
+ partire dal regolamento ferie e permessi e rieseguito a ogni modifica di
+ \glo[Prompt]{\textit{prompt}}, modello o catena di recupero delle fonti; metriche di
+ qualità delle risposte (correttezza, citazioni corrette, astensioni
+ corrette) definite nel Piano di Qualifica.}
+{Risposte vincolate alle fonti recuperate, con citazione obbligatoria e
+ astensione esplicita sotto una soglia di pertinenza; \glo[Prompt]{\textit{prompt}}
+ versionati nel \glo{repository} come il codice; separazione netta tra
+ conoscenza documentale e dati personali, che arrivano solo dai servizi
+ di NEXUM: il modello non calcola né inventa dati. Confronto
+ sperimentale tra documento intero nel contesto e \glo{RAG}, come chiesto
+ dal capitolato, prima di scegliere l'approccio.}
+{Restringere le domande supportate a quelle che superano le prove,
+ rispondendo alle altre con l'astensione e il rimando alla fonte.}
+
+\rischio{RT3}{Integrazione con i servizi di NEXUM}{Media}{Alto}{Alto}
+{I dati personali (per esempio le ferie già godute) e le operazioni (la
+ registrazione di una richiesta) passano dai servizi di NEXUM, secondo un
+ contratto di integrazione definito da Eggon. Un contratto definito tardi,
+ incompleto o modificato blocca lo sviluppo delle capacità operative, che
+ sono il nucleo dell'\glo{MVP}.}
+{Stato del contratto di integrazione verificato a ogni incontro e
+ riportato nei verbali esterni; attività bloccate in attesa di risposte
+ del proponente.}
+{Concordare il contratto entro la RTB; sviluppare su simulatori conformi
+ al contratto, ammessi dal capitolato; isolare l'accesso ai servizi in un
+ componente dedicato, così che il passaggio dal simulatore al servizio
+ reale non tocchi il resto del sistema; prove automatiche sul rispetto del
+ contratto.}
+{Dimostrare il percorso completo dell'\glo{MVP} sui simulatori conformi,
+ documentando lo scostamento; ripianificare le attività dipendenti nello
+ \glo[Sprint]{\textit{sprint}} successivo.}
+
+\rischio{RT4}{Scelta tecnologica inadeguata}{Media}{Medio}{Medio}
+{Il capitolato non impone tecnologie e chiede scelte motivate da
+ esperimenti. Una scelta che si rivela inadatta (prestazioni, curva di
+ apprendimento, compatibilità) dopo l'avvio dello sviluppo costringe a
+ rifare parte del lavoro.}
+{Esiti dei \glo{PoC} valutati rispetto a criteri di successo scritti prima di
+ iniziare; problemi ricorrenti con una libreria o un servizio durante lo
+ sviluppo.}
+{Decisioni prese solo dopo esperimenti comparativi documentati; architettura a componenti con interfacce chiare (fornitore del
+ modello, registro delle abilità \glo{MCP}, accesso ai servizi), così che un
+ componente si possa sostituire da solo.}
+{Sostituzione del solo componente interessato dietro la sua interfaccia e
+ ripianificazione dello \glo[Sprint]{\textit{sprint}}.}
+
+\rischio{RT5}{Malfunzionamenti di strumenti e infrastruttura}{Media}{Basso}{Basso}
+{Servizi esterni del modo di lavorare (GitHub, \glo{GitHub Actions}) in ritardo o
+ non disponibili, errori nella compilazione automatica dei documenti,
+ guasti dei computer personali o perdita di lavoro non salvato.}
+{Esecuzioni automatiche in errore o ferme in coda; segnalazioni dei membri
+ nei canali del gruppo.}
+{Tutto il lavoro è versionato su GitHub con \glo[Push]{\textit{push}} frequenti;
+ documenti compilabili anche in locale; installazione degli strumenti
+ della compilazione automatica conservata in \glo{cache}.}
+{Rilancio delle esecuzioni automatiche; compilazione locale; uso
+ temporaneo di un altro computer o di un editor online.}
+
+% ---------------------------------------------------------------------
+\subsection{Rischi legati ai requisiti e al prodotto}
+
+\rischio{RR1}{Ampliamento del perimetro}{Media}{Alto}{Alto}
+{Il capitolato indica come possibilità ulteriori altri domini oltre a
+ ferie e permessi, altri formati oltre al PDF, grafi di conoscenza e
+ tecniche avanzate. Inseguirle sottrae ore al nucleo obbligatorio, cioè
+ il percorso completo dalla domanda all'invio della richiesta.}
+{Nuove richieste emerse negli incontri esterni; crescita dei requisiti
+ desiderabili e opzionali nell'Analisi dei Requisiti; ore registrate su
+ attività fuori dal perimetro dell'\glo{MVP}.}
+{Perimetro dell'\glo{MVP} fissato e confermato con Eggon il 2026-10-26: solo
+ ferie e permessi, solo lingua italiana, regolamento aziendale in PDF come
+ prima fonte. Requisiti classificati in obbligatori, desiderabili e
+ opzionali; ogni nuova richiesta viene stimata in ore prima di essere
+ accettata e la decisione è registrata a verbale.}
+{Rinvio delle richieste non essenziali a dopo il completamento dell'\glo{MVP};
+ negoziazione con il proponente delle priorità.}
+
+\rischio{RR2}{Requisiti incompresi o incompleti}{Media}{Alto}{Alto}
+{I sedici requisiti di business del capitolato vanno tradotti in
+ \glo[Requisito]{requisiti} di sistema verificabili. Interpretazioni errate (per esempio
+ sulla differenza tra richiesta registrata e approvata, sui due profili
+ utente o sulla separazione tra aziende) emergono tardi e costano
+ rifacimenti.}
+{Domande aperte che restano senza risposta per più di un incontro;
+ casi d'uso respinti o corretti in sede di validazione; requisiti senza
+ una fonte nel capitolato o nei verbali.}
+{Incontro settimanale fisso con Eggon, con domande preparate in anticipo;
+ validazione progressiva dei casi d'uso con il proponente; tracciamento
+ di ogni requisito verso la sua fonte (capitolato o verbale) nell'Analisi
+ dei Requisiti.}
+{Incontro straordinario di chiarimento; revisione dei requisiti
+ interessati e ripianificazione delle attività che ne dipendono.}
+
+\rischio{RR3}{Operazioni errate o duplicate}{Bassa}{Alto}{Medio}
+{L'assistente può registrare una richiesta di ferie sbagliata (date
+ ambigue, anno mancante), inviarla due volte dopo un errore di rete o
+ presentare come approvata una richiesta solo registrata. Il capitolato
+ lo considera un criterio di accettazione.}
+{Prove di accettazione sul percorso completo con casi limite (date
+ ambigue, annullamenti, errori dei servizi); registro delle operazioni
+ eseguite.}
+{Riepilogo completo e conferma esplicita prima di ogni invio; richiesta
+ di chiarimento quando un dato è ambiguo; controllo dell'esito
+ dell'operazione prima di ripeterla; messaggi che distinguono sempre
+ richiesta registrata e approvata.}
+{Disattivazione dell'invio, mantenendo la sola preparazione della
+ richiesta, finché il difetto non è corretto.}
+
+\rischio{RR4}{Sicurezza, riservatezza e autorizzazioni}{Bassa}{Alto}{Medio}
+{Il sistema tratta dati personali del dipendente, distingue due profili
+ (personale e amministrazione) e separa i dati delle aziende. Un messaggio
+ o un documento costruito ad arte può indurre il modello a operazioni non
+ autorizzate; il codice prodotto con strumenti di generazione, ammessi da
+ Eggon, può introdurre vulnerabilità.}
+{Prove specifiche su autorizzazioni e separazione dei dati; revisione di
+ sicurezza del codice nella verifica, con riferimento alle linee guida
+ OWASP indicate da Eggon.}
+{Solo dati fittizi nella sperimentazione; autorizzazioni applicate dai
+ servizi e non dal modello; abilità esposte tramite \glo{MCP} con ingressi e
+ uscite validati e privilegi minimi; il codice generato con strumenti
+ automatici viene compreso e verificato come qualsiasi altro codice.}
+{Blocco della funzionalità interessata, correzione con priorità massima e
+ comunicazione al proponente.}
+
+% ---------------------------------------------------------------------
+\subsection{Rischi organizzativi}
+
+\rischio{RO1}{Sovrapposizione con lezioni, esami e festività}{Alta}{Medio}{Alto}
+{La sessione d'esami invernale (gennaio e febbraio) coincide con la
+ preparazione della RTB e con l'avvio della PB, e le festività natalizie
+ cadono negli \glo[Sprint]{\textit{sprint}} 4 e 5. La disponibilità del gruppo cala
+ proprio in periodi decisivi.}
+{Indisponibilità comunicate da ciascuno all'inizio dello \glo[Sprint]{\textit{sprint}};
+ ore svolte inferiori a quelle pianificate nel cruscotto.}
+{Calendario con ore ridotte negli \glo[Sprint]{\textit{sprint}} delle festività
+ (Sezione~\ref{sec:calendario}); lavoro documentale anticipato a novembre e
+ dicembre; candidatura alla RTB a fine gennaio con margine; incontro
+ settimanale con Eggon mantenuto anche nei periodi d'esame, come chiesto
+ dal proponente.}
+{Riassegnazione delle attività tra i membri disponibili; rinvio delle
+ attività non critiche; aggiornamento del calendario di massima.}
+
+\rischio{RO2}{Sottostima delle attività e ritardi}{Alta}{Alto}{Alto}
+{Per tutti è il primo progetto di queste dimensioni: le stime tendono a
+ essere ottimistiche e i ritardi si accumulano verso le revisioni.}
+{Scostamento tra ore stimate ed effettive; obiettivi dello \glo[Sprint]{\textit{sprint}}
+ non raggiunti; attività riportate allo \glo[Sprint]{\textit{sprint}} successivo.}
+{Attività piccole, che stanno dentro uno \glo[Sprint]{\textit{sprint}} (indicativamente
+ non più di 8 ore); stime riviste in ogni retrospettiva alla luce dei
+ consuntivi; priorità esplicite per gli obiettivi di ogni \glo[Sprint]{\textit{sprint}};
+ margine prima di ogni revisione.}
+{Ripianificazione dello \glo[Sprint]{\textit{sprint}}, riduzione degli obiettivi meno
+ importanti e, se serve, spostamento della data di revisione comunicato
+ per tempo al \glo{Committente}.}
+
+\rischio{RO3}{Rotazione dei ruoli e passaggio di consegne}{Media}{Medio}{Medio}
+{Ogni due settimane ogni membro cambia ruolo. Chi subentra può non
+ conoscere lo stato delle attività, e il lavoro a cavallo tra due
+ \glo[Sprint]{\textit{sprint}} rischia di restare senza responsabile.}
+{Attività senza assegnatario a inizio \glo[Sprint]{\textit{sprint}}; domande ricorrenti
+ sullo stato del lavoro nei primi giorni dopo il cambio.}
+{Piano di rotazione fissato in anticipo per l'intero progetto; passaggio
+ di consegne nella riunione di fine \glo[Sprint]{\textit{sprint}}, riportato nel
+ verbale; ogni attività descritta nella sua \glo[Issue]{\textit{issue}} con lo stato aggiornato;
+ procedure scritte nelle Norme di Progetto.}
+{Affiancamento da parte del membro uscente nei primi giorni del nuovo
+ \glo[Sprint]{\textit{sprint}}.}
+
+\rischio{RO4}{Superamento del preventivo}{Media}{Alto}{Alto}
+{Il preventivo fissa 92 ore per persona, ripartite per ruolo. Consumare
+ troppo presto le ore di un ruolo (per esempio il Progettista) o
+ eccedere nei ruoli più costosi (Responsabile, 30\,\texteuro/h) lascia
+ senza risorse le fasi finali.}
+{Ore consumate e residue per persona e per ruolo nel cruscotto, aggiornato
+ ogni notte; consumo del budget rispetto al tempo trascorso; consuntivo di
+ ogni periodo.}
+{Pianificazione degli \glo[Sprint]{\textit{sprint}} coerente con il preventivo
+ (Sezione~\ref{sec:impegno}); registrazione puntuale delle ore su ogni
+ attività; controllo del consumo a ogni retrospettiva.}
+{Riequilibrio dei ruoli negli \glo[Sprint]{\textit{sprint}} successivi; revisione del
+ preventivo a finire; riduzione del perimetro concordata con il
+ proponente.}
+
+\rischio{RO5}{Comunicazione discontinua con il proponente}{Bassa}{Alto}{Medio}
+{Eggon ha indicato la continuità della comunicazione come rischio
+ principale del progetto: incontri saltati o risposte tardive rallentano
+ analisi e integrazione.}
+{Incontri settimanali saltati; domande al proponente senza risposta da
+ più di una settimana.}
+{Incontro settimanale fisso di circa un'ora; canale rapido concordato per le comunicazioni brevi; verbale
+ esterno di ogni incontro con decisioni e azioni; aggiornamento proattivo
+ sulle scelte progettuali.}
+{Incontro di recupero; comunicazione scritta delle decisioni in sospeso
+ con una proposta del gruppo su cui il proponente possa rispondere.}
+
+% ---------------------------------------------------------------------
+\subsection{Rischi personali e interpersonali}
+
+\rischio{RP1}{Indisponibilità di un membro}{Media}{Medio}{Medio}
+{Malattie, impegni personali o, nel caso peggiore, l'abbandono del
+ progetto riducono le ore disponibili e possono lasciare scoperte
+ competenze che una sola persona conosce.}
+{Comunicazioni di indisponibilità; ore registrate assenti per più giorni;
+ attività assegnate ferme.}
+{Nessuna competenza in mano a una sola persona: studio a coppie,
+ documentazione delle scelte, attività descritte nelle \glo[Issue]{\textit{issue}}; ore e
+ attività riassegnabili grazie al tracciamento sul Project.}
+{Ridistribuzione temporanea delle attività; in caso di abbandono,
+ comunicazione immediata al committente e rinegoziazione del perimetro con
+ il proponente.}
+
+\rischio{RP2}{Divergenze nelle decisioni}{Media}{Basso}{Basso}
+{Opinioni diverse su scelte tecniche o organizzative possono allungare le
+ discussioni e rallentare le decisioni.}
+{Lo stesso argomento discusso in più riunioni senza decisione.}
+{Decisioni prese in riunione e registrate a verbale; per le scelte
+ tecniche, confronto basato su esperimenti; se il consenso non si
+ raggiunge, decide il Responsabile o si vota a maggioranza.}
+{Mediazione del Responsabile; nei casi estremi, confronto con il
+ proponente o con il committente.}
+
+\rischio{RP3}{Comunicazione interna insufficiente}{Media}{Medio}{Medio}
+{Informazioni disperse tra i canali del gruppo possono causare lavoro
+ duplicato, decisioni non conosciute da tutti o attività dimenticate.}
+{Due persone che lavorano alla stessa cosa; decisioni ignorate da parte
+ del gruppo.}
+{Canali e loro uso definiti nelle Norme di Progetto; ogni attività ha una
+ \glo[Issue]{\textit{issue}}, che è il riferimento per il suo stato; verbale dopo ogni
+ riunione.}
+{Riunione di riallineamento e aggiornamento delle \glo[Issue]{\textit{issue}} interessate.}
+
+% ---------------------------------------------------------------------
+\subsection{Riepilogo}
+La Tabella~\ref{tab:riepilogo-rischi} riassume i rischi in ordine di
+livello. Quelli di livello alto sono riesaminati a ogni retrospettiva;
+gli altri a ogni cambio di fase (RTB, PB).
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Riepilogo dei rischi, dal livello più alto\label{tab:riepilogo-rischi}}
+  \begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}Xccc@{}}
+    \toprule
+    \intestazione{Codice} & \intestazione{Rischio} & \intestazione{Probabilità} &
+      \intestazione{Impatto} & \intestazione{Livello} \\
+    \midrule
+    RT1 & Inesperienza con le tecnologie del capitolato & Alta  & Alto  & Alto \\
+    RT2 & Qualità e affidabilità delle risposte del modello & Alta & Alto & Alto \\
+    RO2 & Sottostima delle attività e ritardi            & Alta  & Alto  & Alto \\
+    RO1 & Sovrapposizione con lezioni, esami e festività  & Alta  & Medio & Alto \\
+    RT3 & Integrazione con i servizi di NEXUM            & Media & Alto  & Alto \\
+    RR1 & Ampliamento del perimetro                      & Media & Alto  & Alto \\
+    RR2 & Requisiti incompresi o incompleti              & Media & Alto  & Alto \\
+    RO4 & Superamento del preventivo                     & Media & Alto  & Alto \\
+    \midrule
+    RT4 & Scelta tecnologica inadeguata                  & Media & Medio & Medio \\
+    RO3 & Rotazione dei ruoli e passaggio di consegne    & Media & Medio & Medio \\
+    RP1 & Indisponibilità di un membro                   & Media & Medio & Medio \\
+    RP3 & Comunicazione interna insufficiente            & Media & Medio & Medio \\
+    RR3 & Operazioni errate o duplicate                  & Bassa & Alto  & Medio \\
+    RR4 & Sicurezza, riservatezza e autorizzazioni       & Bassa & Alto  & Medio \\
+    RO5 & Comunicazione discontinua con il proponente    & Bassa & Alto  & Medio \\
+    \midrule
+    RT5 & Malfunzionamenti di strumenti e infrastruttura & Media & Basso & Basso \\
+    RP2 & Divergenze nelle decisioni                     & Media & Basso & Basso \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+% =====================================================================
+% Qui andrà la sezione "Modello di sviluppo", come previsto
+% dall'introduzione:
+% \section{Modello di sviluppo}
+% =====================================================================
+
+% =====================================================================
+\section{Calendario di massima}\label{sec:calendario}
+% =====================================================================
+
+Il progetto si articola in due revisioni di avanzamento: la
+\textit{Requirements and Technology Baseline} (RTB), che fissa i requisiti
+e le tecnologie dimostrandole con un \glo{PoC}, e la \textit{Product
+Baseline} (PB), che presenta l'\glo{MVP} completo. La data della PB
+coincide con l'impegno assunto nella Dichiarazione di Impegni
+(Tabella~\ref{tab:revisioni}).
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Date previste per le revisioni\label{tab:revisioni}}
+  \begin{tabular}{@{}llc@{}}
+    \toprule
+    \intestazione{Revisione} & \intestazione{Contenuto} & \intestazione{Candidatura prevista} \\
+    \midrule
+    RTB & requisiti, tecnologie scelte e \glo{PoC} & 2027-01-25 \\
+    PB  & \glo{MVP} completo e verificato          & 2027-03-23 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Il lavoro è diviso in dieci \glo[Sprint]{\textit{sprint}} di due settimane, da lunedì a
+domenica, allineati alla rotazione dei ruoli
+(Tabella~\ref{tab:calendario}). I primi sei portano alla RTB, gli ultimi
+quattro alla PB. Gli \glo[Sprint]{\textit{sprint}} 4 e 5 comprendono le festività
+natalizie e prevedono circa un quarto di ore in meno degli altri; la RTB
+cade all'inizio della sessione d'esami invernale, che il calendario tiene
+in conto (rischio RO1, sezione~\ref{rischio:RO1}).
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Calendario di massima degli \textit{sprint}\label{tab:calendario}}
+  \begin{tabularx}{\linewidth}{@{}cllc>{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \intestazione{Sprint} & \intestazione{Inizio} & \intestazione{Fine} &
+      \intestazione{Fase} & \intestazione{Obiettivo principale} \\
+    \midrule
+    1  & 2026-11-02 & 2026-11-15 & RTB & avvio: pianificazione, norme, infrastruttura, primo incontro di analisi \\
+    2  & 2026-11-16 & 2026-11-29 & RTB & casi d'uso delle quattro capacità; primi esperimenti con i modelli \\
+    3  & 2026-11-30 & 2026-12-13 & RTB & requisiti completi e tracciati; esperimento sulla conoscenza documentale \\
+    4  & 2026-12-14 & 2026-12-27 & RTB & \glo{PoC} delle abilità \glo{MCP} su servizi simulati (festività) \\
+    5  & 2026-12-28 & 2027-01-10 & RTB & \glo{PoC} del percorso completo; bozza della \textit{Technology Baseline} (festività) \\
+    6  & 2027-01-11 & 2027-01-24 & RTB & verifica e approvazione dei documenti; preparazione della RTB \\
+    \midrule
+    7  & 2027-01-25 & 2027-02-07 & PB  & revisione RTB e correzioni; architettura dell'\glo{MVP}; avvio dello sviluppo \\
+    8  & 2027-02-08 & 2027-02-21 & PB  & \glo{MVP}: conoscenza documentale, gestione delle fonti, conversazione \\
+    9  & 2027-02-22 & 2027-03-07 & PB  & \glo{MVP}: dati personali, richiesta con conferma, autorizzazioni \\
+    10 & 2027-03-08 & 2027-03-21 & PB  & collaudo sui criteri di accettazione; documenti finali; preparazione della PB \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Le date sono una stima iniziale: a ogni retrospettiva il consuntivo del
+periodo le confronta con l'avanzamento reale e, se serve, questa sezione
+viene aggiornata e le modifiche comunicate al committente.
+
+% =====================================================================
+\section{Impegno orario previsto e stima dei costi}\label{sec:impegno}
+% =====================================================================
+
+Il preventivo riprende quello della Dichiarazione di Impegni: 552 ore,
+92 per ogni membro, per un costo complessivo di 11.250,00\,\texteuro.
+Ogni membro ricopre tutti i ruoli con la stessa ripartizione oraria, così
+che il carico e le opportunità di apprendimento siano uguali per tutti
+(Tabella~\ref{tab:ore-membro}). La Tabella~\ref{tab:costi-ruolo} riporta
+ore e costi per ruolo.
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Ore previste per membro e per ruolo\label{tab:ore-membro}}
+  \begin{tabular}{@{}lrrrrrrr@{}}
+    \toprule
+    \intestazione{Membro} & \intestazione{Re} & \intestazione{Am} & \intestazione{An} &
+      \intestazione{Pt} & \intestazione{Pr} & \intestazione{Ve} & \intestazione{Totale} \\
+    \midrule
+    \nome{biasini}    & 9 & 12 & 13 & 17 & 22 & 19 & 92 \\
+    \nome{cescobolla} & 9 & 12 & 13 & 17 & 22 & 19 & 92 \\
+    \nome{corro}      & 9 & 12 & 13 & 17 & 22 & 19 & 92 \\
+    \nome{guglielmo}  & 9 & 12 & 13 & 17 & 22 & 19 & 92 \\
+    \nome{mazzurana}  & 9 & 12 & 13 & 17 & 22 & 19 & 92 \\
+    \nome{spagnoli}   & 9 & 12 & 13 & 17 & 22 & 19 & 92 \\
+    \midrule
+    \textbf{Totale}   & 54 & 72 & 78 & 102 & 132 & 114 & 552 \\
+    \bottomrule
+  \end{tabular}
+
+  \smallskip
+  {\footnotesize Re = Responsabile, Am = Amministratore, An = Analista,
+   Pt = Progettista, Pr = Programmatore, Ve = Verificatore.}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Ore e costi previsti per ruolo\label{tab:costi-ruolo}}
+  \begin{tabular}{@{}lrrrr@{}}
+    \toprule
+    \intestazione{Ruolo} & \intestazione{Ore} & \intestazione{Quota ore} &
+      \intestazione{Costo orario} & \intestazione{Costo} \\
+    \midrule
+    Responsabile   &  54 &  9,8\,\% & 30,00\,\texteuro & 1.620,00\,\texteuro \\
+    Amministratore &  72 & 13,0\,\% & 20,00\,\texteuro & 1.440,00\,\texteuro \\
+    Analista       &  78 & 14,1\,\% & 25,00\,\texteuro & 1.950,00\,\texteuro \\
+    Progettista    & 102 & 18,5\,\% & 25,00\,\texteuro & 2.550,00\,\texteuro \\
+    Programmatore  & 132 & 23,9\,\% & 15,00\,\texteuro & 1.980,00\,\texteuro \\
+    Verificatore   & 114 & 20,7\,\% & 15,00\,\texteuro & 1.710,00\,\texteuro \\
+    \midrule
+    \textbf{Totale} & \textbf{552} & 100\,\% & & \textbf{11.250,00\,\texteuro} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+La ripartizione tra le due fasi segue la natura del lavoro
+(Tabella~\ref{tab:ore-fase}). Verso la RTB prevalgono analisi,
+amministrazione e verifica dei documenti, oltre alla prima progettazione e
+al codice del \glo{PoC}; verso la PB prevalgono progettazione di dettaglio,
+programmazione e verifica del prodotto. Poco più della metà delle ore è
+destinata alla RTB, perché in questa fase si producono quasi tutti i
+documenti e si sceglie lo \glo{Stack tecnologico}.
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Ore e costi previsti per fase e ruolo\label{tab:ore-fase}}
+  \begin{tabular}{@{}lrrrrrrrr@{}}
+    \toprule
+    \intestazione{Fase} & \intestazione{Re} & \intestazione{Am} & \intestazione{An} &
+      \intestazione{Pt} & \intestazione{Pr} & \intestazione{Ve} &
+      \intestazione{Ore} & \intestazione{Costo} \\
+    \midrule
+    RTB (\textit{sprint} 1--6)  & 31,5 & 48 & 65 & 47 & 56 & 64 & 311,5 & 6.505,00\,\texteuro \\
+    PB (\textit{sprint} 7--10)  & 22,5 & 24 & 13 & 55 & 76 & 50 & 240,5 & 4.745,00\,\texteuro \\
+    \midrule
+    \textbf{Totale} & 54 & 72 & 78 & 102 & 132 & 114 & 552 & 11.250,00\,\texteuro \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+La suddivisione di dettaglio per \glo[Sprint]{\textit{sprint}}, membro e ruolo è
+riportata nella pianificazione di ogni periodo. Il consumo effettivo è
+tracciato con le ore registrate su ogni attività e confrontato con il
+preventivo nel consuntivo di ogni periodo (rischio RO4, sezione~\ref{rischio:RO4}).
+
+% =====================================================================
+\section{Pianificazione}\label{sec:pianificazione}
+% =====================================================================
+
+\subsection{Introduzione}
+Questa sezione raccoglie, per ogni \glo[Sprint]{\textit{sprint}}, la pianificazione
+decisa nella riunione di apertura e il resoconto scritto alla chiusura.
+Ogni \glo[Sprint]{\textit{sprint}} è descritto con la stessa struttura:
+\begin{itemize}
+  \item \textbf{Panoramica e obiettivi}: il contesto del periodo e i
+        risultati attesi, ognuno tracciato da una o più \glo[Issue]{\textit{issue}};
+  \item \textbf{Rischi attesi}: i rischi della sezione~\ref{sec:rischi}
+        più probabili nel periodo e come vengono mitigati;
+  \item \textbf{Ruoli assegnati}: il ruolo di ogni membro, uno per
+        persona, secondo la rotazione;
+  \item \textbf{Preventivo}: ore e costi pianificati per membro e per ruolo;
+  \item \textbf{Consuntivo}: ore e costi effettivi, con lo scarto rispetto
+        al preventivo;
+  \item \textbf{Risorse rimanenti}: ore e budget ancora disponibili dopo
+        lo \glo[Sprint]{\textit{sprint}};
+  \item \textbf{Retrospettiva}: rischi incontrati, cosa ha funzionato,
+        cosa migliorare e come cambia la pianificazione successiva.
+\end{itemize}
+
+Le ore del consuntivo non sono stimate a posteriori: ogni membro le
+registra durante il lavoro sulla \glo[Issue]{\textit{issue}} dell'attività svolta, con
+il comando \texttt{/ore} descritto nelle \textit{Norme di Progetto}. Le
+registrazioni vengono sommate automaticamente per persona, ruolo e
+\glo[Sprint]{\textit{sprint}}, e da queste derivano le tabelle di consuntivo. Ruoli,
+ore pianificate e obiettivi di ogni \glo[Sprint]{\textit{sprint}} sono gli stessi
+riportati nel file di pianificazione del gruppo, da cui il cruscotto
+confronta ogni giorno ore pianificate ed effettive.
+
+Nelle tabelle i ruoli sono abbreviati come segue: Re = Responsabile,
+Am = Amministratore, An = Analista, Pt = Progettista, Pr = Programmatore,
+Ve = Verificatore. Le tariffe orarie sono quelle della
+Tabella~\ref{tab:costi-ruolo}.
+
+% =====================================================================
+\subsection{Requirements and Technology Baseline}\label{sec:pianificazione-rtb}
+% =====================================================================
+
+% ---------------------------------------------------------------------
+\subsubsection{Sprint 1: dal 2026-11-02 al 2026-11-15}\label{sec:sprint-1}
+% ---------------------------------------------------------------------
+
+\subsubsubsection{Panoramica e obiettivi}
+Il primo \glo[Sprint]{\textit{sprint}} si apre con la presentazione del Diario di Bordo
+del 2026-11-02 e con l'aggiudicazione del \glo{capitolato} C2
+\textit{NEXUM Concierge}, presa in esame dal gruppo nella riunione interna
+del 2026-11-03. Il periodo ha un carattere soprattutto organizzativo: il
+gruppo imposta i processi e gli strumenti che userà per tutto il progetto,
+avvia i documenti della RTB e apre il dialogo con la proponente Eggon, da
+cui dipendono l'Analisi dei Requisiti e le scelte tecnologiche dei periodi
+successivi. Gli obiettivi fissati sono:
+\begin{itemize}
+  \item \textbf{Piano di Progetto}: prima stesura di rischi attesi e
+        mitigazione, calendario di massima, impegno orario e
+        pianificazione del primo \glo[Sprint]{\textit{sprint}};
+  \item \textbf{Norme di Progetto}: prima stesura, con i processi di
+        gestione, di documentazione e di verifica già adottati dal gruppo;
+  \item \textbf{Infrastruttura di gestione}: organizzazione del GitHub
+        Project con i campi per \glo[Sprint]{\textit{sprint}}, ruolo e ore;
+        collegamento automatico tra \glo[Issue]{\textit{issue}}, \glo[Pull request]{\textit{pull request}}
+        e Project; registrazione delle ore con il comando \texttt{/ore};
+        cruscotto di avanzamento; creazione del \glo{repository} per i
+        \glo{PoC};
+  \item \textbf{Glossario}: riorganizzazione per lettere e inserimento dei
+        primi termini del dominio del capitolato;
+  \item \textbf{Rapporti con la proponente}: primo incontro con Eggon per
+        concordare canali e cadenza di comunicazione e per chiarire il
+        perimetro dell'\glo{MVP};
+  \item \textbf{Analisi dei Requisiti}: studio del capitolato,
+        individuazione degli attori e delle quattro capacità del
+        \textit{Concierge}, prima bozza dei casi d'uso;
+  \item \textbf{Studio delle tecnologie}: approfondimento delle tecnologie
+        indicate nel capitolato e preparazione dell'ambiente per i primi
+        esperimenti;
+  \item \textbf{Verifica}: revisione di ogni documento e verbale prodotto
+        nel periodo prima della sua approvazione.
+\end{itemize}
+
+\subsubsubsection{Rischi attesi}
+Per il primo \glo[Sprint]{\textit{sprint}} il gruppo prevede i seguenti rischi:
+\begin{itemize}
+  \item \textbf{RT1 -- Inesperienza con le tecnologie del capitolato}
+        (sezione~\ref{rischio:RT1}): nessun membro ha ancora lavorato con
+        le tecnologie richieste. Lo studio è distribuito tra i componenti del gruppo e i risultati vengono condivisi nelle riunioni interne;
+  \item \textbf{RR2 -- Requisiti incompresi o incompleti}
+        (sezione~\ref{rischio:RR2}): il capitolato lascia aperti diversi
+        aspetti dell'integrazione con NEXUM. I dubbi vengono raccolti in
+        un elenco di domande da portare al primo incontro con Eggon;
+  \item \textbf{RO5 -- Comunicazione discontinua con il proponente}
+        (sezione~\ref{rischio:RO5}): il canale con Eggon è ancora da
+        stabilire. Il Responsabile concorda nel primo incontro modalità e
+        frequenza dei contatti;
+\end{itemize}
+
+\subsubsubsection{Ruoli assegnati}
+I ruoli del primo \glo[Sprint]{\textit{sprint}} sono riportati nella
+Tabella~\ref{tab:ruoli-sprint-1}. I ruoli seguono la rotazione pianificata, che
+garantisce a ogni membro le ore previste per ciascun ruolo entro la fine
+del progetto.
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Sprint 1 -- Ruoli assegnati\label{tab:ruoli-sprint-1}}
+  \begin{tabular}{@{}llr@{}}
+    \toprule
+    \intestazione{Ruolo} & \intestazione{Membro} & \intestazione{Ore pianificate} \\
+    \midrule
+    Responsabile   & \nome{cescobolla} & 4,5 \\
+    Amministratore & \nome{biasini}    & 12 \\
+    Analista       & \nome{guglielmo}  & 13 \\
+                   & \nome{mazzurana}  & 6 \\
+    Progettista    & \nome{spagnoli}   & 8 \\
+    Programmatore  & --                & -- \\
+    Verificatore   & \nome{corro}      & 9,5 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Non è previsto un Programmatore: nel primo periodo non si scrive ancora
+codice di prodotto, e le prime prove tecniche rientrano nello studio
+svolto dal Progettista. Il peso maggiore è sull'analisi (19 ore), perché
+l'Analisi dei Requisiti è il documento su cui poggia tutta la RTB.
+
+\subsubsubsection{Preventivo}
+La Tabella~\ref{tab:preventivo-sprint-1} riporta le ore pianificate per
+membro e ruolo; la Tabella~\ref{tab:preventivo-economico-sprint-1} le
+riassume per ruolo con il relativo costo.
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Sprint 1 -- Preventivo orario per membro e ruolo\label{tab:preventivo-sprint-1}}
+  \begin{tabular}{@{}lrrrrrrr@{}}
+    \toprule
+    \intestazione{Membro} & \intestazione{Re} & \intestazione{Am} & \intestazione{An} &
+      \intestazione{Pt} & \intestazione{Pr} & \intestazione{Ve} & \intestazione{Totale} \\
+    \midrule
+    \nome{biasini}    & --  & 12 & -- & -- & -- & --  & 12 \\
+    \nome{cescobolla} & 4,5 & -- & -- & -- & -- & --  & 4,5 \\
+    \nome{corro}      & --  & -- & -- & -- & -- & 9,5 & 9,5 \\
+    \nome{guglielmo}  & --  & -- & 13 & -- & -- & --  & 13 \\
+    \nome{mazzurana}  & --  & -- & 6  & -- & -- & --  & 6 \\
+    \nome{spagnoli}   & --  & -- & -- & 8  & -- & --  & 8 \\
+    \midrule
+    \textbf{Totale ore}         & 4,5    & 12     & 19     & 8      & -- & 9,5    & 53 \\
+    \textbf{Costo (\texteuro)}  & 135,00 & 240,00 & 475,00 & 200,00 & -- & 142,50 & 1.192,50 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Sprint 1 -- Preventivo economico per ruolo\label{tab:preventivo-economico-sprint-1}}
+  \begin{tabular}{@{}lrrr@{}}
+    \toprule
+    \intestazione{Ruolo} & \intestazione{Ore} & \intestazione{Quota ore} & \intestazione{Costo} \\
+    \midrule
+    Responsabile   & 4,5 &  8,5\,\% & 135,00\,\texteuro \\
+    Amministratore & 12  & 22,6\,\% & 240,00\,\texteuro \\
+    Analista       & 19  & 35,8\,\% & 475,00\,\texteuro \\
+    Progettista    & 8   & 15,1\,\% & 200,00\,\texteuro \\
+    Programmatore  & --  & --       & -- \\
+    Verificatore   & 9,5 & 17,9\,\% & 142,50\,\texteuro \\
+    \midrule
+    \textbf{Totale} & \textbf{53} & 100\,\% & \textbf{1.192,50\,\texteuro} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[x=0.32cm, y=0.62cm, font=\small]
+    % una barra per ruolo, lunga quanto le ore preventivate
+    \foreach \ruolo/\ore/\testo [count=\i] in
+      {Responsabile/4.5/4{,}5, Amministratore/12/12, Analista/19/19,
+       Progettista/8/8, Programmatore/0/0, Verificatore/9.5/9{,}5} {
+      \node[anchor=east] at (-0.4, -\i) {\ruolo};
+      \ifdim \ore pt > 0pt
+        \fill[gptaccento] (0, -\i-0.32) rectangle (\ore, -\i+0.32);
+      \fi
+      \node[anchor=west, text=gptinchiostro] at (\ore+0.3, -\i) {\testo\ h};
+    }
+    \draw[gptgrigio] (0, -0.4) -- (0, -6.6);
+  \end{tikzpicture}
+  \caption{Sprint 1 -- Ore preventivate per ruolo\label{fig:preventivo-sprint-1}}
+\end{figure}
+
+\subsubsubsection{Consuntivo}
+\textit{Da compilare alla chiusura dello sprint (2026-11-15).}
+
+% ---------------------------------------------------------------------
+% COME COMPILARE IL CONSUNTIVO
+% Le ore effettive si leggono dal cruscotto (repository .github-private):
+% il file tabelle/consuntivo-sprint-1.tex contiene già questa tabella,
+% con lo scarto dal preventivo tra parentesi. Si può incollare al posto
+% dello scheletro qui sotto oppure includerlo con
+%   \input{tabelle/consuntivo-sprint-1}
+% Togliete la riga "Da compilare..." e il simbolo % davanti alle righe.
+% Nelle celle: ore effettive e, se diverse, lo scarto, per esempio
+%   13 \scriptsize(+1)   oppure   5 \scriptsize($-$1)
+% ---------------------------------------------------------------------
+% La Tabella~\ref{tab:consuntivo-sprint-1} riporta le ore effettivamente
+% registrate per membro e ruolo, con lo scarto dal preventivo tra
+% parentesi; la Tabella~\ref{tab:consuntivo-economico-sprint-1} confronta
+% ore e costi per ruolo con il preventivo.
+%
+% \begin{table}[H]
+%   \centering
+%   \small
+%   \caption{Sprint 1 -- Consuntivo orario per membro e ruolo\label{tab:consuntivo-sprint-1}}
+%   \begin{tabular}{@{}lrrrrrrr@{}}
+%     \toprule
+%     \intestazione{Membro} & \intestazione{Re} & \intestazione{Am} & \intestazione{An} &
+%       \intestazione{Pt} & \intestazione{Pr} & \intestazione{Ve} & \intestazione{Totale} \\
+%     \midrule
+%     \nome{biasini}    & --  & ... & --  & --  & -- & --  & ... \\
+%     \nome{cescobolla} & ... & --  & --  & --  & -- & --  & ... \\
+%     \nome{corro}      & --  & --  & --  & --  & -- & ... & ... \\
+%     \nome{guglielmo}  & --  & --  & ... & --  & -- & --  & ... \\
+%     \nome{mazzurana}  & --  & --  & ... & --  & -- & --  & ... \\
+%     \nome{spagnoli}   & --  & --  & --  & ... & -- & --  & ... \\
+%     \midrule
+%     \textbf{Totale ore}        & ... & ... & ... & ... & -- & ... & ... \\
+%     \textbf{Costo (\texteuro)} & ... & ... & ... & ... & -- & ... & ... \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+%
+% \begin{table}[H]
+%   \centering
+%   \small
+%   \caption{Sprint 1 -- Consuntivo economico per ruolo\label{tab:consuntivo-economico-sprint-1}}
+%   \begin{tabular}{@{}lrrrr@{}}
+%     \toprule
+%     \intestazione{Ruolo} & \intestazione{Ore} & \intestazione{Scarto ore} &
+%       \intestazione{Costo} & \intestazione{Scarto costo} \\
+%     \midrule
+%     Responsabile   & ... & ... & ...\,\texteuro & ...\,\texteuro \\
+%     Amministratore & ... & ... & ...\,\texteuro & ...\,\texteuro \\
+%     Analista       & ... & ... & ...\,\texteuro & ...\,\texteuro \\
+%     Progettista    & ... & ... & ...\,\texteuro & ...\,\texteuro \\
+%     Programmatore  & --  & --  & --             & --             \\
+%     Verificatore   & ... & ... & ...\,\texteuro & ...\,\texteuro \\
+%     \midrule
+%     \textbf{Totale} & ... & ... & ...\,\texteuro & ...\,\texteuro \\
+%     \bottomrule
+%   \end{tabular}
+%
+%   \smallskip
+%   {\footnotesize Scarto = consuntivo $-$ preventivo: un valore positivo
+%    indica più ore o più spesa del previsto.}
+% \end{table}
+
+\subsubsubsection{Risorse rimanenti}
+\textit{Da compilare alla chiusura dello sprint (2026-11-15).}
+
+% ---------------------------------------------------------------------
+% Ore e budget rimanenti = preventivo totale (Tabella tab:costi-ruolo)
+% meno le ore consumate dall'inizio del progetto. Il cruscotto le
+% calcola nel file tabelle/riepilogo-ruoli.tex (colonne "res.").
+% Partenza: 54 / 72 / 78 / 102 / 132 / 114 ore = 552 ore, 11.250,00 euro.
+% ---------------------------------------------------------------------
+% \begin{table}[H]
+%   \centering
+%   \small
+%   \caption{Sprint 1 -- Ore e budget rimanenti per ruolo\label{tab:rimanenti-sprint-1}}
+%   \begin{tabular}{@{}lrrrr@{}}
+%     \toprule
+%     \intestazione{Ruolo} & \intestazione{Ore consumate} & \intestazione{Ore rimanenti} &
+%       \intestazione{Costo consumato} & \intestazione{Budget rimanente} \\
+%     \midrule
+%     Responsabile   & ... & ... & ...\,\texteuro & ...\,\texteuro \\
+%     Amministratore & ... & ... & ...\,\texteuro & ...\,\texteuro \\
+%     Analista       & ... & ... & ...\,\texteuro & ...\,\texteuro \\
+%     Progettista    & ... & ... & ...\,\texteuro & ...\,\texteuro \\
+%     Programmatore  & 0   & 132 & 0,00\,\texteuro & 1.980,00\,\texteuro \\
+%     Verificatore   & ... & ... & ...\,\texteuro & ...\,\texteuro \\
+%     \midrule
+%     \textbf{Totale} & ... & ... & ...\,\texteuro & ...\,\texteuro \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+\subsubsubsection{Retrospettiva}
+\textit{Da compilare dopo la riunione di retrospettiva di fine sprint.}
+
+% ---------------------------------------------------------------------
+% Traccia (togliete i % e completate):
+%
+% \textbf{Rischi incontrati.} Quali dei rischi attesi si sono verificati,
+% con che effetto, e se la mitigazione prevista ha funzionato. Eventuali
+% rischi non previsti (in quel caso aggiungeteli alla sezione dei rischi).
+%
+% \textbf{Cosa ha funzionato.}
+% \begin{itemize}
+%   \item ...
+% \end{itemize}
+%
+% \textbf{Cosa migliorare.}
+% \begin{itemize}
+%   \item ...
+% \end{itemize}
+%
+% \textbf{Obiettivi.} Quali obiettivi sono stati raggiunti e quali
+% passano allo sprint 2, con il motivo.
+%
+% \textbf{Aggiornamento della pianificazione.} Le azioni correttive
+% decise per lo sprint 2 e le eventuali modifiche a ruoli o ore
+% (in quel caso aggiornate anche il file di pianificazione).
+% ---------------------------------------------------------------------
+
+\end{document}
