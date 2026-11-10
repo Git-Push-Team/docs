@@ -32,6 +32,7 @@ Non serve conoscere LaTeX né Git: seguite le ricette e copiate i comandi così 
     - [R15. Aggiornare il sito: milestone, diapositive, gruppo](#r15-aggiornare-il-sito-milestone-diapositive-gruppo)
     - [R16. Il Glossario: crearlo, aggiungere termini, marcarli](#r16-il-glossario-crearlo-aggiungere-termini-marcarli)
     - [R17. Segnare le ore (comando `/ore`)](#r17-segnare-le-ore-comando-ore)
+    - [R18. Ortografia e leggibilità (🔎 Analisi dei testi)](#r18-ortografia-e-leggibilità--analisi-dei-testi)
 5. [Le versioni: le regole del registro](#5-le-versioni-le-regole-del-registro)
 6. [Prontuario dei comandi](#6-prontuario-dei-comandi)
 7. [Quando qualcosa va storto](#7-quando-qualcosa-va-storto)
@@ -55,8 +56,9 @@ Non serve conoscere LaTeX né Git: seguite le ricette e copiate i comandi così 
 | **CI** / **Action** | I controlli automatici di GitHub: compilano i PDF e li commentano nella PR. |
 | **Milestone** | Una delle tre consegne: **Candidatura**, **RTB** (Requirements and Technology Baseline), **PB** (Product Baseline). Ognuna ha la sua cartella. |
 | **Chiave** | Il nome breve di una persona usato nei documenti: `guglielmo`, `corro`… (elenco in `template/dati-gruppo.tex`). |
-| **Preambolo** | La parte del `.tex` **prima** di `\begin{document}`: lì si scrivono titolo, data, persone, registro. |
-| **Registro delle modifiche** | La tabella con tutte le versioni del documento. Si scrive con le righe `\modifica{...}`. |
+| **Preambolo** | La parte del `.tex` **prima** di `\begin{document}`: lì si scrivono titolo, data, persone. |
+| **Registro delle modifiche** | La tabella con tutte le versioni del documento. Le righe `\modifica{...}` le scrive il **bot** dopo il merge, nel file `nome.registro.tex` accanto al `.tex` ([sezione 5](#5-le-versioni-le-regole-del-registro)). |
+| **Etichetta (label)** | Parola che si attacca a una PR (a destra, *Labels*). `contenuto`, `correzione` e `approvazione` dicono al bot come cambia la versione. |
 
 ---
 
@@ -156,6 +158,7 @@ Dentro queste cartelle potete creare sottocartelle a piacere (per esempio una pe
 | `template/sito.toml` | impostazioni del sito: stato delle milestone, link extra, capitolato, account GitHub | ⚠️ solo Amministratori ([R15](#r15-aggiornare-il-sito-milestone-diapositive-gruppo)) |
 | `<Milestone>/diapositive/` | PDF delle presentazioni e dei diari di bordo, fatti fuori da LaTeX | ✅ sì ([R15](#r15-aggiornare-il-sito-milestone-diapositive-gruppo)) |
 | `template/gpt.cls` | la classe LaTeX: decide l'aspetto di tutti i documenti | ⚠️ solo Amministratori |
+| `scripts/analisi/parole.txt` | parole che l'analisi dei testi non deve segnalare come errori (nomi, sigle) | ✅ sì, una parola per riga ([R18](#r18-ortografia-e-leggibilità--analisi-dei-testi)) |
 | `scripts/build.py`, `scripts/sito.py`, `latexmkrc`, `.github/`, `.vscode/` | compilazione, pagina del sito e automazioni | ⚠️ solo Amministratori |
 | `build/`, `site/` | file generati dalla compilazione sul vostro computer (PDF di prova, sito di prova): si possono cancellare | ❌ non si caricano su GitHub (sono ignorati) |
 
@@ -204,9 +207,11 @@ Le volte successive, nello stesso branch, bastano `git add -A`, `git commit -m "
 **Passo 6 — Aprite la pull request.** Dopo il push, GitHub stampa un link `.../pull/new/doc/12-...`: apritelo (oppure sul sito del repo cliccate il pulsante giallo *Compare & pull request*). Poi:
 
 1. nel testo, dopo `Closes #`, scrivete il numero della issue (`Closes #12`);
-2. spuntate la *Checklist dell'autore*;
-3. a destra, in *Reviewers*, scegliete il **Verificatore** (diverso da voi);
-4. cliccate *Create pull request*.
+2. alla riga `Descrizione:` scrivete **cosa** è cambiato e **dove** (*"Stesura della sezione 3, Gestione dei rischi"*): è il testo che finirà nel registro;
+3. a destra, in *Labels*, mettete l'**etichetta di versione**: `contenuto` (prima stesura o parti nuove) o `correzione` (correzioni piccole). Senza etichetta il registro non cambia ([sezione 5](#5-le-versioni-le-regole-del-registro));
+4. spuntate la *Checklist dell'autore*;
+5. a destra, in *Reviewers*, scegliete il **Verificatore** (diverso da voi);
+6. cliccate *Create pull request*.
 
 **Passo 7 — Aspettate il commento automatico** (2–4 minuti). Nella scheda *Conversation* della PR compare il commento **📄 Anteprima dei documenti** con:
 
@@ -214,10 +219,14 @@ Le volte successive, nello stesso branch, bastano `git add -A`, `git commit -m "
 - il link **Apri il PDF** (se avete cambiato un solo documento si apre nel browser; se sono di più, scaricate lo zip);
 - se c'è un ❌, le righe d'errore con file e numero di riga: correggete, poi rifate il passo 5 (commit + push) e il commento si aggiorna da solo.
 
+Compare anche il commento **📝 Registro delle modifiche**, con la riga che il bot aggiungerà dopo il merge (versione, autore, verificatore, descrizione). Si aggiorna da solo quando cambiate etichetta o descrizione, o quando qualcuno approva.
+
+E il commento **🔎 Analisi dei testi**: errori di ortografia, grammatica e tipografia trovati nelle righe che avete cambiato, e la leggibilità (indice Gulpease) del documento. Sono **suggerimenti**: non bloccano il merge ([R18](#r18-ortografia-e-leggibilità--analisi-dei-testi)).
+
 Quando il Verificatore approva (vedi [R12](#r12-verificare-il-lavoro-di-un-altro-verificatore)), si clicca **Merge pull request**. Dopo qualche minuto:
 
 - il PDF è sul sito <https://git-push-team.github.io/docs/>, nella sezione della sua milestone; 🎉
-- nel repository, accanto al vostro `.tex`, compare il `.pdf` con lo stesso nome (lo salva il bot).
+- nel repository, accanto al vostro `.tex`, compaiono il `.pdf` con lo stesso nome e, se la PR aveva un'etichetta di versione, la riga nuova in `nome.registro.tex` (li salva il bot).
 
 Per questo, prima di iniziare un nuovo lavoro, rifate sempre il passo 2 (`git pull`): così avete anche i PDF aggiornati.
 
@@ -251,7 +260,6 @@ cp template/modelli/verbale-interno.tex Candidatura/verbali/interni/VI-2026-10-2
 | `\verificatore{...}` | **chiave** di chi controlla (un Verificatore, diverso dal redattore) | `\verificatore{corro}` |
 | `\componenti{...}` | chi faceva parte del gruppo quel giorno: **lasciatelo com'è** | (già pronto) |
 | `\assenti{...}` | chiavi di chi mancava, separate da virgole; vuoto se c'erano tutti | `\assenti{spagnoli}` |
-| `\modifica{0.1.0}{...}` | prima riga del registro: data di oggi, la vostra chiave e `--` al posto del verificatore (lo sostituisce lui quando ha verificato) | `\modifica{0.1.0}{2026-10-26}{mazzurana}{--}{Stesura del verbale}` |
 
 > Le chiavi sono in `template/dati-gruppo.tex`: `biasini`, `cescobolla`, `corro`, `guglielmo`, `mazzurana`, `spagnoli`.
 > Se ne scrivete una sbagliata, la compilazione si ferma e vi dice quali sono quelle giuste.
@@ -275,19 +283,12 @@ cp template/modelli/verbale-interno.tex Candidatura/verbali/interni/VI-2026-10-2
 
 Le decisioni si numerano da sole (D1, D2…), le azioni pure (A1, A2…). `tutti` stampa "Tutto il gruppo".
 
-**4. Consegnate** con il giro dei 7 passi. Nella PR il registro si completa così (regole nella [sezione 5](#5-le-versioni-le-regole-del-registro)):
+**4. Consegnate** con il giro dei 7 passi. Il registro non si scrive a mano: lo compila il bot dopo il merge ([sezione 5](#5-le-versioni-le-regole-del-registro)). Per un verbale nuovo:
 
-1. il Verificatore legge la stesura, mette **la sua chiave al posto di `--`** nella riga `0.1.0` e vi scrive nella review cosa correggere;
-2. voi correggete e aggiungete **in cima** la riga della versione approvata, dicendo cosa avete corretto:
+- se il Verificatore lo approva così com'è, oppure dopo le correzioni chieste nella stessa PR, mettete l'etichetta **`approvazione`** e come descrizione *"Stesura e approvazione del verbale"*: il bot scrive una sola riga, `1.0.0`;
+- se invece volete registrare prima la stesura e approvarlo con una PR successiva, la prima PR ha l'etichetta **`contenuto`** (`0.1.0`, *"Stesura del verbale"*) e la seconda **`approvazione`** (`1.0.0`, *"Corrette le scadenze delle azioni e approvazione del verbale"*).
 
-   ```latex
-   \modifica{1.0.0}{2026-10-27}{mazzurana}{--}{Corrette le scadenze delle azioni e approvazione del verbale}
-   \modifica{0.1.0}{2026-10-26}{mazzurana}{corro}{Stesura del verbale}
-   ```
-
-3. il Verificatore ricontrolla, mette la sua chiave al posto di `--` anche lì e fa il merge.
-
-Se alla prima lettura non c'è niente da correggere, il Verificatore mette la sua chiave e cambia direttamente `0.1.0` in `1.0.0`: il verbale avrà una riga sola, ed è giusto così. Un verbale è approvato quando la sua `1.0.0` è verificata; quello esterno poi va anche firmato dall'azienda ([R14](#r14-caricare-un-verbale-esterno-firmato)).
+Autore è chi ha aperto la PR (e chi vi ha fatto commit), verificatore chi l'ha approvata. Un verbale è approvato quando ha la sua `1.0.0`; quello esterno poi va anche firmato dall'azienda ([R14](#r14-caricare-un-verbale-esterno-firmato)).
 
 👀 Esempio completo: `template/esempi/esempio-verbale-interno.tex`.
 
@@ -330,15 +331,14 @@ Esempio: nel verbale `VI-2026-10-19` (versione `1.0.0`) c'è un nome sbagliato.
 
 1. Giro dei 7 passi, passi 1–3 (issue, `main` aggiornato, branch `doc/15-correzione-verbale-19-10`).
 2. Correggete il testo.
-3. Aggiungete **in cima** al registro una riga con la versione nuova (regole nella [sezione 5](#5-le-versioni-le-regole-del-registro)):
+3. Passi 5–6 del giro, con l'etichetta **`correzione`** e la descrizione *"Corretto il nome del Responsabile nella sezione Ruoli"*.
+4. Il Verificatore controlla e approva la PR. Dopo il merge il bot aggiunge in cima al registro:
 
    ```latex
-   \modifica{1.0.1}{2026-10-28}{guglielmo}{--}{Corretto il nome del Responsabile nella sezione Ruoli}
-   \modifica{1.0.0}{2026-10-20}{guglielmo}{corro}{Correzioni formali emerse in verifica e approvazione del verbale}
-   \modifica{0.1.0}{2026-10-19}{guglielmo}{corro}{Stesura del verbale}
+   \modifica{1.0.1}{2026-10-28}{guglielmo}{corro}{Corretto il nome del Responsabile nella sezione Ruoli}% PR #15
    ```
 
-4. Passi 5–7. Il Verificatore controlla e, se va bene, mette la sua chiave al posto di `--` nella riga nuova (e la data di oggi). La versione `1.0.1` esiste solo da quel momento.
+   Se la correzione è minima e non merita una versione (un refuso nel codice LaTeX che non si vede nel PDF, un commento), non mettete nessuna etichetta: il registro non cambia.
 
 > La versione del PDF (copertina, piè di pagina e nome del file) cambia da sola: è sempre quella della **prima** riga.
 > Non c'è nessun `\versione{}` da aggiornare.
@@ -363,26 +363,26 @@ Nomi suggeriti: `norme-di-progetto`, `piano-di-progetto`, `piano-di-qualifica`, 
 | `\titolo{...}` | il nome del documento: `\titolo{Norme di Progetto}` |
 | `\uso{...}` | `interno` o `esterno`, **come la cartella** (`documenti/interni/` → `interno`). Se non coincidono la PR ve lo segnala |
 | `\responsabile{...}` | la chiave del Responsabile, che approva il documento |
-| `\modifica{0.1.0}{...}` | la prima riga del registro, con `--` al posto del verificatore |
+
+Il registro non si scrive: finché il documento non è unito la copertina dice *Versione bozza*; la prima PR con etichetta `contenuto` crea la `0.1.0`.
 
 **Registro dei documenti: più persone e approvatore.**
 
-- Ogni PR aggiunge **una riga** in cima: cosa avete fatto e dove, la vostra chiave e `--`. Il Verificatore, quando la modifica è a posto, scrive la sua chiave al posto di `--` ([R12](#r12-verificare-il-lavoro-di-un-altro-verificatore)).
-- In autore e verificatore potete mettere **più chiavi separate da virgole**: `\modifica{0.2.0}{2026-11-10}{mazzurana, biasini}{cescobolla}{Stesura della sezione 2, Processi primari}`. In copertina ognuno compare una volta sola tra *Redattori* e *Verificatori*.
-- Quando il documento è pronto, la PR della sua ultima revisione usa la versione `1.0.0` e il **Responsabile**, che approva, si scrive **in fondo alla riga, tra parentesi quadre**:
+- Ogni PR con un'etichetta di versione fa aggiungere al bot **una riga** in cima ([sezione 5](#5-le-versioni-le-regole-del-registro)). Più autori o più verificatori compaiono separati da virgole; in copertina ognuno compare una volta sola tra *Redattori* e *Verificatori*.
+- Quando il documento è pronto, la PR della sua ultima revisione riceve l'etichetta **`approvazione`**, messa dal **Responsabile** dello sprint. Il bot scrive la `1.0.0` (o `2.0.0`…) con il Responsabile **tra parentesi quadre** in fondo, nella colonna *Approvatore*:
 
   ```latex
-  \modifica{1.0.0}{2026-11-19}{mazzurana}{corro}{Revisione finale della sezione 3 e approvazione del documento}[spagnoli]
-  \modifica{0.3.0}{2026-11-17}{mazzurana}{corro}{Stesura della sezione 3, Gestione dei rischi}
+  \modifica{1.0.0}{2026-11-19}{mazzurana}{corro}{Revisione finale della sezione 3 e approvazione del documento}[spagnoli]% PR #40
+  \modifica{0.3.0}{2026-11-17}{mazzurana}{corro}{Stesura della sezione 3, Gestione dei rischi}% PR #38
   ```
 
-  Le parentesi quadre le aggiunge il Responsabile nella PR, dopo il Verificatore (e approva anche lui la PR). La colonna **Approvatore** compare nel registro solo se almeno una riga ha le parentesi quadre; nelle altre righe c'è un trattino. Nei verbali l'approvatore non si usa: la compilazione si ferma e ve lo dice.
+  Se l'etichetta l'ha messa qualcun altro, il bot non scrive la riga e lo spiega nel commento della PR. La colonna **Approvatore** compare solo se almeno una riga ce l'ha; nei verbali l'approvatore non si usa.
 
 **Si fanno da soli**: copertina (con versione, data dell'ultima modifica, **redattori e verificatori presi dal registro**), registro delle modifiche, **indice**, elenco delle figure e delle tabelle (solo se ce ne sono), intestazioni e numeri di pagina.
 
 **3. Scrivete** con `\section{...}`, `\subsection{...}`, `\subsubsection{...}`: compaiono da sole nell'indice.
 
-**4. Consegnate** con il giro dei 7 passi. A ogni modifica successiva: nuova riga in cima al registro, con le regole della [sezione 5](#5-le-versioni-le-regole-del-registro).
+**4. Consegnate** con il giro dei 7 passi, con l'etichetta di versione giusta ([sezione 5](#5-le-versioni-le-regole-del-registro)).
 
 👀 Esempio completo: `template/esempi/esempio-documento/`.
 
@@ -579,23 +579,14 @@ Vi arriva una richiesta di revisione (mail o campanella di GitHub).
 
 1. Aprite la PR. Nella scheda **Conversation** trovate il commento **📄 Anteprima dei documenti**: cliccate **Apri il PDF** e leggetelo **per intero**.
 2. Nella scheda **Files changed** vedete le righe modificate (verde = aggiunto, rosso = tolto). Per segnalare un problema su una riga, passateci sopra col mouse e cliccate il **+** blu.
-3. Seguite la *Checklist del Verificatore* nella descrizione della PR.
+3. Seguite la *Checklist del Verificatore* nella descrizione della PR. Il commento **🔎 Analisi dei testi** vi indica refusi e frasi difficili nelle righe cambiate: aiuta, ma non sostituisce la lettura ([R18](#r18-ortografia-e-leggibilità--analisi-dei-testi)).
 4. **Se ci sono cose da correggere**: *Review changes* (o *Submit review*) → **Request changes** → spiegate cosa sistemare. L'autore corregge e fa push; voi rileggete.
-5. **Se è tutto a posto**, registrate la verifica nel registro, direttamente dal sito:
-    - in *Files changed*, sul file `.tex`, menu **⋯** → **Edit file**;
-    - nella riga in cima al registro scrivete **la vostra chiave al posto di `--`** e mettete la **data di oggi** (una versione nasce quando è verificata):
-
-      ```latex
-      \modifica{0.3.0}{2026-11-17}{mazzurana}{--}{Stesura della sezione 3, Gestione dei rischi}      % prima
-      \modifica{0.3.0}{2026-11-18}{mazzurana}{corro}{Stesura della sezione 3, Gestione dei rischi}   % dopo
-      ```
-
-    - controllate che la descrizione dica **cosa** è cambiato e **dove** (non "Modifica" o "Fix");
-    - **non aggiungete righe di sola "Verifica"**: la verifica è la vostra chiave nella riga della modifica;
-    - se è un **documento** che arriva a `1.0.0`, dopo di voi il Responsabile aggiunge `[spagnoli]` in fondo alla riga ([R4](#r4-creare-un-documento-norme-piani-analisi));
-    - in basso, *Commit changes* (lasciate "Commit directly to the doc/… branch").
-6. Aspettate che il commento automatico torni ✅ con la nuova versione e **senza avvisi sul registro** (sotto *Da controllare*), poi *Review changes* → **Approve** → *Submit review*.
-7. Cliccate **Merge pull request** → *Confirm merge*. Fatto: il sito si aggiorna da solo e il bot salva il PDF accanto al `.tex`.
+5. **Se è tutto a posto**, controllate il commento **📝 Registro delle modifiche**:
+    - l'**etichetta** è quella giusta (`contenuto` per parti nuove, `correzione` per correzioni piccole, `approvazione` solo per la versione approvata, messa dal Responsabile)? Se no, cambiatela a destra in *Labels*;
+    - la **descrizione** dice **cosa** è cambiato e **dove** (non "Modifica" o "Fix")? Se no, chiedete all'autore di correggere la riga `Descrizione:` della PR (o correggetela voi: *⋯ → Edit* sulla descrizione).
+    Non serve modificare il `.tex`: la verifica è la vostra approvazione.
+6. *Review changes* → **Approve** → *Submit review*. Il commento del registro si aggiorna e vi mostra come verificatore.
+7. Cliccate **Merge pull request** → *Confirm merge*. Fatto: il bot scrive la riga nel registro, aggiorna il sito e salva il PDF accanto al `.tex`.
 
 ---
 
@@ -715,7 +706,7 @@ RTB/documenti/esterni/glossario/
    ```
 
 3. Nella definizione potete usare `\emph{}`, `\textbf{}`, `\url{}` e `\glo{}` (se anche quel termine è nel Glossario: sul sito diventa un link). Niente tabelle, immagini o elenchi.
-4. Aggiungete una riga in cima al registro di `glossario.tex`, come per ogni documento: quali voci avete aggiunto o cambiato, la vostra chiave e `--` per il Verificatore.
+4. Nella PR mettete l'etichetta `contenuto` (voci nuove) o `correzione` e, come descrizione, quali voci avete aggiunto o cambiato: il bot aggiunge la riga al registro del Glossario.
 
 **Marcare un termine nei documenti.** Dove il termine compare nel testo:
 
@@ -749,50 +740,102 @@ Come funzionano i controlli:
 
 ### R17. Segnare le ore (comando `/ore`)
 
-Le ore di lavoro si registrano **nei commenti** della issue su cui avete lavorato (o della PR che la chiude), mentre lavorate:
+Le ore di lavoro si registrano **nei commenti** della issue su cui avete lavorato (o della PR che la chiude), alla fine di ogni blocco di lavoro.
+
+Si scrive l'**orario**, non il totale: il bot calcola la durata. Un orario si può controllare, un numero no.
 
 | Commento | Significato |
 | --- | --- |
-| `/ore 2` | 2 ore, nel ruolo che avete nello sprint in corso |
-| `/ore 1,5 verificatore` | 1 ora e mezza da Verificatore |
-| `/ore 1h30 analista 2026-11-05` | lavoro fatto in un altro giorno |
-| `/ore 45m` | 45 minuti |
+| `/ore 14:00-16:30` | dalle 14 alle 16:30 (2,5 ore), nel ruolo che avete nello sprint in corso |
+| `/ore 9-11 verificatore` | dalle 9 alle 11, da Verificatore |
+| `/ore 21:00-22:30 analista 2026-11-05` | lavoro fatto in un altro giorno |
+| `/ore 23:30-00:30` | a cavallo della mezzanotte: conta nel giorno in cui avete iniziato |
 
-- Le ore sono di **chi scrive il commento**: nessuno le segna per un altro. Più righe `/ore` nello stesso commento vanno bene.
+- Vale ancora la forma con il solo totale (`/ore 2`, `/ore 1,5 verificatore`, `/ore 1h30 analista 2026-11-05`, `/ore 45m`): i commenti già scritti restano validi e le ore già contate non cambiano. Da ora usate l'orario.
+- Le ore sono di **chi scrive il commento**: nessuno le segna per un altro. Più righe `/ore` nello stesso commento vanno bene (una per ogni blocco di lavoro).
+- L'orario non può finire dopo il momento in cui scrivete il commento (c'è mezz'ora di margine): le ore si segnano a lavoro fatto. Per un altro giorno aggiungete la data.
+- **Cose da controllare**: il bot segnala, nel riepilogo della issue (🔎 *Da controllare*) e ogni notte nel cruscotto (*Da sistemare*), due intervalli della stessa persona che si **sovrappongono**, **più di 8 ore** della stessa persona **in un giorno** e le ore segnate **più di 3 giorni dopo** il lavoro. Le ore contano lo stesso: se è tutto giusto si ignora, altrimenti correggete il commento. Le soglie sono in cima a `gestione/registro_ore.py` del repository `.github`.
 - Il bot mette 👍 se il comando è valido, 😕 se c'è un errore, e tiene aggiornato un commento di riepilogo nella issue. Nel Project il campo *Ore effettive* della issue è il totale.
 - **Per correggere** modificate o cancellate il vostro commento: tutto si ricalcola.
-- **Verificatore**: scrivete `/ore 1 verificatore` in un commento della PR (nella conversazione, non nel riquadro della review): le ore vanno alla issue che la PR chiude con `Closes #numero`.
-- **Riunioni**: ogni riunione ha la sua issue (modello **Riunione**); dopo la riunione ogni partecipante ci scrive `/ore 1,5`.
+- **Verificatore**: scrivete `/ore 18:00-19:00 verificatore` in un commento della PR (nella conversazione, non nel riquadro della review): le ore vanno alla issue che la PR chiude con `Closes #numero`.
+- **Riunioni**: ogni riunione ha la sua issue (modello **Riunione**); dopo la riunione ogni partecipante ci scrive l'orario, per esempio `/ore 21:00-22:30`.
 
 Il ruolo di ognuno nello sprint, gli obiettivi e il preventivo sono nel file `gestione/pianificazione.toml` del repository [`.github`](https://github.com/Git-Push-Team/.github); il cruscotto con tutti i totali si vede, da membri, sulla pagina dell'organizzazione.
 
 ---
 
+### R18. Ortografia e leggibilità (🔎 Analisi dei testi)
+
+A ogni PR che tocca un documento parte da sola l'**Analisi dei testi**, e nella PR compare il commento **🔎 Analisi dei testi**. **Non blocca mai il merge**: segnala, poi decidete voi.
+
+**Cosa controlla.**
+
+| Parte | Cosa trova | Esempio |
+| --- | --- | --- |
+| **Ortografia** e **Grammatica** | refusi e concordanze, con [LanguageTool](https://languagetool.org) in italiano | *erori* → *errori* |
+| **Tipografia** | gli errori tipici dell'italiano scritto | *E'* → *È*; *perchè* → *perché*; *un pò* → *un po'*; *qual'è* → *qual è*; *un'altro* → *un altro*; parole ripetute (*il il*); spazio prima di virgola e punto; virgolette dritte `"così"` (in LaTeX: ` ``così'' `); trattino ` - ` al posto di ` -- `; `...` al posto di `\dots` |
+| **Stile** | scelte da uniformare | mesi e giorni con la maiuscola (*Lunedì 12 Ottobre*); date numeriche nel testo (*23/03/2027*); plurali inglesi (*le issues* → *le issue*, *i commits* → *i commit*) |
+| **Leggibilità** | l'**indice Gulpease** del documento e delle sue sezioni, e le frasi oltre 40 parole | vedi sotto |
+
+**L'indice Gulpease** misura quanto è facile leggere un testo italiano, da 0 a 100: `89 + (300 × frasi − 10 × lettere) / parole`. Lo abbassano frasi lunghe e parole lunghe. Per un lettore con il diploma: sotto **40** il testo è difficile, sopra **60** è facile. Nel commento: 🟢 facile, 🟡 accettabile, 🔴 difficile, ⚪ testo troppo breve per dirlo. Titoli, intestazioni di tabella e didascalie non contano. Per alzarlo: spezzate le frasi lunghe (il commento le elenca), un concetto per frase.
+
+**Come si legge il commento.** Per ogni documento toccato: prima i problemi **nelle righe cambiate da questa PR** (con il numero di riga e, se sta in un capitolo, il nome del file), poi, chiusi in *Nel resto del documento*, quelli già presenti. Gli stessi avvisi compaiono anche accanto alle righe, nella scheda *Files changed*.
+
+**Un falso allarme?** Un nome, una sigla o un termine giusto segnalato come errore: aggiungetelo a `scripts/analisi/parole.txt` (una parola per riga) nella stessa PR. Non serve per le voci del Glossario, i nomi del gruppo, le parole inglesi corrette e le parole in corsivo (`\textit{...}`): quelle si ignorano da sole. Gli altri falsi allarmi si ignorano e basta.
+
+**Sul vostro computer** (facoltativo):
+
+```bash
+python3 scripts/analisi_testo.py RTB/documenti/esterni/piano-di-progetto.tex
+python3 scripts/analisi_testo.py --solo-gulpease
+```
+
+La prima riga controlla un documento (o una cartella: `RTB`), la seconda dà in un attimo l'indice Gulpease di tutti. Senza LanguageTool si fanno tutti i controlli tranne ortografia e grammatica; per averlo serve Java, poi una volta sola `python3 scripts/analisi_testo.py --scarica-lt` (scarica circa 220 MB in `.cache/`, che non si carica su GitHub).
+
+> Dopo ogni merge l'analisi gira su **tutti** i documenti: il riepilogo con l'indice Gulpease di ognuno è nella scheda *Actions → Analisi dei testi* (utile per le metriche del Piano di Qualifica). Le soglie 40 e 60 si cambiano in cima a `scripts/analisi_testo.py`.
+
+---
+
 ## 5. Le versioni: le regole del registro
 
-Il registro delle modifiche racconta la storia del documento: il committente lo legge e lo valuta. Le regole vengono dai suoi feedback ai gruppi degli anni scorsi (confermatele nelle Norme di Progetto).
+Il registro delle modifiche racconta la storia del documento: il committente lo legge e lo valuta. **Non si scrive a mano**: lo compila il bot a partire dalle pull request, così ogni riga corrisponde a una PR approvata e si può verificare su GitHub.
 
-1. **Una riga = una modifica.** Dice **cosa** è cambiato e **dove** (*"Stesura della sezione 3, Gestione dei rischi"*, non *"Modifica"* o *"Fix"*), **chi** l'ha fatta (autore) e **chi** l'ha controllata (verificatore, **un'altra persona**).
-2. **La versione cambia solo dopo una verifica andata a buon fine.** Chi scrive mette `--` come verificatore, cioè "non ancora verificata". Il Verificatore, quando è tutto a posto, scrive la sua chiave al posto di `--` e mette la data di oggi; solo allora si fa il merge. Su `main` non ci sono mai `--`.
-3. **Niente righe di sola "Verifica"**, senza autore: la verifica è la chiave del verificatore nella riga della modifica.
-4. **`1.0.0` è l'approvazione**: la revisione con cui il documento è pronto per la consegna. Nei **documenti** il Responsabile si scrive in fondo alla riga, tra parentesi quadre (`[spagnoli]`). Nei **verbali** l'approvazione è la verifica della `1.0.0`; quelli esterni poi vanno firmati dall'azienda ([R14](#r14-caricare-un-verbale-esterno-firmato)).
-5. **Le date** sono quelle della verifica, in formato `AAAA-MM-GG`. Salendo nel registro non tornano mai indietro; nei verbali non sono mai prima della riunione.
+**Dove sta.** Accanto a ogni documento c'è un file con lo stesso nome e `.registro.tex` in fondo (`piano-di-progetto.tex` → `piano-di-progetto.registro.tex`). La classe lo legge da sola. Nel `.tex` non si scrive nessuna riga `\modifica`.
 
-La versione ha tre numeri `X.Y.Z` ed è **sempre quella della prima riga del registro**:
+**Come nasce una riga.** Dopo il merge di una PR con un'**etichetta di versione**, il bot aggiunge in cima al registro di ogni documento toccato (anche tramite un capitolo o un'immagine della sua cartella) una riga con:
 
-| Quando | Versione | Esempio di riga (dopo la verifica) |
+| Campo | Da dove lo prende il bot |
+| --- | --- |
+| versione | l'ultima del registro, aumentata secondo l'etichetta |
+| data | il giorno del merge (per l'approvazione, il giorno in cui è stata messa l'etichetta, se dopo) |
+| autore | chi ha aperto la PR e chi vi ha fatto commit (anche come co-autore), tranne chi l'ha approvata |
+| verificatore | chi ha approvato la PR (*Review changes → Approve*), diverso dall'autore |
+| descrizione | la riga `Descrizione:` della PR; se manca, il titolo della PR |
+| approvatore | solo per l'approvazione dei documenti: il Responsabile che ha messo l'etichetta |
+
+In fondo alla riga il bot scrive `% PR #numero`: così si risale sempre alla PR, alla revisione e alla discussione.
+
+**Le etichette** (a destra nella PR, *Labels*; se una PR ne ha più d'una vale la più forte):
+
+| Etichetta | Quando | Versione |
 | --- | --- | --- |
-| Prima stesura | `0.1.0` | `\modifica{0.1.0}{2026-11-02}{guglielmo}{corro}{Prima stesura: struttura e introduzione}` |
-| Ogni parte nuova | `0.2.0`, `0.3.0`, … | `\modifica{0.2.0}{2026-11-05}{biasini}{cescobolla}{Stesura della sezione 2, Processi primari}` |
-| Correzione piccola | `0.2.1` | `\modifica{0.2.1}{2026-11-06}{biasini}{corro}{Corretti i refusi della sezione 2}` |
-| Approvazione | `1.0.0` | `\modifica{1.0.0}{2026-11-10}{guglielmo}{corro}{Revisione finale e approvazione del documento}[spagnoli]` |
-| Correzione dopo l'approvazione | `1.0.1` | `\modifica{1.0.1}{2026-11-12}{biasini}{corro}{Corretto un refuso nella sezione 1.2}` |
-| Parte nuova dopo l'approvazione | `1.1.0`, `1.2.0`, … | `\modifica{1.1.0}{2026-11-20}{mazzurana}{cescobolla}{Aggiunta la sezione 4, Verifica}` |
-| Nuova approvazione (consegna successiva) | `2.0.0` | `\modifica{2.0.0}{2027-03-01}{corro}{guglielmo}{Revisione per la PB e approvazione del documento}[spagnoli]` |
+| `contenuto` | prima stesura, parti nuove | `0.2.1` → `0.3.0` (la prima volta: `0.1.0`) |
+| `correzione` | correzioni piccole | `0.2.0` → `0.2.1` |
+| `approvazione` | versione approvata, pronta per la consegna. Nei **documenti** la mette il **Responsabile** dello sprint (il bot lo controlla in `pianificazione.toml`); nei **verbali** chiunque, dopo la verifica | `0.3.0` → `1.0.0`, `1.2.1` → `2.0.0` |
+| *nessuna* | ritocchi che non meritano una versione (codice LaTeX che non cambia il PDF, commenti) | invariata, nessuna riga |
 
-Un verbale di solito ha due righe: `0.1.0` *Stesura del verbale* e `1.0.0` con le correzioni chieste dal Verificatore ([R1](#r1-scrivere-un-verbale-interno), passo 4). Autore e verificatore possono essere più persone, separate da virgole.
+**Regole che restano.**
 
-**Cosa si controlla da solo.** La classe ferma la compilazione se la versione non ha tre numeri, se la data non è `AAAA-MM-GG` o se le versioni non scendono dall'alto in basso (la più recente in cima, ognuna una volta sola). Il commento automatico della PR (sotto *Da controllare*) segnala invece le righe con `--`, senza autore o con verificatore uguale all'autore, le date che tornano indietro o sono prima della riunione e le approvazioni dei documenti senza `[approvatore]`: non bloccano, ma vanno sistemate prima del merge.
+1. **Una riga = una modifica**: la descrizione dice **cosa** è cambiato e **dove** (*"Stesura della sezione 3, Gestione dei rischi"*, non *"Modifica"* o *"Fix"*).
+2. **Una versione esiste solo se è verificata**: senza un'approvazione la riga avrebbe `--` come verificatore, e il commento della PR lo segnala.
+3. **`1.0.0` è l'approvazione**: la revisione con cui il documento è pronto per la consegna.
+4. **Le date**, salendo nel registro, non tornano indietro.
+
+**Prima del merge** il commento **📝 Registro delle modifiche** nella PR mostra la riga che verrà aggiunta, e anche il PDF di anteprima ha già la versione nuova. **Dopo il merge** lo stesso commento diventa il resoconto di ciò che il bot ha scritto, con gli eventuali problemi (per esempio un'approvazione data da chi non è Responsabile: in quel caso il Responsabile toglie e rimette l'etichetta alla PR, anche chiusa, e si rilancia *Actions → Pubblica il sito → Run workflow*; il bot riguarda le PR delle ultime tre settimane).
+
+**Correggere una riga già scritta** (per esempio un refuso nella descrizione): modificate il file `.registro.tex` in una PR **senza etichetta**.
+
+**Cosa si controlla da solo.** La classe ferma la compilazione se una versione non ha tre numeri, se una data non è `AAAA-MM-GG` o se le versioni non scendono dall'alto in basso. Il commento della PR (sotto *Da controllare*) segnala le righe senza verificatore o con verificatore uguale all'autore, le date che tornano indietro, le approvazioni dei documenti senza approvatore e le righe `\modifica` rimaste a mano nel `.tex` (al primo merge con etichetta il bot le sposta nel `.registro.tex`).
 
 ---
 
@@ -817,8 +860,8 @@ Un verbale di solito ha due righe: `0.1.0` *Stesura del verbale* e `1.0.0` con l
 | `\oggetto{}` `\chiusura{}` | lettere | `\oggetto{Candidatura}` | riga "Oggetto:" e saluto finale |
 | `\capitolato{}` | tutti, facoltativo | `\capitolato{C2 -- NEXUM Concierge}` | riga "Capitolato" in copertina |
 | `\destinatari{}` | tutti, facoltativo | `\destinatari{A\newline B}` | cambia i destinatari predefiniti |
-| `\modifica{}{}{}{}{}` | verbali, documenti | `\modifica{0.1.0}{2026-10-26}{corro, biasini}{--}{Prima stesura}` | una riga del registro (la più recente in cima): versione, data, autore, verificatore (`--` finché non verifica), cosa è cambiato; più persone separate da virgole |
-| `\modifica{}{}{}{}{}[]` | solo documenti | `\modifica{1.0.0}{2026-11-19}{corro}{guglielmo}{Revisione finale e approvazione del documento}[spagnoli]` | come sopra, con l'approvatore tra `[ ]`: aggiunge la colonna *Approvatore* |
+| `\modifica{}{}{}{}{}` | file `.registro.tex` | `\modifica{0.1.0}{2026-10-26}{corro, biasini}{guglielmo}{Prima stesura}` | una riga del registro: versione, data, autore, verificatore, cosa è cambiato. **La scrive il bot** ([sezione 5](#5-le-versioni-le-regole-del-registro)) |
+| `\modifica{}{}{}{}{}[]` | file `.registro.tex`, solo documenti | `\modifica{1.0.0}{2026-11-19}{corro}{guglielmo}{Revisione finale e approvazione del documento}[spagnoli]` | come sopra, con l'approvatore tra `[ ]`: aggiunge la colonna *Approvatore* |
 
 **Nel testo** (dopo `\begin{document}`):
 
@@ -847,6 +890,8 @@ Un verbale di solito ha due righe: `0.1.0` *Stesura del verbale* e `1.0.0` con l
 | `python3 scripts/build.py --esempi` | compila anche modelli ed esempi (utile dopo aver toccato la classe) |
 | `python3 scripts/build.py --list` | elenca i documenti trovati, con versione, milestone e sezione del sito |
 | `python3 scripts/build.py --clean` | cancella `build/` e `site/` e ricompila tutto da capo |
+| `python3 scripts/analisi_testo.py percorso/file.tex` | ortografia, tipografia e leggibilità di un documento (o di una cartella) ([R18](#r18-ortografia-e-leggibilità--analisi-dei-testi)) |
+| `python3 scripts/analisi_testo.py --solo-gulpease` | l'indice Gulpease di tutti i documenti |
 
 ---
 
@@ -865,22 +910,30 @@ Dove leggere l'errore: nella **PR**, nel commento automatico (righe `file:riga: 
 | `\versione non serve piu'` | Cancellate la riga `\versione{...}`: la versione si prende dal registro. |
 | `Manca l'elenco dei componenti` | Copiate la riga `\componenti{...}` dal modello del verbale. |
 | `"xyz" e' in \assenti ma non in \componenti` | Chi è assente deve comparire anche tra i componenti. |
-| `Manca il titolo` / `Manca la data` / `Il registro delle modifiche e' vuoto` | Aggiungete la riga che manca nel preambolo (vedete il modello). |
+| `Manca il titolo` / `Manca la data` | Aggiungete la riga che manca nel preambolo (vedete il modello). |
 | `\uso: scrivete interno oppure esterno` | Solo queste due parole. |
 | `Opzione "verbale=..." non valida` | Prima riga: `[verbale=interno]` o `[verbale=esterno]`. |
 | `\capitolato non va in dati-gruppo.tex` | Scrivetelo nel singolo documento ([R11](#r11-cambiare-i-dati-del-gruppo)). |
 | `L'approvatore [...] si usa solo nei documenti, non nei verbali` | Togliete la parte tra parentesi quadre in fondo alla riga `\modifica` del verbale. |
 
-**Avvisi sul registro** (nel commento della PR, sotto *Da controllare*; non bloccano, ma vanno sistemati prima del merge, [sezione 5](#5-le-versioni-le-regole-del-registro)):
+**Avvisi sul registro** (nel commento della PR, sotto *Da controllare*; non bloccano, [sezione 5](#5-le-versioni-le-regole-del-registro)):
 
 | Avviso (in breve) | Cosa fare |
 | --- | --- |
-| `la riga X non è ancora verificata (--)` | Normale finché il Verificatore non ha controllato: è lui che scrive la sua chiave al posto di `--`. |
-| `nella riga X manca l'autore` | Ogni riga è una modifica di qualcuno: niente righe di sola "Verifica". Mettete la verifica nella riga della modifica. |
+| `ci sono righe \modifica scritte a mano nel .tex` | Toglietele: il registro lo scrive il bot. Se restano, al primo merge con etichetta il bot le sposta nel `.registro.tex`. |
+| `la riga X non ha verificatore (--)` | La PR è stata unita senza approvazione: correggete il `.registro.tex` con una PR senza etichetta, mettendo la chiave di chi ha verificato. |
 | `nella riga X chi verifica è anche autore` | Serve un'altra persona come verificatore. |
-| `la riga X è più vecchia della riga sotto` | Le date, salendo, non tornano indietro: correggete la data. |
-| `la riga X ha data ..., prima della riunione` | Un verbale non si scrive prima della riunione: correggete la data. |
-| `la riga X è un'approvazione ma manca l'approvatore` | Documento a `1.0.0`, `2.0.0`…: il Responsabile aggiunge `[spagnoli]` in fondo alla riga. |
+| `la riga X è più vecchia della riga sotto` | Le date, salendo, non tornano indietro: correggete la data nel `.registro.tex`. |
+| `la riga X ha data ..., prima della riunione` | Un verbale non si scrive prima della riunione: correggete la data nel `.registro.tex`. |
+| `la riga X è un'approvazione ma manca l'approvatore` | L'approvazione dei documenti la registra il bot quando il Responsabile mette l'etichetta `approvazione`. |
+
+**Il commento 📝 Registro delle modifiche** (dopo il merge) segnala anche:
+
+| Avviso (in breve) | Cosa fare |
+| --- | --- |
+| `l'etichetta approvazione l'ha messa X, ma il Responsabile dello sprint è Y` | Y toglie e rimette l'etichetta alla PR (anche chiusa), poi *Actions → Pubblica il sito → Run workflow*. |
+| `X non è tra i membri di pianificazione.toml` | Aggiungete il suo username GitHub in `[membri]` di `pianificazione.toml` (repository `.github`). |
+| `nessun membro ha approvato la PR` | Come sopra: correggete a mano il verificatore nel `.registro.tex`. |
 
 **Errori classici di LaTeX:**
 
@@ -931,6 +984,8 @@ Dove leggere l'errore: nella **PR**, nel commento automatico (righe `file:riga: 
 | Nelle *Actions*, il passo *Compila* dice `Nessun documento da compilare` e il sito è vuoto | i `.tex` non sono dentro `Candidatura/`, `RTB/` o `PB/` (scritte esattamente così, maiuscole comprese): per esempio sono ancora nelle vecchie cartelle `verbali/`, `documenti/`. Gli avvisi gialli nella pagina dell'Action dicono quali file spostare |
 | La voce **Glossario** non compare nel menu del sito | il Glossario non esiste ancora, oppure non ha voci `\termine{…}{…}` ([R16](#r16-il-glossario-crearlo-aggiungere-termini-marcarli)) |
 | Il commento della PR ha una parte **📖 Glossario** | termini marcati che mancano nel Glossario, voci doppie o fuori ordine: la tabella in [R16](#r16-il-glossario-crearlo-aggiungere-termini-marcarli) dice cosa fare |
+| Il commento **🔎 Analisi dei testi** segnala come errore una parola giusta | se è un nome, una sigla o un termine del progetto, aggiungetelo a `scripts/analisi/parole.txt`; altrimenti ignoratelo: non blocca nulla ([R18](#r18-ortografia-e-leggibilità--analisi-dei-testi)) |
+| Nel commento 🔎 compare *LanguageTool non trovato* o *si è fermato con un errore* | lo scaricamento o l'avvio di LanguageTool non è riuscito: ortografia e grammatica mancano, il resto c'è. Di solito si sistema da solo alla PR successiva; se resta, rilanciate l'Action (*Re-run jobs*) |
 | Il pulsante **Firmato** non compare | la copia firmata deve stare accanto al `.tex` con lo stesso nome più `-firmato`: `VE-2026-11-05-firmato.pdf` accanto a `VE-2026-11-05.tex` ([R14](#r14-caricare-un-verbale-esterno-firmato)) |
 
 ---
@@ -940,12 +995,13 @@ Dove leggere l'errore: nella **PR**, nel commento automatico (righe `file:riga: 
 Sul sito di GitHub, nella pagina del repository `docs`, scheda **Settings**:
 
 1. **Pages** → *Build and deployment* → *Source*: **GitHub Actions**. Senza questo il sito non si pubblica. (Con il piano gratuito di GitHub, Pages funziona solo se il repository è **pubblico**.)
-2. **Issues → Labels** (dalla scheda *Issues*, pulsante *Labels*): create le etichette `documentazione` ed `errore`, usate dai modelli delle issue.
+2. **Issues → Labels** (dalla scheda *Issues*, pulsante *Labels*): create le etichette `documentazione` ed `errore`, usate dai modelli delle issue. Le etichette di versione (`contenuto`, `correzione`, `approvazione`) le crea da solo il bot alla prima PR.
 3. **La chiave del bot e la protezione di `main`**: passi A–F qui sotto.
+4. **Il registro legge la pianificazione**: autore, verificatore e Responsabile il bot li ricava da `gestione/pianificazione.toml` del repository [`.github`](https://github.com/Git-Push-Team/.github), che deve restare **pubblico**. Se diventa privato, o un membro non ha il suo username GitHub in `[membri]`, le righe non si scrivono (lo dicono la pagina dell'Action e il commento della PR).
 
 ### La chiave del bot e la protezione di `main`
 
-`main` è protetto: si cambia solo con una pull request approvata. Il bot che salva i PDF accanto ai `.tex` però scrive su `main` **dopo** il merge, senza PR, quindi gli serve un permesso speciale. GitHub non lo concede al bot normale delle Actions: lo si dà a una **chiave di deployment** (*deploy key*) che solo il bot conosce. Se saltate questa parte non si rompe niente: il sito si aggiorna lo stesso, solo che i PDF non compaiono accanto ai `.tex` (nella scheda *Actions* compare un avviso).
+`main` è protetto: si cambia solo con una pull request approvata. Il bot che salva i PDF accanto ai `.tex` e le righe del registro però scrive su `main` **dopo** il merge, senza PR, quindi gli serve un permesso speciale. GitHub non lo concede al bot normale delle Actions: lo si dà a una **chiave di deployment** (*deploy key*) che solo il bot conosce. Se saltate questa parte il sito si aggiorna lo stesso (anche con le versioni nuove), ma PDF e righe del registro non vengono salvati nel repository (nella scheda *Actions* compare un avviso).
 
 **A. Create la coppia di chiavi** (sul vostro computer, una volta sola). Nel terminale (su Windows va bene PowerShell o *Git Bash*), in una cartella **fuori** dal repository, per esempio il Desktop:
 
@@ -976,12 +1032,12 @@ Poi **cancellate i due file** dal computer: non servono più e la parte segreta 
 - *Rules*, spuntate:
   - **Restrict deletions** e **Block force pushes** (già spuntate di solito);
   - **Require a pull request before merging**, con *Required approvals* = **1**;
-  - **Require status checks to pass** → *Add checks* → scrivete e scegliete **Compila i documenti** (compare dopo che la prima PR l'ha eseguito). **Non** spuntate *Require branches to be up to date before merging*: il bot aggiorna `main` a ogni merge e vi costringerebbe a premere *Update branch* di continuo
+  - **Require status checks to pass** → *Add checks* → scrivete e scegliete **Compila i documenti** (compare dopo che la prima PR l'ha eseguito). **Non** aggiungete *Analisi dei testi* né *Anteprima del registro*: sono solo suggerimenti. **Non** spuntate *Require branches to be up to date before merging*: il bot aggiorna `main` a ogni merge e vi costringerebbe a premere *Update branch* di continuo
 - *Create*
 
 **E. Togliete la vecchia regola**, se c'era: *Settings → Branches* → accanto alla regola per `main`, **Delete**. Le due protezioni si sommano e quella vecchia bloccherebbe il bot.
 
-**F. Provate**: fate il merge di una PR qualsiasi (o *Actions → Pubblica il sito → Run workflow*). Nell'esecuzione, il passo *Salva i PDF nel repository* deve dire `PDF salvati nel repository.`, e su `main` compare il commit *"Aggiorna i PDF accanto ai sorgenti [skip ci]"*. La prima volta salva i PDF di tutti i documenti; da lì in poi solo quelli cambiati.
+**F. Provate**: fate il merge di una PR qualsiasi (o *Actions → Pubblica il sito → Run workflow*). Nell'esecuzione, il passo *Salva registro e PDF nel repository* deve dire `Registro e PDF salvati nel repository.`, e su `main` compare il commit *"Aggiorna i PDF accanto ai sorgenti [skip ci]"* (e, se la PR aveva un'etichetta di versione, *"Registro delle modifiche aggiornato dal bot [skip ci]"*). La prima volta salva i PDF di tutti i documenti; da lì in poi solo quelli cambiati.
 
 > Se al passo B GitHub non vi lascia aggiungere la chiave, o al passo D in *Bypass list* non compare **Deploy keys**, probabilmente l'organizzazione ha disattivato le deploy key: chiedete a un proprietario dell'organizzazione `Git-Push-Team` di riattivarle nelle impostazioni dell'organizzazione.
 
@@ -989,9 +1045,20 @@ Poi **cancellate i due file** dal computer: non servono più e la parte segreta 
 
 ## 9. Cosa è cambiato rispetto alla versione precedente
 
-**Ultime novità: le regole delle versioni.**
+**Ultime novità: il registro delle modifiche automatico.**
 
-- Ogni riga del registro ha autore **e** verificatore: `--` vuol dire "non ancora verificata" e lo sostituisce il Verificatore prima del merge. Niente più righe di sola "Verifica"; la `1.0.0` è la revisione approvata, nei documenti con `[spagnoli]` ([sezione 5](#5-le-versioni-le-regole-del-registro)).
+- Le righe `\modifica` non si scrivono più: le aggiunge il bot dopo il merge, nel file `nome.registro.tex` accanto al documento, in base all'**etichetta** della PR (`contenuto`, `correzione`, `approvazione`). Autore e verificatore li prende da GitHub: chi ha fatto la PR e chi l'ha approvata ([sezione 5](#5-le-versioni-le-regole-del-registro)).
+- Senza etichetta la versione non cambia: per i ritocchi minimi.
+- Le righe già esistenti sono state spostate nei file `.registro.tex`, identiche: i PDF non cambiano.
+- Nella PR il commento **📝 Registro delle modifiche** mostra in anticipo la riga, e il PDF di anteprima ha già la versione nuova.
+- Un documento nuovo, prima del suo primo merge, ha in copertina *Versione bozza*.
+- **Branch aperti prima di questa novità**: dopo *Update branch* togliete dal `.tex` le righe `\modifica` che avevate aggiunto e mettete etichetta e descrizione alla PR (se le lasciate, il bot le sposta da solo).
+- **Ore con l'orario**: `/ore 14:00-16:30` al posto di `/ore 2,5`; il bot calcola la durata e segnala sovrapposizioni, giorni oltre 8 ore e ore segnate in ritardo ([R17](#r17-segnare-le-ore-comando-ore)). La vecchia forma vale ancora.
+- **Analisi dei testi**: nelle PR il commento **🔎 Analisi dei testi** segnala errori di ortografia, grammatica e tipografia e dà l'indice Gulpease dei documenti. Non blocca nulla ([R18](#r18-ortografia-e-leggibilità--analisi-dei-testi)).
+
+**Novità precedenti: le regole delle versioni.**
+
+- Ogni riga del registro ha autore **e** verificatore: `--` vuol dire "non verificata" (oggi verificatore e approvatore li scrive il bot). Niente più righe di sola "Verifica"; la `1.0.0` è la revisione approvata, nei documenti con `[spagnoli]` ([sezione 5](#5-le-versioni-le-regole-del-registro)).
 - Il commento automatico della PR segnala i problemi del registro (righe non verificate, date che tornano indietro, approvazioni senza approvatore…): [sezione 7](#7-quando-qualcosa-va-storto).
 - I registri della Candidatura sono stati sistemati con queste regole.
 - Sul sito ogni PDF (documenti, verbali, copie firmate, diapositive) e ogni link esterno si apre in una **scheda nuova**, e la scheda mostra il titolo del documento invece del nome del file.

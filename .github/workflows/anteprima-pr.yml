@@ -17,6 +17,7 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  issues: read          # per l'anteprima del registro (chi ha messo le etichette)
 
 concurrency:
   group: anteprima-${{ github.event.pull_request.number }}
@@ -34,6 +35,26 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0          # serve la storia per confrontare con main
+
+      # Il registro: nel PDF di anteprima compare già la riga che il bot
+      # aggiungerà dopo il merge (secondo le etichette della PR in questo
+      # momento). Si scrive solo nella copia della CI, non nel repository.
+      - name: Scarica la pianificazione del gruppo
+        continue-on-error: true
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/.github
+          path: .gestione
+          sparse-checkout: gestione/pianificazione.toml
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      - name: Riga del registro prevista
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PIANIFICAZIONE: .gestione/gestione/pianificazione.toml
+        run: python3 scripts/registro.py anteprima --pr "${{ github.event.pull_request.number }}" --scrivi > /dev/null
 
       - name: Installa LaTeX
         uses: ./.github/actions/setup-latex
@@ -85,9 +106,9 @@ jobs:
               echo "📎 **[Scarica i $QUANTI PDF (zip)]($URL)** (restano disponibili per 7 giorni)"
             fi
           } > commento.md
-          # aggiorna il commento precedente del bot, oppure ne crea uno nuovo
-          gh pr comment "$PR" --edit-last --body-file commento.md \
-            || gh pr comment "$PR" --body-file commento.md
+          # aggiorna il commento dell'anteprima (riconosciuto da un marcatore
+          # nascosto: gli altri commenti del bot non si toccano), o lo crea
+          python3 scripts/commenta.py --pr "$PR" --marcatore anteprima-pdf --file commento.md
 
       - name: Esito
         if: steps.build.outcome == 'failure'

@@ -1,0 +1,34 @@
+# Parole che l'analisi dei testi NON deve segnalare come errori di battitura:
+# nomi propri, sigle, termini del progetto. Una (o più) per riga; dopo # è un
+# commento. Maiuscole e minuscole non contano.
+#
+# Non serve aggiungere: le voci del Glossario, i nomi dei membri del gruppo
+# (template/dati-gruppo.tex), le parole inglesi, le parole in corsivo
+# (\textit, \emph) e quelle marcate con \glo: si ignorano da sole.
+
+# Gruppo, corso, università
+Git Push Team GitPushTeam UniPD Unipd Vardanega Cardin Torre Archimede Paolotti
+
+# Proponente e capitolato
+Eggon NEXUM Concierge RubyLLM pgvector
+
+# Strumenti
+GitHub Overleaf LaTeX Discord Telegram Jira Notion Miro Figma Slack Zoom Docker
+latexmk TeX textidote LanguageTool Gulpease Mermaid PlantUML StarUML draw.io
+Teams Meet
+
+# Altri proponenti (Analisi dei Capitolati)
+Sanmarco Vimar Uranion Ergon Halue Miriade
+
+# Termini tecnici usati nei documenti
+backend frontend endpoint chatbot multicanale prompt prompting embedding
+retrieval tokenizzazione deployment deploy onboarding js
+microservizio microservizi multipiattaforma videochiamata videochiamate
+conversazionale conversazionali domotico domotici domotiche
+versionare versionato versionata versionati versionate versionamento
+proattivo proattiva proattivi proattive regolatorio regolatoria regolatorie
+ripianificare ripianificato ripianificazione rifattorizzazione perimetrazione
+riassegnabile riassegnabili riprendibile riprendibili elaborabile elaborabili
+
+# Abbreviazioni nelle intestazioni delle tabelle dei ruoli
+Resp Amm Progett Verif

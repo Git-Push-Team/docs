@@ -29,6 +29,9 @@ site/
 *.vrb
 *.xdv
 
+# Strumenti scaricati (LanguageTool per l'analisi dei testi)
+.cache/
+
 # Python
 __pycache__/
 *.pyc

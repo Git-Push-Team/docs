@@ -475,6 +475,8 @@
 % =====================================================================
 \def\gpt@versione{}
 \def\gpt@dataversione{}
+% in copertina: la versione o, se il registro è ancora vuoto, "bozza"
+\newcommand{\gpt@versionestampata}{\ifx\gpt@versione\@empty bozza\else\gpt@versione\fi}
 \def\gpt@versioneletta{}
 \def\gpt@righemodifiche{}
 %  Solo nei DOCUMENTI si può aggiungere in fondo, tra parentesi quadre,
@@ -500,6 +502,14 @@
     \global\gpt@conapprovatoretrue
     \gappto\gpt@righemodifiche{\gpt@rigamodifica{#1}{#2}{#3}{#4}{#5}{#6}}}{%
     \gappto\gpt@righemodifiche{\gpt@rigamodifica{#1}{#2}{#3}{#4}{#5}{--}}}}
+
+%  Le righe del registro stanno in un file accanto al documento, con lo
+%  stesso nome e ".registro.tex" in fondo (piano-di-progetto.tex ->
+%  piano-di-progetto.registro.tex). Le scrive il bot dopo il merge
+%  (scripts/registro.py, GUIDA.md sezione 5); la classe le legge qui,
+%  alla fine del preambolo. Eventuali righe \modifica ancora scritte nel
+%  .tex vengono prima, cioè sono considerate le più recenti.
+\AtEndPreamble{\InputIfFileExists{\jobname.registro.tex}{}{}}
 
 
 % =====================================================================
@@ -642,7 +652,7 @@
   \vfill
   \gpt@inizioschede
       \gpt@rigacop{Identificativo}{\gpt@id}
-      \gpt@rigacop{Versione}{\gpt@versione}
+      \gpt@rigacop{Versione}{\gpt@versionestampata}
       \gpt@rigacop{Redattore}{\nome{\gpt@redattore}}
       \gpt@rigacop{Verificatore}{\nome{\gpt@verificatore}}
       \ifdefempty{\gpt@capitolato}{}{\gpt@rigacop{Capitolato}{\gpt@capitolato}}
@@ -654,10 +664,11 @@
 
 \newcommand{\gpt@copertinadocumento}{%
   \thispagestyle{empty}%
-  \gpt@testacopertina{Documento a uso \gpt@uso}{28}{Versione \gpt@versione}%
+  \gpt@testacopertina{Documento a uso \gpt@uso}{28}{Versione \gpt@versionestampata}%
   \vfill
   \gpt@inizioschede
-      \gpt@rigacop{Ultima modifica}{\gpt@datalungada{\gpt@dataversione}}
+      \ifdefempty{\gpt@dataversione}{}{%
+        \gpt@rigacop{Ultima modifica}{\gpt@datalungada{\gpt@dataversione}}}
       \ifdefempty{\gpt@responsabile}{}{\gpt@rigacop{Responsabile}{\nome{\gpt@responsabile}}}
       \gpt@rigacop{Redattori}{\gpt@stampaautori}
       \gpt@rigacop{Verificatori}{\gpt@stampaverificatori}
@@ -709,7 +720,12 @@
     \toprule\gpt@intestregistro\midrule\endfirsthead
     \toprule\gpt@intestregistro\midrule\endhead
     \bottomrule\endfoot
-    \gpt@righemodifiche
+    \ifx\gpt@righemodifiche\@empty
+      \multicolumn{5}{@{}l@{}}{\itshape Ancora nessuna versione: la prima riga la
+        aggiunge il bot dopo il merge della pull request.} \\
+    \else
+      \gpt@righemodifiche
+    \fi
   \end{longtable}%
   \endgroup
   \gpt@dopolt}
@@ -942,11 +958,11 @@
 \newcommand{\gpt@controllifinali}{%
   \ifdefempty{\gpt@titolo}{\ClassError{gpt}{Manca il titolo: scrivete
     \string\titolo\string{...\string} nel preambolo}{}}{}%
+  % registro vuoto: documento nuovo, non ancora unito. Non è un errore:
+  % la prima riga la aggiunge il bot dopo il merge (GUIDA.md, sezione 5)
   \ifgpt@lettera\else
-    \ifdefempty{\gpt@versione}{\ClassError{gpt}{Il registro delle modifiche
-      e' vuoto: aggiungete almeno la riga
-      \string\modifica\string{0.1.0\string}\string{AAAA-MM-GG\string}%
-      \string{autore\string}\string{--\string}\string{Prima stesura\string}}{}}{}%
+    \ifdefempty{\gpt@versione}{\ClassWarningNoLine{gpt}{Registro delle
+      modifiche vuoto: la prima riga la aggiunge il bot dopo il merge}}{}%
   \fi
   \ifgpt@documento\else
     \ifdefempty{\gpt@anno}{\ClassError{gpt}{Manca la data: scrivete

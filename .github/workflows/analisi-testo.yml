@@ -1,0 +1,92 @@
+# =====================================================================
+#  Analisi dei testi  --  NON BLOCCANTE: dà suggerimenti, non ferma nulla.
+#
+#  Controlla come sono scritti i documenti (scripts/analisi_testo.py):
+#  ortografia e grammatica con LanguageTool, errori tipografici tipici
+#  dell'italiano, leggibilità con l'indice Gulpease.
+#   - Pull request: solo i documenti toccati. Commento "🔎 Analisi dei
+#     testi" con in evidenza i problemi nelle righe cambiate, e avvisi
+#     accanto a quelle righe nella scheda "Files changed".
+#   - Su main dopo ogni merge, o a mano (Actions -> Analisi dei testi ->
+#     Run workflow): tutti i documenti, riepilogo nella pagina dell'Action.
+#  NON va messo tra i controlli obbligatori del ruleset (GUIDA.md, R18).
+# =====================================================================
+name: Analisi dei testi
+
+on:
+  pull_request:
+    branches: [main]
+    paths: ["**.tex", "scripts/analisi_testo.py", "scripts/analisi/**"]
+  push:
+    branches: [main]
+    paths: ["**.tex", "scripts/analisi_testo.py", "scripts/analisi/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: analisi-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analisi:
+    name: Analisi dei testi (non bloccante)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    continue-on-error: true
+    steps:
+      - name: Scarica il repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0          # serve la storia per trovare le righe cambiate
+
+      # LanguageTool con il dizionario italiano sta dentro textidote.jar
+      # (circa 220 MB, versione fissata e controllata con sha256): si
+      # scarica la prima volta e poi resta nella cache delle Actions.
+      - name: Recupera LanguageTool dalla cache
+        id: cache
+        continue-on-error: true
+        uses: actions/cache@v5
+        with:
+          path: .cache/textidote.jar
+          key: textidote-0.8.3
+
+      - name: Scarica LanguageTool
+        if: steps.cache.outputs.cache-hit != 'true'
+        continue-on-error: true
+        run: python3 scripts/analisi_testo.py --scarica-lt
+
+      - name: Analizza i documenti
+        id: analisi
+        continue-on-error: true
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            python3 scripts/analisi_testo.py --pr "origin/${{ github.base_ref }}" \
+              --annotazioni --uscita build/analisi.md --json build/analisi.json
+          else
+            python3 scripts/analisi_testo.py --uscita build/analisi.md --json build/analisi.json
+          fi
+          if [ -f build/analisi.md ]; then cat build/analisi.md >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Commenta la pull request
+        if: >-
+          github.event_name == 'pull_request' &&
+          steps.analisi.outputs.documenti != '0' &&
+          hashFiles('build/analisi.md') != ''
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          python3 scripts/commenta.py --pr "${{ github.event.pull_request.number }}"
+          --marcatore analisi-testo --file build/analisi.md
+
+      - name: Salva il resoconto
+        if: hashFiles('build/analisi.json') != ''
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: analisi-dei-testi
+          path: build/analisi.*
+          retention-days: 14
