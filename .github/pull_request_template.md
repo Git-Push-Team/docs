@@ -15,7 +15,8 @@ Il registro lo scrive il bot dopo il merge (GUIDA.md, sezione 5).
    - contenuto     prima stesura o parti nuove     0.2.1 -> 0.3.0
    - correzione    correzioni piccole               0.2.0 -> 0.2.1
    - approvazione  versione approvata               0.3.0 -> 1.0.0
-                   (nei documenti la mette il Responsabile dello sprint)
+                   in una PR separata; la mette il Responsabile dello sprint.
+                   Nella riga c'è solo il Responsabile, senza verificatore
    - nessuna       ritocchi che non meritano una versione: il registro non cambia
 Il commento "📝 Registro delle modifiche" qui sotto mostra la riga prima del merge.
 -->

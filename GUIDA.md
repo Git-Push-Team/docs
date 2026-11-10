@@ -285,10 +285,15 @@ Le decisioni si numerano da sole (D1, D2…), le azioni pure (A1, A2…). `tutti
 
 **4. Consegnate** con il giro dei 7 passi. Il registro non si scrive a mano: lo compila il bot dopo il merge ([sezione 5](#5-le-versioni-le-regole-del-registro)). Per un verbale nuovo:
 
-- se il Verificatore lo approva così com'è, oppure dopo le correzioni chieste nella stessa PR, mettete l'etichetta **`approvazione`** e come descrizione *"Stesura e approvazione del verbale"*: il bot scrive una sola riga, `1.0.0`;
-- se invece volete registrare prima la stesura e approvarlo con una PR successiva, la prima PR ha l'etichetta **`contenuto`** (`0.1.0`, *"Stesura del verbale"*) e la seconda **`approvazione`** (`1.0.0`, *"Corrette le scadenze delle azioni e approvazione del verbale"*).
+1. la prima PR (stesura) ha l'etichetta **`contenuto`** e la descrizione *"Stesura del verbale"*: dopo il merge il bot scrive la `0.1.0`, con autore chi ha fatto la PR e verificatore chi l'ha approvata;
+2. la seconda PR (approvazione) ha l'etichetta **`approvazione`**, messa dal **Responsabile** dello sprint: il bot scrive la `1.0.0` con **solo il Responsabile** come autore e `-` al posto del verificatore. La PR va comunque approvata dal Verificatore (serve per il merge), ma in questa riga non compare:
 
-Autore è chi ha aperto la PR (e chi vi ha fatto commit), verificatore chi l'ha approvata. Un verbale è approvato quando ha la sua `1.0.0`; quello esterno poi va anche firmato dall'azienda ([R14](#r14-caricare-un-verbale-esterno-firmato)).
+   ```latex
+   \modifica{1.0.0}{2026-11-12}{cescobolla}{-}{Approvazione del verbale}% PR #21
+   \modifica{0.1.0}{2026-11-10}{guglielmo}{corro}{Stesura del verbale}% PR #20
+   ```
+
+Un verbale è approvato quando ha la sua `1.0.0`; quello esterno poi va anche firmato dall'azienda ([R14](#r14-caricare-un-verbale-esterno-firmato)). Ogni PR, anche quella di approvazione, deve cambiare almeno un file del verbale (per esempio le ultime correzioni): il bot capisce dai file cambiati quale documento registrare.
 
 👀 Esempio completo: `template/esempi/esempio-verbale-interno.tex`.
 
@@ -366,17 +371,17 @@ Nomi suggeriti: `norme-di-progetto`, `piano-di-progetto`, `piano-di-qualifica`, 
 
 Il registro non si scrive: finché il documento non è unito la copertina dice *Versione bozza*; la prima PR con etichetta `contenuto` crea la `0.1.0`.
 
-**Registro dei documenti: più persone e approvatore.**
+**Registro dei documenti: più persone e approvazione.**
 
 - Ogni PR con un'etichetta di versione fa aggiungere al bot **una riga** in cima ([sezione 5](#5-le-versioni-le-regole-del-registro)). Più autori o più verificatori compaiono separati da virgole; in copertina ognuno compare una volta sola tra *Redattori* e *Verificatori*.
-- Quando il documento è pronto, la PR della sua ultima revisione riceve l'etichetta **`approvazione`**, messa dal **Responsabile** dello sprint. Il bot scrive la `1.0.0` (o `2.0.0`…) con il Responsabile **tra parentesi quadre** in fondo, nella colonna *Approvatore*:
+- Quando il documento è pronto, una PR **separata** riceve l'etichetta **`approvazione`**, messa dal **Responsabile** dello sprint. Il bot scrive la `1.0.0` (o `2.0.0`…) con **solo il Responsabile** come autore e `-` al posto del verificatore; la PR va comunque approvata dal Verificatore per il merge, ma nella riga non compare:
 
   ```latex
-  \modifica{1.0.0}{2026-11-19}{mazzurana}{corro}{Revisione finale della sezione 3 e approvazione del documento}[spagnoli]% PR #40
+  \modifica{1.0.0}{2026-11-19}{spagnoli}{-}{Approvazione del documento}% PR #40
   \modifica{0.3.0}{2026-11-17}{mazzurana}{corro}{Stesura della sezione 3, Gestione dei rischi}% PR #38
   ```
 
-  Se l'etichetta l'ha messa qualcun altro, il bot non scrive la riga e lo spiega nel commento della PR. La colonna **Approvatore** compare solo se almeno una riga ce l'ha; nei verbali l'approvatore non si usa.
+  Se l'etichetta l'ha messa qualcun altro, il bot non scrive la riga e lo spiega nel commento della PR.
 
 **Si fanno da soli**: copertina (con versione, data dell'ultima modifica, **redattori e verificatori presi dal registro**), registro delle modifiche, **indice**, elenco delle figure e delle tabelle (solo se ce ne sono), intestazioni e numeri di pagina.
 
@@ -582,7 +587,7 @@ Vi arriva una richiesta di revisione (mail o campanella di GitHub).
 3. Seguite la *Checklist del Verificatore* nella descrizione della PR. Il commento **🔎 Analisi dei testi** vi indica refusi e frasi difficili nelle righe cambiate: aiuta, ma non sostituisce la lettura ([R18](#r18-ortografia-e-leggibilità--analisi-dei-testi)).
 4. **Se ci sono cose da correggere**: *Review changes* (o *Submit review*) → **Request changes** → spiegate cosa sistemare. L'autore corregge e fa push; voi rileggete.
 5. **Se è tutto a posto**, controllate il commento **📝 Registro delle modifiche**:
-    - l'**etichetta** è quella giusta (`contenuto` per parti nuove, `correzione` per correzioni piccole, `approvazione` solo per la versione approvata, messa dal Responsabile)? Se no, cambiatela a destra in *Labels*;
+    - l'**etichetta** è quella giusta (`contenuto` per parti nuove, `correzione` per correzioni piccole, `approvazione` solo per la versione approvata, messa dal Responsabile)? Se no, cambiatela a destra in *Labels*. Con `approvazione` voi approvate la PR come sempre, ma nella riga del registro compare solo il Responsabile;
     - la **descrizione** dice **cosa** è cambiato e **dove** (non "Modifica" o "Fix")? Se no, chiedete all'autore di correggere la riga `Descrizione:` della PR (o correggetela voi: *⋯ → Edit* sulla descrizione).
     Non serve modificare il `.tex`: la verifica è la vostra approvazione.
 6. *Review changes* → **Approve** → *Submit review*. Il commento del registro si aggiorna e vi mostra come verificatore.
@@ -808,10 +813,9 @@ Il registro delle modifiche racconta la storia del documento: il committente lo 
 | --- | --- |
 | versione | l'ultima del registro, aumentata secondo l'etichetta |
 | data | il giorno del merge (per l'approvazione, il giorno in cui è stata messa l'etichetta, se dopo) |
-| autore | chi ha aperto la PR e chi vi ha fatto commit (anche come co-autore), tranne chi l'ha approvata |
-| verificatore | chi ha approvato la PR (*Review changes → Approve*), diverso dall'autore |
-| descrizione | la riga `Descrizione:` della PR; se manca, il titolo della PR |
-| approvatore | solo per l'approvazione dei documenti: il Responsabile che ha messo l'etichetta |
+| autore | chi ha aperto la PR e chi vi ha fatto commit (anche come co-autore), tranne chi l'ha approvata. **Nell'approvazione**: solo il Responsabile che ha messo l'etichetta |
+| verificatore | chi ha approvato la PR (*Review changes → Approve*), diverso dall'autore. **Nell'approvazione**: `-` (nessuno) |
+| descrizione | la riga `Descrizione:` della PR; se manca, il titolo della PR (nell'approvazione: *Approvazione del documento* o *del verbale*) |
 
 In fondo alla riga il bot scrive `% PR #numero`: così si risale sempre alla PR, alla revisione e alla discussione.
 
@@ -821,21 +825,21 @@ In fondo alla riga il bot scrive `% PR #numero`: così si risale sempre alla PR,
 | --- | --- | --- |
 | `contenuto` | prima stesura, parti nuove | `0.2.1` → `0.3.0` (la prima volta: `0.1.0`) |
 | `correzione` | correzioni piccole | `0.2.0` → `0.2.1` |
-| `approvazione` | versione approvata, pronta per la consegna. Nei **documenti** la mette il **Responsabile** dello sprint (il bot lo controlla in `pianificazione.toml`); nei **verbali** chiunque, dopo la verifica | `0.3.0` → `1.0.0`, `1.2.1` → `2.0.0` |
+| `approvazione` | versione approvata, pronta per la consegna, in una **PR separata** dopo quelle di contenuto. La mette il **Responsabile** dello sprint (il bot lo controlla in `pianificazione.toml`), in documenti e verbali. Nella riga c'è solo lui, senza verificatore | `0.3.0` → `1.0.0`, `1.2.1` → `2.0.0` |
 | *nessuna* | ritocchi che non meritano una versione (codice LaTeX che non cambia il PDF, commenti) | invariata, nessuna riga |
 
 **Regole che restano.**
 
 1. **Una riga = una modifica**: la descrizione dice **cosa** è cambiato e **dove** (*"Stesura della sezione 3, Gestione dei rischi"*, non *"Modifica"* o *"Fix"*).
-2. **Una versione esiste solo se è verificata**: senza un'approvazione la riga avrebbe `--` come verificatore, e il commento della PR lo segnala.
-3. **`1.0.0` è l'approvazione**: la revisione con cui il documento è pronto per la consegna.
+2. **Una versione esiste solo se è verificata**: senza un'approvazione la riga avrebbe `--` come verificatore, e il commento della PR lo segnala. Fanno eccezione le righe di approvazione, che hanno solo chi approva.
+3. **`1.0.0` è l'approvazione**: la versione con cui il Responsabile dichiara il documento pronto per la consegna.
 4. **Le date**, salendo nel registro, non tornano indietro.
 
 **Prima del merge** il commento **📝 Registro delle modifiche** nella PR mostra la riga che verrà aggiunta, e anche il PDF di anteprima ha già la versione nuova. **Dopo il merge** lo stesso commento diventa il resoconto di ciò che il bot ha scritto, con gli eventuali problemi (per esempio un'approvazione data da chi non è Responsabile: in quel caso il Responsabile toglie e rimette l'etichetta alla PR, anche chiusa, e si rilancia *Actions → Pubblica il sito → Run workflow*; il bot riguarda le PR delle ultime tre settimane).
 
 **Correggere una riga già scritta** (per esempio un refuso nella descrizione): modificate il file `.registro.tex` in una PR **senza etichetta**.
 
-**Cosa si controlla da solo.** La classe ferma la compilazione se una versione non ha tre numeri, se una data non è `AAAA-MM-GG` o se le versioni non scendono dall'alto in basso. Il commento della PR (sotto *Da controllare*) segnala le righe senza verificatore o con verificatore uguale all'autore, le date che tornano indietro, le approvazioni dei documenti senza approvatore e le righe `\modifica` rimaste a mano nel `.tex` (al primo merge con etichetta il bot le sposta nel `.registro.tex`).
+**Cosa si controlla da solo.** La classe ferma la compilazione se una versione non ha tre numeri, se una data non è `AAAA-MM-GG` o se le versioni non scendono dall'alto in basso. Il commento della PR (sotto *Da controllare*) segnala le righe senza verificatore (tranne quelle di approvazione) o con verificatore uguale all'autore, le date che tornano indietro e le righe `\modifica` rimaste a mano nel `.tex` (al primo merge con etichetta il bot le sposta nel `.registro.tex`).
 
 ---
 
@@ -861,7 +865,8 @@ In fondo alla riga il bot scrive `% PR #numero`: così si risale sempre alla PR,
 | `\capitolato{}` | tutti, facoltativo | `\capitolato{C2 -- NEXUM Concierge}` | riga "Capitolato" in copertina |
 | `\destinatari{}` | tutti, facoltativo | `\destinatari{A\newline B}` | cambia i destinatari predefiniti |
 | `\modifica{}{}{}{}{}` | file `.registro.tex` | `\modifica{0.1.0}{2026-10-26}{corro, biasini}{guglielmo}{Prima stesura}` | una riga del registro: versione, data, autore, verificatore, cosa è cambiato. **La scrive il bot** ([sezione 5](#5-le-versioni-le-regole-del-registro)) |
-| `\modifica{}{}{}{}{}[]` | file `.registro.tex`, solo documenti | `\modifica{1.0.0}{2026-11-19}{corro}{guglielmo}{Revisione finale e approvazione del documento}[spagnoli]` | come sopra, con l'approvatore tra `[ ]`: aggiunge la colonna *Approvatore* |
+| `\modifica{}{}{}{-}{}` | file `.registro.tex` | `\modifica{1.0.0}{2026-11-19}{spagnoli}{-}{Approvazione del documento}` | la riga di approvazione: solo il Responsabile, `-` al posto del verificatore. **La scrive il bot** |
+| `\modifica{}{}{}{}{}[]` | file `.registro.tex`, solo documenti | `\modifica{1.0.0}{2026-10-29}{corro}{guglielmo}{Revisione finale e approvazione}[spagnoli]` | forma vecchia, con l'approvatore tra `[ ]` (colonna *Approvatore*): resta valida per le righe già scritte, il bot non la usa più |
 
 **Nel testo** (dopo `\begin{document}`):
 
@@ -925,7 +930,6 @@ Dove leggere l'errore: nella **PR**, nel commento automatico (righe `file:riga: 
 | `nella riga X chi verifica è anche autore` | Serve un'altra persona come verificatore. |
 | `la riga X è più vecchia della riga sotto` | Le date, salendo, non tornano indietro: correggete la data nel `.registro.tex`. |
 | `la riga X ha data ..., prima della riunione` | Un verbale non si scrive prima della riunione: correggete la data nel `.registro.tex`. |
-| `la riga X è un'approvazione ma manca l'approvatore` | L'approvazione dei documenti la registra il bot quando il Responsabile mette l'etichetta `approvazione`. |
 
 **Il commento 📝 Registro delle modifiche** (dopo il merge) segnala anche:
 
@@ -1049,6 +1053,7 @@ Poi **cancellate i due file** dal computer: non servono più e la parte segreta 
 
 - Le righe `\modifica` non si scrivono più: le aggiunge il bot dopo il merge, nel file `nome.registro.tex` accanto al documento, in base all'**etichetta** della PR (`contenuto`, `correzione`, `approvazione`). Autore e verificatore li prende da GitHub: chi ha fatto la PR e chi l'ha approvata ([sezione 5](#5-le-versioni-le-regole-del-registro)).
 - Senza etichetta la versione non cambia: per i ritocchi minimi.
+- L'approvazione (`1.0.0`, `2.0.0`…) si fa con una PR separata, con l'etichetta `approvazione` messa dal Responsabile: nella riga c'è solo lui come autore, senza verificatore (la PR la approva comunque il Verificatore per il merge).
 - Le righe già esistenti sono state spostate nei file `.registro.tex`, identiche: i PDF non cambiano.
 - Nella PR il commento **📝 Registro delle modifiche** mostra in anticipo la riga, e il PDF di anteprima ha già la versione nuova.
 - Un documento nuovo, prima del suo primo merge, ha in copertina *Versione bozza*.

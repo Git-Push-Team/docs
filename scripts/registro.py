@@ -584,12 +584,11 @@ def proponi(pr: dict, file: list[str], revisioni: list[dict], commit: list[dict]
         data = giorno.isoformat()
         if attuale and attuale.data > data:
             data = attuale.data
-        autore = chiavi(autori_login, gruppo, problemi, "autore")
-        verificatore = chiavi(verificatori_login, gruppo, problemi, "verificatore")
-        if verificatore == "--":
-            problemi.append("nessun membro ha approvato la PR: la riga ha `--` come verificatore.")
-        approvatore = ""
-        if etichetta == "approvazione" and tipo == "documento":
+        if etichetta == "approvazione":
+            # Riga di approvazione (documenti e verbali): solo chi approva, cioè
+            # il Responsabile che mette l'etichetta, nella colonna autore, e "-"
+            # al posto del verificatore. La PR la approva comunque il Verificatore
+            # su GitHub (serve per il merge), ma in questa riga non compare.
             k = gruppo.chiave(chi_approva)
             resp = gruppo.responsabili(giorno)
             if not k:
@@ -600,7 +599,7 @@ def proponi(pr: dict, file: list[str], revisioni: list[dict], commit: list[dict]
             if resp is None or not resp:
                 problemi.append("non posso controllare che l'etichetta `approvazione` l'abbia messa il "
                                 "Responsabile: in `pianificazione.toml` lo sprint di oggi non ha un "
-                                f"Responsabile. Ho registrato `{k}` come approvatore.")
+                                f"Responsabile. Ho registrato `{k}` come chi approva.")
             elif k not in resp:
                 problemi.append(f"l'etichetta `approvazione` l'ha messa `{k}`, ma il Responsabile "
                                 f"dello sprint è `{', '.join(resp) or 'nessuno'}`. Riga non aggiunta: "
@@ -608,8 +607,16 @@ def proponi(pr: dict, file: list[str], revisioni: list[dict], commit: list[dict]
                                 "poi rilanciate *Pubblica il sito* dalla scheda Actions.")
                 proposte.append(Proposta(doc, None, etichetta, problemi))
                 continue
-            approvatore = k
-        riga = Riga(versione, data, autore, verificatore, descrizione, approvatore, pr=pr["number"])
+            testo = descrizione_della_pr(pr.get("body"), "") or (
+                "Approvazione del documento" if tipo == "documento" else "Approvazione del verbale")
+            riga = Riga(versione, data, k, "-", testo, pr=pr["number"])
+            proposte.append(Proposta(doc, riga, etichetta, problemi))
+            continue
+        autore = chiavi(autori_login, gruppo, problemi, "autore")
+        verificatore = chiavi(verificatori_login, gruppo, problemi, "verificatore")
+        if verificatore == "--":
+            problemi.append("nessun membro ha approvato la PR: la riga ha `--` come verificatore.")
+        riga = Riga(versione, data, autore, verificatore, descrizione, pr=pr["number"])
         proposte.append(Proposta(doc, riga, etichetta, problemi))
         _ = nome
     return proposte
@@ -733,8 +740,12 @@ def comando_anteprima(gh: GitHub, gruppo: Gruppo | None, numero: int, scrivi: bo
     else:
         proposte = proponi(pr, file, gh.revisioni(numero), gh.commit(numero), gh.eventi(numero),
                            gruppo, root, giorno=datetime.now(FUSO).date())
+        spiegazione = ("nella riga di approvazione c'è solo chi approva, cioè il Responsabile che "
+                       "mette l'etichetta, e nessun verificatore (la PR va comunque approvata dal "
+                       "Verificatore per il merge)" if etichetta == "approvazione"
+                       else "il verificatore è chi approva la PR")
         righe += [f"Etichetta `{etichetta}`: dopo il merge il bot aggiungerà queste righe "
-                  "(il verificatore è chi approva la PR; la data sarà quella del merge).", "",
+                  f"({spiegazione}; la data sarà quella del merge).", "",
                   *tabella(proposte, root)]
         problemi = [f"- `{p.documento.relative_to(root).as_posix()}`: {x}"
                     for p in proposte for x in p.problemi]
@@ -742,7 +753,8 @@ def comando_anteprima(gh: GitHub, gruppo: Gruppo | None, numero: int, scrivi: bo
             righe += ["", "⚠️ **Da controllare** (non blocca nulla):", *problemi]
         if not re.search(r"^[ \t>*_-]*Descrizione[^:\n]*:[ \t*_]*\S", re.sub(r"<!--.*?-->", "", pr.get("body") or "", flags=re.S), re.M | re.I):
             righe += ["", "ℹ️ Nella descrizione della PR manca la riga `Descrizione: ...`: "
-                      "nel registro andrà il titolo della PR."]
+                      "nel registro andrà " + ("*Approvazione del documento* (o *del verbale*)."
+                                              if etichetta == "approvazione" else "il titolo della PR.")]
         if scrivi:
             for p in proposte:
                 if p.riga:
