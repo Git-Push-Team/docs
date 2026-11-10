@@ -4,12 +4,30 @@
 
 Closes #<!-- numero della issue -->
 
+## Registro delle modifiche
+
+<!--
+Il registro lo scrive il bot dopo il merge (GUIDA.md, sezione 5).
+1. Scrivete qui sotto, dopo "Descrizione:", COSA è cambiato e DOVE: è il testo della riga del registro.
+   Esempio: Descrizione: Stesura della sezione 3, Gestione dei rischi
+   Se la lasciate vuota, il bot usa il titolo della PR.
+2. A destra, in "Labels", scegliete l'etichetta di versione:
+   - contenuto     prima stesura o parti nuove     0.2.1 -> 0.3.0
+   - correzione    correzioni piccole               0.2.0 -> 0.2.1
+   - approvazione  versione approvata               0.3.0 -> 1.0.0
+                   (nei documenti la mette il Responsabile dello sprint)
+   - nessuna       ritocchi che non meritano una versione: il registro non cambia
+Il commento "📝 Registro delle modifiche" qui sotto mostra la riga prima del merge.
+-->
+
+Descrizione: 
+
 ## Checklist dell'autore
 
 - [ ] Ho modificato un solo documento o un solo argomento.
 - [ ] Il `.tex` è nella cartella giusta: `Candidatura/`, `RTB/` o `PB/`, poi `documenti/` o `verbali/`, poi `interni/` o `esterni/`.
 - [ ] Non ho caricato PDF: quello accanto al `.tex` lo crea la CI dopo il merge.
-- [ ] Ho aggiunto **in cima** al registro una riga `\modifica{...}` con la nuova versione, la mia chiave, `--` al posto del verificatore e una descrizione che dice **cosa** è cambiato e **dove** (GUIDA.md, sezione 5).
+- [ ] Ho scritto la `Descrizione:` (**cosa** è cambiato e **dove**) e messo l'etichetta di versione (`contenuto` o `correzione`; nessuna per i ritocchi minimi). Non ho scritto righe `\modifica` nel `.tex`.
 - [ ] I termini tecnici nuovi sono marcati con `\glo{}` e aggiunti al Glossario.
 - [ ] Ho scelto come revisore il Verificatore, diverso da me.
 
@@ -17,8 +35,9 @@ Closes #<!-- numero della issue -->
 
 - [ ] Ho aperto il PDF dal commento automatico e l'ho letto per intero.
 - [ ] Il contenuto è corretto e coerente con gli altri documenti e con le decisioni prese.
-- [ ] Ortografia, date, nomi e riferimenti sono corretti.
-- [ ] Ho registrato la verifica: la mia chiave al posto di `--` nella riga in cima al registro, con la data di oggi (niente righe di sola "Verifica"; vedi GUIDA.md, R12).
-- [ ] Se un documento arriva a `1.0.0` (o `2.0.0`…), il Responsabile ha aggiunto `[spagnoli]` in fondo alla riga.
+- [ ] Ortografia, date, nomi e riferimenti sono corretti (aiuta il commento **🔎 Analisi dei testi**, che però non sostituisce la lettura).
+- [ ] Nel commento **📝 Registro delle modifiche** etichetta e descrizione sono giuste (GUIDA.md, R12).
+- [ ] Se il documento va approvato (`1.0.0`, `2.0.0`…), l'etichetta `approvazione` l'ha messa il Responsabile.
 - [ ] Il commento automatico non ha avvisi sul registro (sotto *Da controllare*).
 - [ ] La compilazione automatica è verde.
+- [ ] Ho approvato con *Review changes* → **Approve**: è così che il bot mi registra come verificatore.

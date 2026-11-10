@@ -1,0 +1,59 @@
+# =====================================================================
+#  Registro delle modifiche  --  nelle pull request.
+#
+#  Commenta la PR con le righe che il bot aggiungerà al registro dopo il
+#  merge: versione (dall'etichetta), autore, verificatore (chi approva),
+#  descrizione. Riparte quando cambiano etichette, descrizione, commit o
+#  revisioni, così il commento è sempre aggiornato. Non blocca nulla.
+#  Crea anche le etichette di versione, se nel repository mancano.
+#  Il codice è in scripts/registro.py; le regole in GUIDA.md, sezione 5.
+# =====================================================================
+name: Registro delle modifiche
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize, edited, labeled, unlabeled, ready_for_review]
+  pull_request_review:
+    types: [submitted, dismissed]
+
+permissions:
+  contents: read
+  pull-requests: write   # il commento con l'anteprima del registro
+  issues: write          # creare le etichette, se mancano
+
+concurrency:
+  group: registro-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  anteprima:
+    name: Anteprima del registro
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Scarica il repository
+        uses: actions/checkout@v7
+
+      - name: Scarica la pianificazione del gruppo
+        continue-on-error: true
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/.github
+          path: .gestione
+          sparse-checkout: gestione/pianificazione.toml
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      - name: Etichette di versione
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/registro.py etichette
+
+      - name: Commenta la pull request
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PIANIFICAZIONE: .gestione/gestione/pianificazione.toml
+        run: python3 scripts/registro.py anteprima --pr "${{ github.event.pull_request.number }}" --commenta

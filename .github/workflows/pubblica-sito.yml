@@ -2,8 +2,12 @@
 #  Pubblica il sito  --  parte a ogni modifica su main (cioè a ogni
 #  pull request unita) e si può lanciare a mano dalla scheda Actions.
 #
+#  0. Aggiorna il registro delle modifiche: per ogni PR unita con
+#     un'etichetta di versione (correzione, contenuto, approvazione)
+#     aggiunge la riga nel file .registro.tex dei documenti toccati
+#     (scripts/registro.py, GUIDA.md sezione 5).
 #  1. Compila tutti i documenti di Candidatura/, RTB/ e PB/.
-#  2. Salva nel repository il PDF accanto a ogni .tex cambiato
+#  2. Salva nel repository il registro e il PDF accanto a ogni .tex cambiato
 #     (es. RTB/verbali/interni/VI-2026-11-03.pdf), con un commit del bot.
 #     Per poterlo fare su main protetto serve la chiave CHIAVE_PDF:
 #     GUIDA.md, sezione 8. Senza chiave il sito si pubblica lo stesso,
@@ -18,9 +22,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write     # per salvare i PDF nel repository
+  contents: write       # per salvare registro e PDF nel repository
   pages: write
   id-token: write
+  pull-requests: write  # il bot del registro aggiorna il suo commento nella PR
+  issues: read          # chi ha messo l'etichetta "approvazione"
 
 # Un'esecuzione alla volta: due merge ravvicinati non si pestano i piedi
 concurrency:
@@ -42,6 +48,25 @@ jobs:
           # se il segreto non esiste si usa il token normale
           ssh-key: ${{ secrets.CHIAVE_PDF }}
 
+      # chi è chi (username GitHub -> chiave) e il Responsabile di ogni
+      # sprint: dal file di pianificazione del repository .github
+      - name: Scarica la pianificazione del gruppo
+        continue-on-error: true
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/.github
+          path: .gestione
+          sparse-checkout: gestione/pianificazione.toml
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      - name: Aggiorna il registro delle modifiche
+        continue-on-error: true   # un problema del registro non ferma il sito
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PIANIFICAZIONE: .gestione/gestione/pianificazione.toml
+        run: python3 scripts/registro.py aggiorna
+
       - name: Installa LaTeX
         uses: ./.github/actions/setup-latex
 
@@ -49,21 +74,29 @@ jobs:
         id: build
         run: python3 scripts/build.py --pdf-accanto
 
-      - name: Salva i PDF nel repository
-        if: steps.build.outputs.pdf_aggiornati != '0'
+      # due commit possibili: quello del registro (passo "Aggiorna il
+      # registro") e quello dei PDF. Si salvano insieme, con un solo push.
+      - name: Salva registro e PDF nel repository
         env:
           HA_CHIAVE: ${{ secrets.CHIAVE_PDF != '' }}
           MESSAGGIO: ${{ steps.build.outputs.messaggio }}   # contiene [skip ci]
+          PDF_AGGIORNATI: ${{ steps.build.outputs.pdf_aggiornati }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit --quiet -m "$MESSAGGIO"
+          if [ -n "$PDF_AGGIORNATI" ] && [ "$PDF_AGGIORNATI" != "0" ]; then
+            git commit --quiet -m "$MESSAGGIO"
+          fi
+          if [ -z "$(git rev-list origin/main..HEAD)" ]; then
+            echo "Niente da salvare: registro e PDF sono già aggiornati."
+            exit 0
+          fi
           if git push origin HEAD:main; then
-            echo "PDF salvati nel repository."
+            echo "Registro e PDF salvati nel repository."
           elif [ "$HA_CHIAVE" != "true" ]; then
-            echo "::warning::PDF non salvati accanto ai .tex: main è protetto e manca la chiave CHIAVE_PDF (GUIDA.md, sezione 8). Il sito viene pubblicato lo stesso."
+            echo "::warning::Registro e PDF non salvati: main è protetto e manca la chiave CHIAVE_PDF (GUIDA.md, sezione 8). Il sito viene pubblicato lo stesso; le righe del registro verranno salvate al prossimo merge."
           else
-            echo "::warning::PDF non salvati: main è cambiato durante la compilazione oppure la chiave non può scavalcare la protezione (GUIDA.md, sezione 8). Il prossimo merge li salverà. Il sito viene pubblicato lo stesso."
+            echo "::warning::Registro e PDF non salvati: main è cambiato durante la compilazione oppure la chiave non può scavalcare la protezione (GUIDA.md, sezione 8). Il prossimo merge li salverà. Il sito viene pubblicato lo stesso."
           fi
 
       - name: Carica il sito

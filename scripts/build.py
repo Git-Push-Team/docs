@@ -42,6 +42,8 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
+import registro     # il registro delle modifiche (scripts/registro.py)
+
 ROOT = Path(__file__).resolve().parent.parent
 BUILD = ROOT / "build"
 SITE = ROOT / "site"
@@ -247,13 +249,13 @@ def controlla_registro(testo: str, tipo: str, data_riunione: str) -> list[str]:
             problemi.append(f"nella riga {v} manca l'autore: ogni riga è una modifica fatta da qualcuno "
                             "(niente righe di sola \"Verifica\").")
         if not persone(r["verificatore"]):
-            problemi.append(f"la riga {v} non è ancora verificata (`--`). Prima del merge il Verificatore "
-                            "scrive la sua chiave al posto di `--`: una versione esiste solo se è verificata.")
+            problemi.append(f"la riga {v} non ha verificatore (`--`): una versione esiste solo se è "
+                            "verificata, cioè se la PR è stata approvata da un altro membro.")
         elif persone(r["autore"]) & persone(r["verificatore"]):
             problemi.append(f"nella riga {v} chi verifica è anche autore: serve un'altra persona.")
         if re.fullmatch(r"[1-9]\d*\.0\.0", v) and tipo == "documento" and not r["approvatore"]:
-            problemi.append(f"la riga {v} è un'approvazione ma manca l'approvatore: aggiungete in fondo "
-                            "`[chiave del Responsabile]`.")
+            problemi.append(f"la riga {v} è un'approvazione ma manca l'approvatore: l'approvazione la "
+                            "registra il bot quando il Responsabile mette l'etichetta `approvazione` alla PR.")
         if n + 1 < len(righe) and r["data"] < righe[n + 1]["data"]:
             problemi.append(f"la riga {v} ({r['data']}) è più vecchia della riga sotto, "
                             f"{righe[n + 1]['versione']} ({righe[n + 1]['data']}): le date non possono "
@@ -287,14 +289,24 @@ def leggi(sorgente: Path, esempio: bool = False) -> Documento:
     d = Documento(sorgente, esempio=esempio)
     titolo = argomenti(testo, "titolo")
     d.titolo = (pulisci(titolo[0]) if titolo else "") or sorgente.stem
-    # versione e data dell'ultima modifica: la PRIMA riga del registro
-    # (la classe gpt.cls fa esattamente la stessa cosa)
-    modifica = argomenti(testo, "modifica", 2)
-    d.versione = modifica[0] if modifica else ""
+    # Il registro: come fa la classe, prima le eventuali righe \modifica
+    # scritte nel .tex, poi quelle del file .registro.tex accanto (le scrive
+    # il bot). Versione e data dell'ultima modifica: la PRIMA riga.
+    preambolo = re.split(r"\\begin\s*\{document\}", testo, maxsplit=1)[0]
+    nel_tex = righe_registro(preambolo)
+    testo_registro = preambolo + "\n" + senza_commenti(registro.testo_registro(sorgente))
+    righe = righe_registro(testo_registro)
+    d.versione = righe[0]["versione"] if righe else ""
     data = argomenti(testo, "data")
-    d.data = data[0] if data else (modifica[1] if len(modifica) > 1 else "")
+    d.data = data[0] if data else (righe[0]["data"] if righe else "")
     d.tipo = tipo_documento(testo)
-    d.registro = controlla_registro(testo, d.tipo, data[0] if data else "")
+    d.registro = controlla_registro(testo_registro, d.tipo, data[0] if data else "")
+    if nel_tex:
+        d.registro.append(
+            f"ci sono righe `\\modifica` scritte a mano nel `.tex` ({', '.join(r['versione'] for r in nel_tex)}): "
+            "ora il registro lo scrive il bot dopo il merge, in base all'etichetta della PR "
+            "(GUIDA.md, sezione 5). Toglietele dal `.tex`; se restano, al prossimo merge con "
+            f"etichetta il bot le sposta in `{registro.file_registro(sorgente).name}`.")
     oggetto = argomenti(testo, "oggetto")
     if oggetto:
         d.sottotitolo = pulisci(oggetto[0])
