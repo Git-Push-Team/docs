@@ -221,8 +221,12 @@ class TestProposte(Base):
         dati = {"pr": pr(8, ["approvazione"]), "file": ["RTB/documenti/esterni/piano-di-progetto.tex"],
                 "revisioni": [revisione("alec0r", "APPROVED")], "eventi": [etichettata("gaexxx")]}
         [p] = self.proponi(dati)
-        self.assertEqual((p.riga.versione, p.riga.approvatore), ("1.0.0", "spagnoli"))
-        self.assertTrue(p.riga.latex().endswith("[spagnoli]% PR #8"))
+        # solo chi approva (il Responsabile) come autore, nessun verificatore
+        self.assertEqual((p.riga.versione, p.riga.autore, p.riga.verificatore, p.riga.approvatore),
+                         ("1.0.0", "spagnoli", "-", ""))
+        self.assertEqual(p.riga.latex(), r"\modifica{1.0.0}{2026-11-10}{spagnoli}{-}"
+                                         r"{Approvazione del documento}% PR #8")
+        self.assertEqual(p.problemi, [])
 
     def test_approvazione_di_chi_non_e_responsabile(self):
         dati = {"pr": pr(9, ["approvazione"]), "file": ["RTB/documenti/esterni/piano-di-progetto.tex"],
@@ -232,11 +236,17 @@ class TestProposte(Base):
         self.assertIsNone(p.riga)
         self.assertTrue(any("Responsabile" in x for x in p.problemi))
 
-    def test_approvazione_del_verbale_senza_approvatore(self):
-        dati = {"pr": pr(10, ["approvazione"]), "file": ["RTB/verbali/interni/VI-2026-11-03.tex"],
-                "revisioni": [revisione("alec0r", "APPROVED")], "eventi": [etichettata("firestone109")]}
+    def test_approvazione_del_verbale(self):
+        dati = {"pr": pr(10, ["approvazione"], corpo="Descrizione: Approvazione del verbale"),
+                "file": ["RTB/verbali/interni/VI-2026-11-03.tex"],
+                "revisioni": [revisione("alec0r", "APPROVED")], "eventi": [etichettata("gaexxx")]}
         [p] = self.proponi(dati)
-        self.assertEqual((p.riga.versione, p.riga.approvatore), ("1.0.0", ""))
+        self.assertEqual(p.riga.latex(), r"\modifica{1.0.0}{2026-11-10}{spagnoli}{-}"
+                                         r"{Approvazione del verbale}% PR #10")
+        # anche nei verbali l'approvazione la dà il Responsabile
+        dati["eventi"] = [etichettata("firestone109")]
+        [p] = self.proponi(dati)
+        self.assertIsNone(p.riga)
 
     def test_etichetta_messa_dopo_il_merge_usa_quella_data(self):
         dati = {"pr": pr(11, ["approvazione"]), "file": ["RTB/documenti/esterni/piano-di-progetto.tex"],

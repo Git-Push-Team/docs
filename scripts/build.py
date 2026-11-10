@@ -248,14 +248,14 @@ def controlla_registro(testo: str, tipo: str, data_riunione: str) -> list[str]:
         if not persone(r["autore"]):
             problemi.append(f"nella riga {v} manca l'autore: ogni riga è una modifica fatta da qualcuno "
                             "(niente righe di sola \"Verifica\").")
+        approvazione = re.fullmatch(r"[1-9]\d*\.0\.0", v)
         if not persone(r["verificatore"]):
-            problemi.append(f"la riga {v} non ha verificatore (`--`): una versione esiste solo se è "
-                            "verificata, cioè se la PR è stata approvata da un altro membro.")
+            # le righe di approvazione (1.0.0, 2.0.0...) hanno solo chi approva: niente verificatore
+            if not approvazione:
+                problemi.append(f"la riga {v} non ha verificatore (`--`): una versione esiste solo se è "
+                                "verificata, cioè se la PR è stata approvata da un altro membro.")
         elif persone(r["autore"]) & persone(r["verificatore"]):
             problemi.append(f"nella riga {v} chi verifica è anche autore: serve un'altra persona.")
-        if re.fullmatch(r"[1-9]\d*\.0\.0", v) and tipo == "documento" and not r["approvatore"]:
-            problemi.append(f"la riga {v} è un'approvazione ma manca l'approvatore: l'approvazione la "
-                            "registra il bot quando il Responsabile mette l'etichetta `approvazione` alla PR.")
         if n + 1 < len(righe) and r["data"] < righe[n + 1]["data"]:
             problemi.append(f"la riga {v} ({r['data']}) è più vecchia della riga sotto, "
                             f"{righe[n + 1]['versione']} ({righe[n + 1]['data']}): le date non possono "
