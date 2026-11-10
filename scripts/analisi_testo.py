@@ -75,7 +75,21 @@ PAROLE = Path(__file__).resolve().parent / "analisi" / "parole.txt"
 # falsi allarmi (spazi, elenchi che iniziano in minuscolo) o doppioni dei
 # controlli fatti qui.
 LT_SPENTE = ["WHITESPACE_RULE", "UPPERCASE_SENTENCE_START", "ITALIAN_WORD_REPEAT_RULE",
-             "COMMA_PARENTHESIS_WHITESPACE", "DOUBLE_PUNCTUATION"]
+             "COMMA_PARENTHESIS_WHITESPACE", "DOUBLE_PUNCTUATION",
+             # spazi prima della punteggiatura: li controlla SPAZIO_PRIMA_PUNTEGGIATURA;
+             # questa segnalerebbe anche "9,8\,\%" delle tabelle, che è voluto
+             "WHITESPACE_PUNCTUATION",
+             # consigli sbagliati o inutili per documenti tecnici (provati sui nostri):
+             "GR_04_002",              # "di intelligenza" -> "d'intelligenza"
+             "GR_09_004",              # "S.r.l." -> "S.R.L." (la forma giusta è S.r.l.)
+             "ST_01_005",              # budget -> bilancio, input -> ingresso...
+             "ST_04_001", "ST_04_002",  # numeri in lettere ("6" -> "sei")
+             "ER_01_001",              # "a seguito di" -> "ha seguito di"
+             "ARTICOLATA_SOSTANTIVO",  # "agli standard": non riconosce i plurali stranieri
+             ]
+# Messaggi di regole lasciate accese, da scartare: la d eufonica si segnala
+# solo quando è di troppo ("ed immediata"), non quando è facoltativa.
+LT_MESSAGGI_SCARTATI = ("In questo caso l'uso della 'd' eufonica è ammesso",)
 LT_ORTOGRAFIA = "TYPOS"
 # Categorie di LanguageTool (le CATn sono quelle delle regole italiane);
 # quelle non elencate valgono "Grammatica".
@@ -1064,6 +1078,8 @@ def problemi_languagetool(testo: Testo, risultati: list[tuple], ignora: set[str]
             b = bisect.bisect_left(conversione, b)
         parola = t[a:b]
         if testo.in_zona("codice", a, b) or testo.in_zona("nome", a, b):
+            continue
+        if messaggio.startswith(LT_MESSAGGI_SCARTATI):
             continue
         if categoria == LT_ORTOGRAFIA:
             minuscola = parola.lower()

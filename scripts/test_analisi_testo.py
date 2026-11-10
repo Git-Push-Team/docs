@@ -205,6 +205,12 @@ class LanguageTool(unittest.TestCase):
         self.assertEqual(next(p for p in trovati if p.estratto == "Il").categoria, "Grammatica")
         # parole da ignorare (parole.txt, nomi, Glossario)
         self.assertEqual(len(A.problemi_languagetool(t, risultati[2:3], {"erori"})), 0)
+        # la d eufonica facoltativa non si segnala, quella di troppo sì
+        a = s.index("commit")
+        eufonica = [(a, a + 6, "ST_03_001", "STYLE", False, A.LT_MESSAGGI_SCARTATI[0] + ": od x.", "od"),
+                    (a, a + 6, "ST_03_001", "STYLE", False, "L'uso della 'd' eufonica dovrebbe "
+                     "essere limitato ai casi d'incontro della stessa vocale: e x.", "e")]
+        self.assertEqual(len(A.problemi_languagetool(t, eufonica, set())), 1)
 
     def test_senza_jar(self):
         risultati, nota = A.esegui_languagetool([testo_da("Testo.")], Path("/non/esiste.jar"))

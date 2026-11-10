@@ -17,6 +17,18 @@ GitHub Overleaf LaTeX Discord Telegram Jira Notion Miro Figma Slack Zoom Docker
 latexmk TeX textidote LanguageTool Gulpease Mermaid PlantUML StarUML draw.io
 Teams Meet
 
+# Altri proponenti (Analisi dei Capitolati)
+Sanmarco Vimar Uranion Ergon Halue Miriade
+
 # Termini tecnici usati nei documenti
 backend frontend endpoint chatbot multicanale prompt prompting embedding
-retrieval tokenizzazione deployment deploy onboarding
+retrieval tokenizzazione deployment deploy onboarding js
+microservizio microservizi multipiattaforma videochiamata videochiamate
+conversazionale conversazionali domotico domotici domotiche
+versionare versionato versionata versionati versionate versionamento
+proattivo proattiva proattivi proattive regolatorio regolatoria regolatorie
+ripianificare ripianificato ripianificazione rifattorizzazione perimetrazione
+riassegnabile riassegnabili riprendibile riprendibili elaborabile elaborabili
+
+# Abbreviazioni nelle intestazioni delle tabelle dei ruoli
+Resp Amm Progett Verif
