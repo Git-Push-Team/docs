@@ -71,7 +71,13 @@ FUSO = ZoneInfo("Europe/Rome")
 
 # etichetta -> quale numero di X.Y.Z aumenta. Se una PR ne ha più d'una
 # vale la più "forte" (l'approvazione comprende le ultime modifiche).
+# "stesura-e-approvazione" scrive DUE righe: una di contenuto (numero
+# centrale) e sopra l'approvazione (numero intero successivo).
+STESURA_E_APPROVAZIONE = "stesura-e-approvazione"
+APPROVAZIONI = ("approvazione", STESURA_E_APPROVAZIONE)    # etichette che mette il Responsabile
 ETICHETTE = {
+    STESURA_E_APPROVAZIONE: (0, "Stesura e approvazione insieme: due righe, 0.1.0 (o 0.3.0) e poi 1.0.0",
+                             "5319e7"),
     "approvazione": (0, "Approvazione: la versione passa al numero intero successivo (0.4.2 → 1.0.0)",
                      "0e8a16"),
     "contenuto": (1, "Contenuto nuovo: aumenta il numero centrale (0.2.1 → 0.3.0)", "1d76db"),
@@ -91,7 +97,8 @@ INTESTAZIONE = """\
 %  REGISTRO DELLE MODIFICHE di {nome}
 %
 %  Le righe le aggiunge il bot dopo il merge di una pull request con
-%  un'etichetta di versione (correzione, contenuto, approvazione):
+%  un'etichetta di versione (correzione, contenuto, approvazione,
+%  stesura-e-approvazione):
 %  GUIDA.md, sezione 5. La riga più recente è in cima.
 %  Si può correggere a mano (per esempio un refuso in una descrizione)
 %  con una pull request SENZA etichetta. La classe legge questo file da
@@ -495,9 +502,15 @@ def _bot(login: str | None) -> bool:
 @dataclass
 class Proposta:
     documento: Path
-    riga: Riga | None
+    riga: Riga | None                  # la riga in cima (la più recente)
     etichetta: str
     problemi: list[str] = field(default_factory=list)
+    precedente: Riga | None = None     # con stesura-e-approvazione: la riga di contenuto, sotto
+
+    @property
+    def righe(self) -> list[Riga]:
+        """Le righe da scrivere, dalla più vecchia alla più recente."""
+        return [r for r in (self.precedente, self.riga) if r]
 
 
 def approvatori(revisioni: list[dict], autore_pr: str) -> list[str]:
@@ -562,13 +575,16 @@ def proponi(pr: dict, file: list[str], revisioni: list[dict], commit: list[dict]
     autore_pr = (pr.get("user") or {}).get("login")
     verificatori_login = approvatori(revisioni, autore_pr)
     autori_login = autori(pr, commit, set(verificatori_login))
-    chi_approva, quando_approva = (ultimo_etichettatore(eventi, "approvazione")
-                                   if etichetta == "approvazione" else (None, None))
+    chi_approva, quando_approva = (ultimo_etichettatore(eventi, etichetta)
+                                   if etichetta in APPROVAZIONI else (None, None))
     if giorno is None:
         momento = _quando(pr["merged_at"]) if pr.get("merged_at") else datetime.now(FUSO)
+        giorno_merge = momento.date()
         if quando_approva and quando_approva > momento:
             momento = quando_approva       # etichetta messa dopo il merge
         giorno = momento.date()
+    else:
+        giorno_merge = giorno
     descrizione = descrizione_della_pr(pr.get("body"), pr.get("title", ""))
 
     proposte = []
@@ -580,46 +596,73 @@ def proponi(pr: dict, file: list[str], revisioni: list[dict], commit: list[dict]
             continue                       # le lettere non hanno registro
         righe = righe_documento(doc)
         attuale = righe[0] if righe else None
-        versione = versione_successiva(attuale.versione if attuale else "", etichetta)
-        data = giorno.isoformat()
-        if attuale and attuale.data > data:
-            data = attuale.data
-        if etichetta == "approvazione":
+        versione_attuale = attuale.versione if attuale else ""
+        data_minima = attuale.data if attuale else ""     # le date non tornano indietro
+        data = max(giorno.isoformat(), data_minima)
+        data_merge = max(giorno_merge.isoformat(), data_minima)
+        if etichetta in APPROVAZIONI:
             # Riga di approvazione (documenti e verbali): solo chi approva, cioè
             # il Responsabile che mette l'etichetta, nella colonna autore, e "-"
             # al posto del verificatore. La PR la approva comunque il Verificatore
             # su GitHub (serve per il merge), ma in questa riga non compare.
+            # Se l'etichetta non l'ha messa il Responsabile non si scrive NIENTE,
+            # nemmeno la riga di contenuto di stesura-e-approvazione: altrimenti
+            # la PR risulterebbe già registrata e l'approvazione non si potrebbe
+            # più aggiungere.
             k = gruppo.chiave(chi_approva)
             resp = gruppo.responsabili(giorno)
             if not k:
-                problemi.append("l'etichetta `approvazione` deve metterla il Responsabile: "
-                                "non trovo chi l'ha messa tra i membri. Riga non aggiunta.")
+                problemi.append(f"l'etichetta `{etichetta}` deve metterla il Responsabile: "
+                                "non trovo chi l'ha messa tra i membri. Righe non aggiunte.")
                 proposte.append(Proposta(doc, None, etichetta, problemi))
                 continue
             if resp is None or not resp:
-                problemi.append("non posso controllare che l'etichetta `approvazione` l'abbia messa il "
+                problemi.append(f"non posso controllare che l'etichetta `{etichetta}` l'abbia messa il "
                                 "Responsabile: in `pianificazione.toml` lo sprint di oggi non ha un "
                                 f"Responsabile. Ho registrato `{k}` come chi approva.")
             elif k not in resp:
-                problemi.append(f"l'etichetta `approvazione` l'ha messa `{k}`, ma il Responsabile "
-                                f"dello sprint è `{', '.join(resp) or 'nessuno'}`. Riga non aggiunta: "
+                problemi.append(f"l'etichetta `{etichetta}` l'ha messa `{k}`, ma il Responsabile "
+                                f"dello sprint è `{', '.join(resp) or 'nessuno'}`. Righe non aggiunte: "
                                 "il Responsabile tolga e rimetta l'etichetta (anche a PR chiusa), "
                                 "poi rilanciate *Pubblica il sito* dalla scheda Actions.")
                 proposte.append(Proposta(doc, None, etichetta, problemi))
                 continue
-            testo = descrizione_della_pr(pr.get("body"), "") or (
-                "Approvazione del documento" if tipo == "documento" else "Approvazione del verbale")
-            riga = Riga(versione, data, k, "-", testo, pr=pr["number"])
-            proposte.append(Proposta(doc, riga, etichetta, problemi))
+            approvazione = ("Approvazione del documento" if tipo == "documento"
+                            else "Approvazione del verbale")
+            if etichetta == "approvazione":
+                testo = descrizione_della_pr(pr.get("body"), "") or approvazione
+                riga = Riga(versione_successiva(versione_attuale, "approvazione"), data, k, "-",
+                            testo, pr=pr["number"])
+                proposte.append(Proposta(doc, riga, etichetta, problemi))
+                continue
+            # stesura-e-approvazione: sotto la riga di contenuto (autore e
+            # verificatore come con `contenuto`, data del merge), sopra
+            # l'approvazione del Responsabile (data in cui ha messo l'etichetta,
+            # se dopo il merge).
+            contenuto = riga_di_contenuto(versione_successiva(versione_attuale, "contenuto"),
+                                          data_merge, autori_login, verificatori_login,
+                                          descrizione, gruppo, problemi, pr["number"])
+            riga = Riga(versione_successiva(contenuto.versione, "approvazione"),
+                        max(data, contenuto.data), k, "-", approvazione, pr=pr["number"])
+            proposte.append(Proposta(doc, riga, etichetta, problemi, precedente=contenuto))
             continue
-        autore = chiavi(autori_login, gruppo, problemi, "autore")
-        verificatore = chiavi(verificatori_login, gruppo, problemi, "verificatore")
-        if verificatore == "--":
-            problemi.append("nessun membro ha approvato la PR: la riga ha `--` come verificatore.")
-        riga = Riga(versione, data, autore, verificatore, descrizione, pr=pr["number"])
+        riga = riga_di_contenuto(versione_successiva(versione_attuale, etichetta), data,
+                                 autori_login, verificatori_login, descrizione, gruppo, problemi,
+                                 pr["number"])
         proposte.append(Proposta(doc, riga, etichetta, problemi))
         _ = nome
     return proposte
+
+
+def riga_di_contenuto(versione: str, data: str, autori_login: list[str],
+                      verificatori_login: list[str], descrizione: str, gruppo: Gruppo,
+                      problemi: list[str], numero: int) -> Riga:
+    """Una riga con autore (chi ha fatto la PR) e verificatore (chi l'ha approvata)."""
+    autore = chiavi(autori_login, gruppo, problemi, "autore")
+    verificatore = chiavi(verificatori_login, gruppo, problemi, "verificatore")
+    if verificatore == "--":
+        problemi.append("nessun membro ha approvato la PR: la riga ha `--` come verificatore.")
+    return Riga(versione, data, autore, verificatore, descrizione, pr=numero)
 
 
 def gia_registrata(doc: Path, numero: int) -> bool:
@@ -661,11 +704,11 @@ def tabella(proposte: list[Proposta], root: Path = ROOT) -> list[str]:
              "| --- | --- | --- | --- | --- |"]
     for p in proposte:
         nome = p.documento.relative_to(root).as_posix()
-        if p.riga:
-            r = p.riga
-            appr = f" (approvatore: {r.approvatore})" if r.approvatore else ""
-            descr = r.descrizione.replace("|", "\\|")
-            righe.append(f"| `{nome}` | **{r.versione}**{appr} | {r.autore} | {r.verificatore} | {descr} |")
+        if p.righe:
+            for r in reversed(p.righe):        # come nel registro: la più recente in alto
+                appr = f" (approvatore: {r.approvatore})" if r.approvatore else ""
+                descr = r.descrizione.replace("|", "\\|")
+                righe.append(f"| `{nome}` | **{r.versione}**{appr} | {r.autore} | {r.verificatore} | {descr} |")
         else:
             righe.append(f"| `{nome}` | — | | | riga non aggiunta |")
     return righe
@@ -688,11 +731,12 @@ def comando_aggiorna(gh: GitHub, gruppo: Gruppo, root: Path = ROOT,
                            gruppo, root)
         proposte = [p for p in proposte if p.documento in docs]
         for p in proposte:
-            if p.riga:
-                aggiungi_riga(p.documento, p.riga)
+            if p.righe:
+                for r in p.righe:              # dalla più vecchia: l'ultima finisce in cima
+                    aggiungi_riga(p.documento, r)
                 for f in (p.documento, file_registro(p.documento)):
                     git("add", "--", f.relative_to(root).as_posix(), root=root)
-                scritte.append(f"{p.documento.stem} v{p.riga.versione}")
+                scritte.append(f"{p.documento.stem} " + " + ".join(f"v{r.versione}" for r in p.righe))
         resoconto += [f"**PR #{numero}** — {pr.get('title', '')} (etichetta `{etichetta}`)", "",
                       *tabella(proposte, root), ""]
         problemi = [f"- `{p.documento.relative_to(root).as_posix()}`: {x}" for p in proposte for x in p.problemi]
@@ -740,10 +784,14 @@ def comando_anteprima(gh: GitHub, gruppo: Gruppo | None, numero: int, scrivi: bo
     else:
         proposte = proponi(pr, file, gh.revisioni(numero), gh.commit(numero), gh.eventi(numero),
                            gruppo, root, giorno=datetime.now(FUSO).date())
-        spiegazione = ("nella riga di approvazione c'è solo chi approva, cioè il Responsabile che "
-                       "mette l'etichetta, e nessun verificatore (la PR va comunque approvata dal "
-                       "Verificatore per il merge)" if etichetta == "approvazione"
-                       else "il verificatore è chi approva la PR")
+        spiegazione = {
+            "approvazione": "nella riga di approvazione c'è solo chi approva, cioè il Responsabile "
+                            "che mette l'etichetta, e nessun verificatore (la PR va comunque "
+                            "approvata dal Verificatore per il merge)",
+            STESURA_E_APPROVAZIONE: "due righe: sotto il contenuto, con autore chi ha fatto la PR e "
+                                    "verificatore chi l'ha approvata; sopra l'approvazione, con solo "
+                                    "il Responsabile che mette l'etichetta",
+        }.get(etichetta, "il verificatore è chi approva la PR")
         righe += [f"Etichetta `{etichetta}`: dopo il merge il bot aggiungerà queste righe "
                   f"({spiegazione}; la data sarà quella del merge).", "",
                   *tabella(proposte, root)]
@@ -754,11 +802,14 @@ def comando_anteprima(gh: GitHub, gruppo: Gruppo | None, numero: int, scrivi: bo
         if not re.search(r"^[ \t>*_-]*Descrizione[^:\n]*:[ \t*_]*\S", re.sub(r"<!--.*?-->", "", pr.get("body") or "", flags=re.S), re.M | re.I):
             righe += ["", "ℹ️ Nella descrizione della PR manca la riga `Descrizione: ...`: "
                       "nel registro andrà " + ("*Approvazione del documento* (o *del verbale*)."
-                                              if etichetta == "approvazione" else "il titolo della PR.")]
+                                              if etichetta == "approvazione" else
+                                              "il titolo della PR (nella riga di contenuto)."
+                                              if etichetta == STESURA_E_APPROVAZIONE
+                                              else "il titolo della PR.")]
         if scrivi:
             for p in proposte:
-                if p.riga:
-                    aggiungi_riga(p.documento, p.riga)
+                for r in p.righe:
+                    aggiungi_riga(p.documento, r)
     if a_mano:
         righe += ["", "ℹ️ Righe `\\modifica` scritte a mano nel `.tex` di "
                   + ", ".join(f"`{d.name}`" for d in a_mano)

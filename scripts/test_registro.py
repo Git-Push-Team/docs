@@ -264,6 +264,54 @@ class TestProposte(Base):
         [p] = self.proponi(dati)
         self.assertEqual((p.riga.versione, p.riga.descrizione), ("0.1.0", "Prima stesura dell'Analisi"))
 
+    # --- stesura-e-approvazione: due righe dalla stessa PR ---------------
+    def stesura(self, numero, chi="gaexxx", quando="2026-11-10T15:00:00Z", **kw):
+        return {"pr": pr(numero, ["stesura-e-approvazione"], **kw),
+                "file": ["RTB/documenti/esterni/piano-di-progetto.tex"],
+                "revisioni": [revisione("alec0r", "APPROVED")],
+                "eventi": [etichettata(chi, "stesura-e-approvazione", quando)]}
+
+    def test_stesura_e_approvazione_documento(self):
+        dati = self.stesura(30, corpo="Descrizione: Revisione finale della sezione 3")
+        [p] = self.proponi(dati)
+        self.assertEqual(p.problemi, [])
+        self.assertEqual([r.latex() for r in p.righe], [
+            r"\modifica{0.3.0}{2026-11-10}{guglielmo}{corro}{Revisione finale della sezione 3}% PR #30",
+            r"\modifica{1.0.0}{2026-11-10}{spagnoli}{-}{Approvazione del documento}% PR #30"])
+        self.assertIs(p.riga, p.righe[-1])                     # in cima va l'approvazione
+
+    def test_stesura_e_approvazione_verbale_nuovo(self):
+        nuovo = self.root / "RTB/verbali/interni/VI-2026-11-12.tex"
+        nuovo.write_text(VERBALE.replace("\\modifica{0.1.0}{2026-11-03}{guglielmo}{corro}{Stesura del verbale}\n", ""),
+                         encoding="utf-8")
+        self.assertEqual(R.righe_documento(nuovo), [])
+        dati = self.stesura(31, corpo="Descrizione: Stesura del verbale")
+        dati["file"] = ["RTB/verbali/interni/VI-2026-11-12.tex"]
+        [p] = self.proponi(dati)
+        self.assertEqual([(r.versione, r.autore, r.verificatore, r.descrizione) for r in p.righe],
+                         [("0.1.0", "guglielmo", "corro", "Stesura del verbale"),
+                          ("1.0.0", "spagnoli", "-", "Approvazione del verbale")])
+
+    def test_stesura_e_approvazione_da_versione_approvata(self):
+        dati = self.stesura(32)
+        R.aggiungi_riga(self.doc, R.Riga("1.0.0", "2026-11-08", "spagnoli", "-", "Approvazione", pr=1))
+        [p] = self.proponi(dati)
+        self.assertEqual([r.versione for r in p.righe], ["1.1.0", "2.0.0"])
+
+    def test_stesura_e_approvazione_di_chi_non_e_responsabile(self):
+        [p] = self.proponi(self.stesura(33, chi="firestone109"))
+        self.assertIsNone(p.riga)
+        self.assertEqual(p.righe, [])                           # nessuna delle due righe
+        self.assertTrue(any("Righe non aggiunte" in x for x in p.problemi))
+
+    def test_stesura_e_approvazione_etichetta_dopo_il_merge(self):
+        [p] = self.proponi(self.stesura(34, quando="2026-11-12T09:00:00Z"))
+        self.assertEqual([r.data for r in p.righe], ["2026-11-10", "2026-11-12"])
+
+    def test_stesura_e_approvazione_vince_sulle_altre(self):
+        self.assertEqual(R.etichetta_della_pr(["contenuto", "approvazione", "stesura-e-approvazione"]),
+                         "stesura-e-approvazione")
+
     def test_autore_sconosciuto(self):
         dati = {"pr": pr(13, ["correzione"], autore="sconosciuto"),
                 "file": ["RTB/documenti/esterni/piano-di-progetto.tex"], "revisioni": [revisione("alec0r", "APPROVED")]}
@@ -289,6 +337,11 @@ class TestAggiorna(Base):
             22: {"pr": pr(22, ["correzione"], titolo="Refuso nei rischi", unita="2026-11-10T12:00:00Z"),
                  "file": ["RTB/documenti/esterni/piano-di-progetto.tex"],
                  "revisioni": [revisione("enricobiasini", "APPROVED")]},
+            23: {"pr": pr(23, ["stesura-e-approvazione"], corpo="Descrizione: Stesura del verbale",
+                          unita="2026-11-10T18:00:00Z"),
+                 "file": ["RTB/verbali/interni/VI-2026-11-10.tex"],
+                 "revisioni": [revisione("alec0r", "APPROVED")],
+                 "eventi": [etichettata("gaexxx", "stesura-e-approvazione", "2026-11-10T17:00:00Z")]},
         })
         os.environ.pop("GITHUB_STEP_SUMMARY", None)
 
@@ -308,6 +361,25 @@ class TestAggiorna(Base):
         R.comando_aggiorna(self.gh, self.gruppo, self.root)                 # seconda esecuzione
         self.assertEqual(self.git("rev-parse", "HEAD"), commit_prima)
         self.assertEqual(len(R.righe_documento(self.doc)), 4)
+        self.assertEqual(len(R.righe_documento(self.root / "RTB/verbali/interni/VI-2026-11-10.tex")), 3)
+
+    def test_stesura_e_approvazione_scrive_due_righe(self):
+        R.comando_aggiorna(self.gh, self.gruppo, self.root)
+        verbale = self.root / "RTB/verbali/interni/VI-2026-11-10.tex"
+        testo = R.file_registro(verbale).read_text(encoding="utf-8")
+        righe = [r for r in testo.splitlines() if r.startswith("\\modifica")]
+        self.assertEqual(righe, [
+            r"\modifica{1.0.0}{2026-11-10}{spagnoli}{-}{Approvazione del verbale}% PR #23",
+            r"\modifica{0.2.0}{2026-11-10}{guglielmo}{corro}{Stesura del verbale}% PR #23",
+            r"\modifica{0.1.0}{2026-11-10}{guglielmo}{corro}{Stesura del verbale}"])
+        self.assertIn("VI-2026-11-10 v0.2.0 + v1.0.0", self.git("log", "-1", "--format=%b"))
+        self.assertIn("1.0.0", self.gh.commenti[23])
+        self.assertIn("0.2.0", self.gh.commenti[23])
+        import build
+        build.ROOT = self.root
+        d = build.leggi(verbale)
+        self.assertEqual(d.versione, "1.0.0")
+        self.assertFalse(any("verificatore" in a for a in d.registro))   # niente avvisi
 
     def test_la_riga_compila_come_prima(self):
         """La classe legge le righe nello stesso ordine di build.py."""
