@@ -4,10 +4,10 @@
 \setcounter{tocdepth}{4}
 \usepackage{titlesec}
 \titleformat{\paragraph}
-  {\normalfont\normalsize\bfseries}
-  {\theparagraph}{1em}{}
+{\normalfont\normalsize\bfseries}
+{\theparagraph}{1em}{}
 \titlespacing*{\paragraph}
-  {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
 
 % ---------------------------------------------------------------------
@@ -26,594 +26,724 @@
 
 
 \begin{document}
-
-% ---------------------------------------------------------------------
-% Contenuto del Documento
-% ---------------------------------------------------------------------
-\section{Introduzione}
-\subsection{Scopo del documento}
-Questo documento ha lo scopo di definire e descrivere le Norme di Progetto, ovvero l'insieme dei metodi, delle regole e delle procedure operative (il cosiddetto \textit{Way of Working} o \glo{WoW}) adottate dal team per la realizzazione del progetto software. 
-
-L'obiettivo principale della stesura di questo documento è fornire una guida chiara e condivisa per tutti i membri del gruppo. Al suo interno vengono specificati gli strumenti utilizzati e le relative motivazioni, le metodologie di lavoro, gli standard di codifica e le regole di collaborazione, al fine di garantire un approccio strutturato, coerente, efficiente e tracciabile per l'intero ciclo di vita del progetto, limitando il rischio di problemi organizzativi.
-
-La stesura di questo documento segue un approccio incrementale: le norme qui descritte verranno costantemente aggiornate, ampliate e affinate nel tempo per riflettere nuove decisioni tecniche e per supportare il miglioramento continuo dei processi del gruppo.
-
-Per strutturare le attività, il team prende come principale riferimento metodologico le \textit{\glo{best practice}} suggerite dallo \glo{standard} \textbf{ISO/IEC 12207:1995}, adattandole alle specifiche esigenze progettuali. In particolare, lo standard individua tre macro-categorie di processi per il ciclo di vita del software:
-\begin{itemize}
-    \item \textbf{Processi primari:} includono tutti i processi direttamente coinvolti nella creazione del prodotto software, ovvero le attività di fornitura e sviluppo.
-    \item \textbf{Processi di supporto:} comprendono i processi che assistono e sostengono i processi primari garantendone la qualità, la correttezza e la tracciabilità. Tra questi vi sono la documentazione, la gestione della configurazione, l'accertamento della qualità, la verifica e la validazione.
-    \item \textbf{Processi organizzativi:} riguardano i processi utilizzati per governare il modo in cui il gruppo lavora, per gestire e coordinare le risorse e per migliorare i flussi operativi. Includono la gestione dei processi, le infrastrutture, la formazione e il miglioramento continuo.
-\end{itemize}
-
-\subsection{Glossario}
-Al fine di evitare ambiguità e garantire una comprensione chiara e uniforme della terminologia utilizzata, è stato redatto un documento dedicato denominato \textbf{Glossario}. Questo strumento raccoglie e definisce in modo univoco i termini tecnici, gli acronimi, le abbreviazioni e i concetti specifici del dominio del progetto.   Per agevolare la consultazione e la fruizione della documentazione, tutti i vocaboli presenti nel Glossario sono contrassegnati all'interno del testo mediante una ``G'' in pedice (ad esempio: \texttt{termine\textsubscript{G}}). L'impiego del Glossario assicura la coerenza terminologica tra i membri del gruppo e verso gli \glo{stakeholder} esterni, oltre a facilitare l'inserimento operativo di nuovi partecipanti al progetto.  
-
-\section{Processi Primari}
-
-\subsection{Fornitura}
-Il processo di \glo{Fornitura} definisce e regolamenta l'insieme delle attività necessarie per avviare, pianificare, realizzare e consegnare il prodotto software in modo controllato, condiviso e verificabile. In qualità di \glo{fornitore}, il gruppo stabilisce le modalità operative, gli strumenti di lavoro e la documentazione contrattuale iniziale per chiarire vincoli, risorse e \glo{requisiti} concordati con la \glo{proponente}. Il processo presidia inoltre il coordinamento delle risorse, il controllo dell'avanzamento e della qualità, nonché la gestione delle comunicazioni verso il \glo{committente} e il supporto nelle fasi di accettazione finale, garantendo la piena conformità del rilascio ai vincoli temporali ed economici pattuiti.
-
-\subsubsection{Documentazione Fornita}
-In seguito sono elencati i documenti che, oltre al presente, sono necessari per la consegna del progetto.
-
-\subsubsubsection{Verbali}
-I verbali, distinti in interni ed esterni, documentano gli incontri svolti: i primi tengono traccia delle riunioni del team, mentre i secondi riassumono i meeting con l'azienda proponente.
-
-\subsubsubsection{Analisi dei capitolati}
-Il documento di Analisi dei Capitolati viene redatto durante la fase di Candidatura con lo scopo di valutare formalmente le proposte d'appalto per il progetto didattico, individuando quella maggiormente allineata alle competenze, agli interessi e agli obiettivi del gruppo.
-
-Per ciascun \glo{capitolato} esaminato, il documento struttura la trattazione secondo i seguenti punti:
-\begin{itemize}
-    \item \textbf{Descrizione generale:} riassume brevemente il prodotto richiesto e i suoi obiettivi principali;
-    \item \textbf{Caratteristiche funzionali e tecnologie:} analizza le funzionalità chiave emerse e lo \glo{stack tecnologico} proposto e/o vincolato;
-    \item \textbf{Colloqui informativi:} raccoglie i chiarimenti e i riscontri ottenuti durante gli incontri conoscitivi con l'azienda proponente;
-    \item \textbf{Valutazione del gruppo:} esamina i punti di forza, le criticità riscontrate e il livello di gradimento espresso dai membri del team, motivando la scelta finale.
-\end{itemize}
-
-\subsubsubsection{Dichiarazione Impegni}
-Il documento di Dichiarazione degli Impegni viene redatto durante la fase di Candidatura con lo scopo di formalizzare l'impegno del gruppo nello sviluppo del \glo{capitolato} scelto, definendo la pianificazione economica, oraria e temporale a cui il team si vincola per l'intero \glo{ciclo di vita} del progetto.
-
-In particolare, il documento si articola attraverso i seguenti elementi chiave:
-\begin{itemize}
-    \item \textbf{Ripartizione dei ruoli e monte ore:} definisce la stima del monte ore complessivo e la sua distribuzione per ciascun ruolo ricoperto dai membri del team;
-    \item \textbf{Preventivo dei costi:} determina il costo orario per ruolo e quantifica l'investimento economico complessivo stimato per la realizzazione del prodotto;
-    \item \textbf{Scadenza di consegna:} stabilisce la data presunta di rilascio finale del progetto didattico;
-    \item \textbf{Formalizzazione dell'impegno:} esplicita la conformità e l'adesione responsabile del gruppo a tali vincoli durante tutte le attività progettuali.
-\end{itemize}
-
-\subsubsubsection{Glossario}
-Il Glossario costituisce un documento ad aggiornamento continuo lungo l'intero ciclo di vita del progetto, concepito per chiarire e contestualizzare i termini appartenenti al \glo{dominio applicativo} che potrebbero risultare ambigui o di complessa interpretazione. Raccogliendo e formalizzando definizioni per vocaboli tecnici, acronimi e abbreviazioni utilizzati nella documentazione di progetto, esso assicura una comunicazione chiara, coerente e priva di fraintendimenti tra i membri del team, l'azienda proponente, il committente e i lettori esterni.
-
-\subsubsubsection{Lettera di candidatura}
-La Lettera di Candidatura rappresenta il documento formale con cui il gruppo GitPushTeam ufficializza la propria candidatura per l'appalto del \glo{capitolato} proposto dall'azienda Eggon. Al suo interno vengono esposte le motivazioni che hanno guidato la decisione del team, valorizzando in particolare l'interesse verso lo stack tecnologico e le opportunità di crescita formativa. Il documento richiama inoltre i principali vincoli operativi assunti dal gruppo tra cui la data di consegna stimata, il preventivo economico e la ripartizione del monte ore, fornendo il necessario raccordo formale con i documenti di Dichiarazione degli Impegni e Analisi dei Capitolati a supporto della proposta.
-
-
-
-\section{Processi di Supporto}
-
-\subsection{Documentazione}
-Il processo di Documentazione costituisce un processo di supporto fondamentale all'interno del ciclo di vita del software, volto a garantire la tracciabilità, la trasparenza e la continuità di tutte le decisioni prese e delle attività svolte dal gruppo. Essa raccoglie l'insieme delle informazioni scritte necessarie a descrivere il sistema ed i processi, fungendo da mezzo di comunicazione primario sia internamente sia verso l'esterno.
-
-L'obiettivo di questa sezione è definire un insieme di norme, convenzioni e procedure ripetibili atte a:
-\begin{itemize}
-    \item \textbf{Uniformare la produzione documentale:} stabilire uno stile grafico, strutturale e sintattico omogeneo per tutti gli artefatti del gruppo.
-    \item \textbf{Garantire la qualità dei processi:} ridurre ambiguità ed errori tramite regole chiare di stesura e verifica.
-    \item \textbf{Semplificare il lavoro del team:} fornire modelli e linee guida operative per agevolare i redattori nella stesura dei documenti.
-\end{itemize}
-
-Per la gestione e la produzione della documentazione, il gruppo adotta la filosofia \glo{Documentation as Code}, trattando i sorgenti dei documenti (redatti in LaTeX) alla stesso modo del codice sorgente, avvalendosi dei sistemi di controllo versione  per la loro gestione e tracciabilità. Nelle sottosezioni seguenti vengono nel dettaglio analizzate le regole operative riguardanti la documentazione.
-
-\subsubsection{Template}
-Al fine di garantire l'omogeneità grafica, tipografica e strutturale di tutti gli artefatti prodotti dal gruppo, nonché di agevolare le attività di stesura da parte dei redattori, sono stati realizzati diversi modelli personalizzati. Tutti i file di supporto e i sorgenti dei template sono conservati all'interno della directory \texttt{template/modelli} nel repository GitHub del gruppo.
-
-I principali modelli disponibili per la redazione comprendono:
-
-\begin{itemize}
-\item \texttt{verbale-interno.tex}: template con la struttura per la documentazione degli incontri interni del gruppo.
-\item \texttt{verbale-esterno.tex}: template con la struttura per la documentazione degli incontri esterni tra il gruppo e il proponente.
-\item \texttt{lettera.tex}: template utilizzato per la stesura della lettera di presentazione (\autoref{sec:lettera_di_presentazione}) e utilizzabile per documentazione in formato lettera.
-\item \texttt{documento.tex}: template di documentazione generica utilizzato nel caso in cui un template più specifico non sia presente.
-\end{itemize}
-
-\subsubsection{Versionamento}
-Per il versionamento dei nostri documenti e codice abbiamo adottato una versione generalizzata della formula del \glo{versionamento semantico} seguendo lo schema:
-\begin{center}
-  \Large \texttt{\textbf{Major.Minor.Patch}}
-\end{center}
-
-in cui ciascuna cifra risponde al seguente criterio generale:
-
-\begin{itemize}
-    \item \textbf{\textit{Major}:} incrementato dalla persona con ruolo di \textit{Responsabile} in sede di approvazione formale.
-    \item \textbf{\textit{Minor}:} incrementato in presenza di una modifica sostanziale.
-    \item \textbf{\textit{Patch}:} incrementato in caso di modifiche leggere, come la correzione di refusi o typo.
-\end{itemize}
-
-Le regole operative che disciplinano il flusso di lavoro all'interno del registro delle modifiche sono le seguenti:
-\begin{itemize}
-    \item \textbf{Esecuzione delle modifiche:} Chiunque nel gruppo, ad esclusione del \textit{Verificatore}, può effettuare una modifica.
-    \item \textbf{Verifica:} Ogni modifica deve essere verificata dal \textit{Verificatore}, il quale, dopo aver completato il controllo, aggiunge il proprio nome al campo verificatore. Questa operazione risulta particolarmente necessaria nel caso in cui in quel momento esistano più verificatori.
-    \item \textbf{Approvazione:} Quando il documento raggiunge un punto di maturazione adatto (ad esempio prima di essere inviato al proponente o al committente), la persona che ricopre il ruolo di \textit{Responsabile} approva formalmente il documento e incrementa la versione \textit{Major}.
-\end{itemize}
-
-\subsubsection{Nomenclatura}
-Al fine di garantire un'identificazione univoca, ordinata ed immediata di ciascun artefatto, il gruppo adotta una convenzione di nomenclatura standardizzata per la denominazione dei file. La struttura del nome varia in base alla tipologia di documento.
-
-\paragraph{Verbali}
-I documenti appartenenti alla categoria dei verbali vengono identificati in modo univoco secondo il seguente schema di nomenclatura:
-
-\begin{center}
-    \sffamily\bfseries VX-YYYY-MM-DD
-\end{center}
-
-in cui:
-\begin{itemize}
-    \item \textbf{\textit{V}:} rappresenta l'appartenenza alla categoria di documentazione dei verbali.
-    \item \textbf{\textit{X}:} rappresenta la categoria di verbale, sarà presente una I in caso di verbale interno oppure una E in caso di verbale esterno.
-    \item \textbf{\textit{YYYY-MM-DD}:} indica la data di svolgimento della riunione espressa nel \glo{formato ISO} (\textit{Anno-Mese-Giorno}).
-\end{itemize}
-
-\subsection{Gestione della configurazione}
-\subsubsection{Identificazione}
-\subsubsection{Controllo}
-\subsubsection{Registrazione}
-
-% GESTIONE DEI PROCESSI (ALESSIO)
-\section{Processi Organizzativi}
-
-\subsection{Gestione dei Processi}
-La Gestione dei Processi si prefigge lo scopo di stabilire e standardizzare le metodologie operative ottimali per organizzare il lavoro del team. Attraverso un'attenta supervisione e la regolamentazione dei flussi delle attività, il gruppo punta a prevenire colli di bottiglia e a massimizzare la resa delle risorse a disposizione. Un pilastro di questo processo è l'accurata tracciabilità documentale, necessaria per conservare la memoria delle decisioni e per supportare un'evoluzione qualitativa del prodotto rilasciato.
-
-\subsubsection{Attività previste}
-Il processo si articola nelle seguenti macro-attività:
-\begin{itemize}
-    \item \textbf{Definizione e Inizializzazione:} identificazione del perimetro di lavoro, analisi preliminare degli obiettivi da traguardare e delineazione delle regole base per l'intervento;
-    \item \textbf{Programmazione delle attività:} allocazione delle risorse umane, stima delle tempistiche e redazione di un piano strategico per fronteggiare i rischi e monitorare le scadenze;
-    \item \textbf{Svolgimento e Monitoraggio:} implementazione pratica dei compiti assegnati, accompagnata da una verifica costante dell'avanzamento lavori per assicurare la massima conformità organizzativa;
-    \item \textbf{Valutazione in itinere:} analisi critica dei risultati parziali, volta ad accertare l'aderenza alle specifiche e a integrare eventuali strategie di miglioramento;
-    \item \textbf{Conclusione:} formalizzazione del termine dei lavori, aggiornamento delle \glo{baseline} di progetto e consegna del materiale definitivo.
-\end{itemize}
-
-\subsubsection{Ruoli di progetto}
-Al fine di garantire una formazione trasversale e una distribuzione equa dei carichi, ogni componente del gruppo ricoprirà a rotazione i sei ruoli previsti dal \glo{Way of Working}. Ciascun ruolo è caratterizzato da precise responsabilità e mansioni operative, fondamentali per la buona riuscita del progetto. L'assegnazione avverrà all'inizio di ogni \glo{sprint} e rifletterà le esigenze specifiche di quella particolare fase di sviluppo.
-
-\paragraph{Responsabile}
-Questa figura detiene il coordinamento esecutivo del gruppo, assicurandosi che tutte le mansioni convergano verso gli obiettivi prefissati. Stabilisce le scadenze, orchestra le fasi di lavoro e funge da portavoce ufficiale nei confronti della \glo{proponente}. È suo onere, inoltre, anticipare e mitigare eventuali rischi che potrebbero compromettere il progetto.
-I suoi compiti sono:
-\begin{itemize}
-    \item Curare le relazioni e le comunicazioni esterne;
-    \item Aggiornare costantemente il \textit{Piano di Progetto};
-    \item Redigere i Verbali formali per gli incontri interni ed esterni;
-    \item Indire le riunioni, coordinare i lavori e gestire i diari di bordo.
-\end{itemize}
-
-\paragraph{Amministratore}
-L'Amministratore vigila sull'efficienza e sull'integrità dell'ecosistema di lavoro. Predispone le tecnologie necessarie, configura gli ambienti e si accerta che tutti i membri possano operare senza ostacoli tecnici. Mantiene l'infrastruttura documentale e supporta il \glo{team} nell'adozione degli strumenti scelti.
-I suoi compiti sono:
-\begin{itemize}
-    \item Strutturare e manutenere i \glo{repository} GitHub;
-    \item Distribuire il carico di lavoro tramite l'assegnazione delle \glo{issue};
-    \item Gestire i canali e le piattaforme di comunicazione interna;
-    \item Redigere, aggiornare e perfezionare le \textit{Norme di Progetto} e il \textit{Piano di Qualifica}.
-\end{itemize}
-
-\paragraph{Analista}
-L'Analista funge da ponte tra le esigenze del committente e il reparto tecnico. Si occupa di recepire, destrutturare e formalizzare le richieste, traducendole in specifiche chiare, inequivocabili e pronte per essere elaborate nelle successive fasi di \glo{design}.
-I suoi compiti sono:
-\begin{itemize}
-    \item Approfondire la conoscenza del dominio applicativo e dei relativi vincoli di business;
-    \item Interfacciarsi con la \glo{proponente} per validare i requisiti estratti;
-    \item Curare la stesura del documento di \textit{Analisi dei Requisiti}.
-\end{itemize}
-
-\paragraph{Progettista}
-Questa figura ha il compito di delineare l'architettura logica e tecnologica del prodotto. Partendo dall'output degli analisti, il Progettista seleziona le tecnologie idonee e modella la struttura del \glo{software}, garantendo scalabilità, robustezza e modularità al sistema.
-I suoi compiti sono:
-\begin{itemize}
-    \item Valutare e selezionare lo \glo{stack tecnologico} ottimale, pesandone pro e contro;
-    \item Definire l'impianto architetturale e le logiche di interazione tra i vari componenti;
-    \item Vigilare affinché l'implementazione pratica del codice rispetti i \glo{design pattern} e l'architettura delineata.
-\end{itemize}
-
-\paragraph{Programmatore}
-Il Programmatore traduce le direttive del Progettista in codice eseguibile. Si concentra sull'implementazione pratica delle funzionalità, mantenendo un'elevata attenzione alla qualità del codice sorgente, alla sua manutenibilità e all'aderenza agli standard di progetto.
-I suoi compiti sono:
-\begin{itemize}
-    \item Sviluppare il codice sorgente nel rigoroso rispetto delle \textit{Norme di Progetto};
-    \item Individuare e correggere prontamente i \glo{bug} emersi in fase di esecuzione;
-    \item Realizzare adeguate suite di \glo{test} per validare il comportamento e la sicurezza dei moduli sviluppati.
-\end{itemize}
-
-\paragraph{Verificatore}
-Il Verificatore agisce come garante ultimo della qualità del progetto. Sottopone a rigorosi controlli ogni \glo{artefatto} prodotto dal team, che si tratti di documentazione o codice sorgente, accertandosene della conformità prima dell'approvazione e del rilascio finale.
-I suoi compiti sono:
-\begin{itemize}
-    \item Ispezionare i documenti redatti per assicurarne coerenza strutturale, assenza di refusi e correttezza formale;
-    \item Eseguire procedure di verifica strutturale e \glo{code review} per garantire un \glo{software} affidabile, ben commentato e stilisticamente coerente.
-\end{itemize}
-\clearpage
-\subsection{Comunicazione}
-Verranno di seguito elencate le modalità di comunicazione, sincrone e non, che verranno adottate dal gruppo per mantenere un contatto proficuo e attivo tra i propri componenti interni e i soggetti esterni.
-\paragraph{Comunicazioni interne}
-Per quanto riguarda la comunicazione interna, il gruppo ha deciso di adottare le seguenti modalità:
-\begin{itemize}
-\item Asincrone: \begin{itemize}
-    \item \textbf{WhatsApp}: è stato creato un gruppo WhatsApp per il progetto, ove tutti i membri del gruppo sono presenti, ed è stato scelto, in accordo con tutti i componenti del team, di renderlo il canale principale per comunicazioni asincrone e organizzative. La motivazione della scelta è data dalla versatilità dello strumento, la familiarità che tutti i membri del gruppo hanno in esso, e la sua estrema semplicità d'uso. Le attività principali che vengono svolte in questo canale sono:\begin{itemize}
-        \item Discussioni semplici affrontabili in modalità differita.
-        \item Organizzazione di incontri straordinari o modulazione degli orari standard.
-        \item Chiarimento di dubbi e difficoltà progettuali che non richiedono un incontro sincrono.
-        \item Recap delle principali attività assegnate ad ogni membro del team dopo una riunione interna.
-        \end{itemize}
-    \item \textbf{Chat testuale di Discord}: utilizzata per scambio di informazioni utili allo svolgimento di determinate task (nel canale generale) e per scambio di informazioni e documenti durante fasi di lavoro collaborativo (nei sotto-canali dedicati).
-        \end{itemize}
-    \item Sincrone: \begin{itemize}
-        \item \textbf{Discord}: è la piattaforma che è stata scelta come mezzo per svolgere le riunioni interne. Discord consente di effettuare sia chiamate vocali standard che videoconferenze, con anche la possibilità di condividere lo schermo durante le fasi di presentazione. Il canale inoltre è stato suddiviso in sotto-canali, dove parte dei membri del team possono trovarsi per sessioni di lavoro collaborativo e discussioni interne, sono inoltre presenti dei canali testuali, già descritti nella parte precdente.
-        \item \textbf{Incontri in presenza}: Si è scelto di non effettuare incontri in presenza con cadenza standard, ma solo in situazioni straordinarie decise in comunione dall'intero team.
-    \end{itemize}
-    \end{itemize}
-\paragraph{Riunioni Interne}
-Come previo descritto, le riunioni interne verranno svolte in remoto via Discord, preferito per la facilità di organizzazione e la maggiore integrazione con gli impegni e le necessità dei singoli membri del team, anche per la distanza geografica presente tra i singoli membri.
-Verranno svolte:\begin{itemize}
-    \item Una riunione \textbf{interna} dalla cadenza settimanale il lunedì, con scelta dell'orario variabile tra il tardo pomeriggio e la sera, discussa di volta in volta mediante i canali di comunicazione asincroni.
-    \item Riunioni \textbf{straordinarie} qualora si ritenesse necessario un ulteriore incontro causato da difficoltà critiche o necessità di lavoro collaborativo per moli di lavoro straordinarie.
-\end{itemize}
-Nel caso delle riunioni straordinarie, la data e l'ora verrà discussa su WhatsApp ed adattata in base alle esigenze dei membri. Le riunioni settimanali non vedranno rimodulazione di data se non in casi straordinari dati da impegni improrogabili di due o più membri del team.
-\paragraph{Comunicazioni Esterne}
-Da definire col proponente una volta assegnato l'appalto.
-\paragraph{Riunioni Esterne con Proponenete e Committente}
-Da definire.
-\paragraph{Pianificazione degli Impegni}
-Per semplificare la pianificazione degli impegni dei singoli membri del team, per incontri straordinari e non, si utilizzaono principalmente dei sondaggi su WhatsApp di volta in volta per definire orari consoni con gli impegni dei singoli membri. In fase di valutazione l'utilizzo di un calendario condiviso (Es. Google Calendar dell'account del team) ove esplicitare formalmente gli impegni settimanali dei vari membri.
-
-\subsection{Infrastruttura}
-Il processo di Infrastruttura ha lo scopo di predisporre e mantenere nel tempo
-l'insieme di strumenti, servizi e ambienti di lavoro di cui hanno bisogno tutti
-gli altri processi: dalla stesura della documentazione alla sua verifica e
-pubblicazione, dalla pianificazione delle attività alla comunicazione interna
-ed esterna. Un'infrastruttura adeguata permette a ogni membro del gruppo di
-lavorare senza ostacoli tecnici, con gli stessi strumenti e le stesse regole,
-qualunque sia il ruolo che ricopre in quel momento.
- 
-La responsabilità del processo è dell'\textbf{Amministratore}, che crea,
-configura e mantiene gli strumenti. Ogni membro del gruppo è tenuto a usarli
-secondo quanto descritto in queste Norme e a segnalare tempestivamente
-qualsiasi malfunzionamento.
- 
-\subsubsection{Attività previste}
-Le attività previste dal processo di Infrastruttura sono:
-\begin{itemize}
-  \item \textbf{Implementazione del processo:} individuazione dei bisogni dei
-        processi da supportare, scelta degli strumenti che li soddisfano e
-        definizione delle regole con cui devono essere usati. Le scelte sono
-        documentate nel presente documento;
-  \item \textbf{Creazione dell'infrastruttura:} configurazione degli
-        strumenti scelti e loro messa a disposizione di tutto il gruppo,
-        verificandone il funzionamento prima dell'adozione;
-  \item \textbf{Manutenzione dell'infrastruttura:} aggiornamento,
-        correzione ed evoluzione degli strumenti, così che restino
-        disponibili e adeguati alle esigenze del progetto in ogni sua fase.
-\end{itemize}
- 
-\subsubsection{Principi adottati}
-Nella scelta e nella configurazione degli strumenti il gruppo segue questi
-principi:
-\begin{itemize}
-  \item \textbf{Un'unica fonte ufficiale:} il \glo{repository} della
-        documentazione è l'unico luogo in cui risiede la versione ufficiale di
-        ogni documento. Bozze e appunti possono nascere altrove (si veda
-        \S~\ref{sec:strumenti-collaborazione}), ma un contenuto diventa
-        ufficiale solo quando entra nel repository tramite \glo{pull request}
-        verificata;
-  \item \textbf{Automazione dei controlli ripetitivi:} compilazione,
-        controlli di forma e pubblicazione sono svolti in automatico, così
-        da ridurre gli errori manuali e lasciare alla verifica umana il
-        controllo dei contenuti;
-  \item \textbf{Nessuna modifica diretta al ramo principale:} il ramo
-        \texttt{main} è protetto e si aggiorna solo tramite pull request
-        approvata da un membro diverso dall'autore;
-  \item \textbf{Strumenti gratuiti e accessibili:} sono adottati solo
-        strumenti senza costi, disponibili su tutti i sistemi operativi usati
-        dai membri del gruppo;
-  \item \textbf{Riproducibilità:} un documento produce lo stesso risultato
-        sul computer di ciascun membro e nel sistema di integrazione
-        continua, perché template, configurazione e script di compilazione
-        sono versionati insieme ai documenti.
-\end{itemize}
- 
-\subsubsection{Infrastruttura del gruppo}
-L'infrastruttura del gruppo è costituita dai seguenti elementi.
- 
-\paragraph{Organizzazione GitHub}
-Tutte le risorse del progetto risiedono nell'organizzazione GitHub
-\textbf{Git-Push-Team} (\url{https://github.com/Git-Push-Team}), di cui fanno
-parte tutti i membri del gruppo.
- 
-\paragraph{Repository della documentazione}
-Il repository \texttt{docs} (\url{https://github.com/Git-Push-Team/docs})
-contiene i sorgenti \LaTeX{} di tutti i documenti, organizzati per milestone:
-\begin{itemize}
-  \item \texttt{Candidatura/}, \texttt{RTB/} e \texttt{PB/}: una cartella per
-        milestone, ciascuna suddivisa in \texttt{documenti/} e
-        \texttt{verbali/}, a loro volta divise in \texttt{interni/} ed
-        \texttt{esterni/};
-  \item \texttt{template/}: la classe \LaTeX{} comune \texttt{gpt.cls}, i dati
-        del gruppo, i modelli da cui partire per ogni nuovo documento e alcuni
-        esempi completi;
-  \item \texttt{scripts/}: gli script Python che compilano i documenti, ne
-        controllano la forma e generano il sito;
-  \item \texttt{.github/}: le automazioni, i modelli delle \glo{issue} e il
-        modello delle pull request;
-  \item \texttt{GUIDA.md}: il manuale operativo che descrive passo per passo
-        come svolgere ogni attività sul repository.
-\end{itemize}
- 
-\paragraph{Integrazione continua}
-Il repository usa GitHub Actions per tre automazioni:
-\begin{itemize}
-  \item \textbf{Anteprima delle pull request:} a ogni modifica proposta
-        vengono compilati tutti i documenti e nella pull request compare un
-        commento con il PDF dei documenti modificati, gli eventuali errori di
-        compilazione e gli avvisi sui controlli automatici (registro delle
-        modifiche, termini del Glossario, posizione dei file);
-  \item \textbf{Pubblicazione:} dopo l'unione in \texttt{main} i documenti
-        vengono ricompilati, i PDF vengono salvati nel repository accanto ai
-        sorgenti e il sito della documentazione viene aggiornato;
-  \item \textbf{Rilascio delle milestone:} alla creazione di un'etichetta
-        di versione (\textit{tag}) viene prodotta una \textit{release} che
-        contiene i PDF della milestone consegnata.
-\end{itemize}
- 
-\paragraph{Sito della documentazione}
-I documenti approvati sono pubblicati con GitHub Pages all'indirizzo
-\url{https://git-push-team.github.io/docs/}. Il sito espone per ogni
-milestone la Lettera di Presentazione, i documenti e i verbali, sempre
-nell'ultima versione, e la pagina del Glossario. Ogni risorsa si apre in una
-scheda dedicata.
- 
-\paragraph{Gestione delle attività}
-Le attività sono tracciate con le issue del repository e raccolte nel
-GitHub Project \textbf{GIT PUSH TEAM}, dove per ognuna sono registrati stato,
-priorità, ruolo, ore stimate, ore effettive, data di inizio e scadenza.
-Le issue si aprono con due modelli: \textit{Attività}, per un compito da
-svolgere su un documento, e \textit{Errore}, per un errore trovato in un
-documento.
- 
-\subsubsection{Strumenti}
-Di seguito sono elencati gli strumenti adottati, raggruppati per funzione, con
-l'uso che ne fa il gruppo.
- 
-\paragraph{Gestione della configurazione e del progetto}
-\begin{description}
-  \item[Git] (\url{https://git-scm.com/}) \hfill \\
-        Sistema di controllo di versione distribuito. Ogni attività si svolge
-        in un \glo{branch} dedicato, creato a partire dalla issue
-        corrispondente.
-  \item[GitHub] (\url{https://github.com/}) \hfill \\
-        Servizio che ospita i repository del gruppo. Oltre al codice e ai
-        documenti, il gruppo ne usa le \textit{pull request} per la verifica,
-        le \textit{issue} e i \textit{Projects} per la pianificazione,
-        \textit{Actions} per l'integrazione continua e \textit{Pages} per il
-        sito.
-  \item[GitHub Desktop] (\url{https://desktop.github.com/}) \hfill \\
-        Applicazione grafica per usare Git senza riga di comando: permette di
-        creare branch, registrare le modifiche e pubblicarle con pochi click.
-\end{description}
- 
-\paragraph{Documentazione}
-\begin{description}
-  \item[\LaTeX{} e TeX Live] (\url{https://www.tug.org/texlive/}) \hfill \\
-        Linguaggio e distribuzione usati per scrivere tutti i documenti. La
-        compilazione è affidata a \texttt{latexmk}, sia in locale sia
-        nell'integrazione continua.
-  \item[Template del gruppo] \hfill \\
-        La classe \texttt{gpt.cls} genera da sola copertina, registro delle
-        modifiche, indici, intestazioni e piè di pagina, e controlla durante
-        la compilazione la correttezza formale di dati come versioni, date e
-        nomi dei membri.
-  \item[Visual Studio Code] (\url{https://code.visualstudio.com/}) \hfill \\
-        Editor consigliato per la stesura, con l'estensione \textit{LaTeX
-        Workshop} che compila il documento e ne mostra il PDF a ogni
-        salvataggio. Il repository ne contiene già la configurazione.
-  \item[Overleaf] (\url{https://www.overleaf.com/}) \hfill \\
-        Editor \LaTeX{} online, usato quando più membri devono scrivere
-        contemporaneamente sullo stesso testo. Il testo prodotto va poi
-        riportato nel repository con una pull request: solo allora diventa
-        parte del documento ufficiale.
-  \item[Python] (\url{https://www.python.org/}) \hfill \\
-        Linguaggio degli script che compilano i documenti, eseguono i
-        controlli automatici e generano il sito.
-\end{description}
- 
-\paragraph{Comunicazione}
-\begin{description}
-  \item[Discord] (\url{https://discord.com/}) \hfill \\
-        Piattaforma per le riunioni interne e le sessioni di lavoro
-        collaborativo, con canali vocali, testuali e condivisione dello
-        schermo.
-  \item[WhatsApp] (\url{https://www.whatsapp.com/}) \hfill \\
-        Canale principale per le comunicazioni asincrone e organizzative.
-  \item[Gmail] (\url{https://mail.google.com/}) \hfill \\
-        Ospita l'indirizzo del gruppo, \texttt{gitpushteam@gmail.com}, usato
-        per tutte le comunicazioni ufficiali con il committente e con le
-        aziende proponenti.
-  \item[Google Meet e Microsoft Teams] (\url{https://meet.google.com/},
-        \url{https://www.microsoft.com/microsoft-teams/}) \hfill \\
-        Piattaforme per le videochiamate con le aziende proponenti. La
-        piattaforma è scelta dall'azienda che organizza l'incontro.
-\end{description}
- 
-\paragraph{Collaborazione}\label{sec:strumenti-collaborazione}
-\begin{description}
-  \item[Google Drive, Documenti e Fogli] (\url{https://drive.google.com/})
-        \hfill \\
-        Spazio condiviso per bozze, appunti presi durante le riunioni e
-        calcoli preliminari, come le stime di ore e costi. Questi file sono
-        materiale di lavoro e non sostituiscono i documenti ufficiali: il
-        loro contenuto definitivo va riportato nel repository.
-\end{description}
- 
-\subsubsection{Manutenzione e modifica dell'infrastruttura}
-\begin{itemize}
-  \item Chi riscontra un malfunzionamento di uno strumento, del template o
-        delle automazioni lo segnala con una issue, descrivendo il problema e
-        come riprodurlo.
-  \item Le modifiche a template, script e automazioni sono svolte
-        dall'Amministratore in un branch dedicato e passano, come ogni altra
-        modifica, da una pull request verificata da un altro membro. Prima
-        di essere unite, quelle di maggiore impatto sono provate in un
-        repository di prova, per non introdurre errori nel repository
-        ufficiale.
-  \item Ogni modifica che cambia il modo di lavorare del gruppo viene
-        descritta nel manuale operativo \texttt{GUIDA.md} e, se riguarda le
-        regole, anche nelle presenti Norme. Il resto del gruppo viene
-        informato nella riunione successiva.
-  \item L'adozione di un nuovo strumento, o l'abbandono di uno esistente, è
-        una decisione del gruppo: viene presa in riunione e registrata nel
-        verbale.
-\end{itemize}
- 
-% ---------------------------------------------------------------------
- 
-\subsection{Miglioramento}
-Il processo di Miglioramento ha lo scopo di valutare in modo sistematico i
-processi adottati dal gruppo e di modificarli quando non risultano efficaci o
-efficienti. Le Norme di Progetto non sono quindi un documento definitivo: si
-aggiornano ogni volta che il gruppo individua un modo migliore di lavorare, e
-ogni aggiornamento è tracciato nel registro delle modifiche.
- 
-Il processo segue il ciclo \textbf{PDCA} (\textit{Plan, Do, Check, Act}), che
-viene ripetuto a ogni sprint:
-\begin{itemize}
-  \item \textbf{Plan:} si individua un problema o un'opportunità e si
-        pianifica l'azione per affrontarlo;
-  \item \textbf{Do:} si attua l'azione pianificata;
-  \item \textbf{Check:} si verifica se l'azione ha prodotto l'effetto atteso;
-  \item \textbf{Act:} se l'esito è positivo, la nuova pratica diventa una
-        regola e si registra nelle Norme; altrimenti si corregge l'azione e
-        il ciclo riparte.
-\end{itemize}
- 
-\subsubsection{Attività previste}
-Le attività previste dal processo di Miglioramento sono:
-\begin{itemize}
-  \item \textbf{Implementazione del processo:} definizione dei processi del
-        gruppo, delle occasioni in cui vengono valutati e di chi se ne
-        occupa;
-  \item \textbf{Valutazione del processo:} raccolta di dati e riscontri
-        sull'andamento dei processi, per individuarne punti di forza e
-        criticità;
-  \item \textbf{Miglioramento del processo:} definizione, attuazione e
-        controllo delle azioni correttive, fino al loro consolidamento nelle
-        Norme.
-\end{itemize}
- 
-\subsubsection{Implementazione del processo}
-I processi del gruppo sono formalizzati nel presente documento, che ne
-costituisce il riferimento, e nel manuale operativo \texttt{GUIDA.md} per gli
-aspetti pratici. Essendo versionati nel repository, ogni loro modifica è
-tracciabile: si sa che cosa è cambiato, quando, chi l'ha proposta e chi l'ha
-verificata.
- 
-I ruoli coinvolti nel processo sono:
-\begin{itemize}
-  \item il \textbf{Responsabile}, che conduce la retrospettiva, raccoglie le
-        proposte di miglioramento e ne pianifica l'attuazione;
-  \item l'\textbf{Amministratore}, che attua le modifiche a strumenti e
-        procedure e aggiorna le Norme di Progetto e la \texttt{GUIDA.md};
-  \item il \textbf{Verificatore}, che controlla che le modifiche siano
-        coerenti con il resto delle Norme;
-  \item \textbf{ogni membro del gruppo}, che può proporre un miglioramento in
-        qualsiasi momento, aprendo una issue o portandolo alla riunione
-        successiva.
-\end{itemize}
- 
-\subsubsection{Valutazione del processo}
-Il gruppo lavora per \glo{sprint} di due settimane, che coincidono con il
-periodo di rotazione dei ruoli. La valutazione dei processi avviene nella
-\textbf{retrospettiva}, un punto fisso della riunione del lunedì che chiude
-ogni sprint, prima del cambio dei ruoli. Durante la retrospettiva ciascun
-membro risponde a tre domande:
-\begin{itemize}
-  \item \textbf{che cosa ha funzionato}, e va quindi mantenuto;
-  \item \textbf{che cosa non ha funzionato}, e perché;
-  \item \textbf{che cosa cambiamo} nello sprint successivo.
-\end{itemize}
- 
-Per rendere la valutazione oggettiva, la retrospettiva si basa anche su dati
-raccolti durante lo sprint:
-\begin{itemize}
-  \item il confronto tra ore stimate e ore effettive delle attività,
-        registrate nel GitHub Project;
-  \item le attività concluse in ritardo o rimaste aperte rispetto a quelle
-        pianificate;
-  \item il numero di correzioni richieste in verifica e gli avvisi ricorrenti
-        dei controlli automatici;
-  \item i valori delle metriche di processo definite nel Piano di Qualifica,
-        quando disponibili.
-\end{itemize}
- 
-Oltre alla retrospettiva, sono occasioni di valutazione i riscontri esterni:
-le osservazioni del committente (ad esempio in sede di aggiudicazione e alle
-revisioni di avanzamento) e quelle dell'azienda proponente negli incontri
-periodici. Ogni osservazione ricevuta viene esaminata nella prima riunione
-utile.
- 
-\subsubsection{Miglioramento del processo}
-Ogni criticità emersa dalla valutazione segue lo stesso percorso, così che
-nessun miglioramento resti solo un'intenzione:
-\begin{enumerate}
-  \item la criticità e la soluzione scelta sono registrate come
-        \textbf{decisione} nel verbale della riunione;
-  \item dalla decisione nasce un'\textbf{azione tracciabile}: una issue con
-        un incaricato e una scadenza, riportata anche nel verbale;
-  \item l'incaricato attua l'azione e, se cambia una regola, aggiorna le
-        Norme di Progetto con una pull request verificata;
-  \item nella retrospettiva successiva il gruppo controlla se l'azione ha
-        risolto la criticità. In caso positivo la nuova pratica resta in
-        vigore; in caso contrario si pianifica un'azione correttiva diversa.
-\end{enumerate}
- 
-\subsubsection{Miglioramenti attuati}
-La Tabella~\ref{tab:miglioramenti} raccoglie i miglioramenti già attuati dal
-gruppo, con la criticità da cui sono nati e l'azione intrapresa. La tabella
-viene aggiornata a ogni nuovo miglioramento.
- 
-\begin{table}[H]
-  \centering
-  \small
-  \caption{Miglioramenti attuati\label{tab:miglioramenti}}
-  \begin{tabularx}{\textwidth}{@{}p{1.9cm}XX@{}}
-    \toprule
-    \intestazione{Data} & \intestazione{Criticità rilevata} &
-      \intestazione{Azione intrapresa} \\
-    \midrule
-    2026-10-20 &
-      Nella prima struttura del repository i documenti erano divisi per
-      tipo, mentre la suddivisione per milestone compariva solo sul sito:
-      chi cercava un file non lo trovava nello stesso posto nei due luoghi. &
-      Riorganizzazione del repository per milestone, poi per documenti e
-      verbali, interni ed esterni, come sul sito. La nuova struttura è stata
-      provata in un repository di prova prima dell'adozione (verbale
-      interno del 2026-10-20). \\
-    \addlinespace
-    2026-10-29 &
-      Dall'esame delle osservazioni del committente ai gruppi degli anni
-      precedenti è emerso che alcune righe dei nostri registri delle
-      modifiche avevano una versione senza verifica, righe di sola
-      ``Verifica'' senza autore e date non coerenti. &
-      Nuove regole di versionamento: ogni riga ha autore e verificatore
-      distinti, la versione cambia solo dopo una verifica superata e la
-      versione 1.0.0 indica l'approvazione. Correzione dei registri esistenti
-      e controllo automatico del registro in ogni pull request. \\
-    \addlinespace
-    2026-10-29 &
-      Dalle stesse osservazioni: le risorse di un sito di documentazione
-      devono aprirsi in una scheda dedicata, che ne riporti il nome reale. &
-      Sul sito ogni documento si apre in una nuova scheda, intitolata con il
-      titolo e la versione del documento. \\
-    \bottomrule
-  \end{tabularx}
-  
-\end{table}
-
+	
+	% ---------------------------------------------------------------------
+	% Contenuto del Documento
+	% ---------------------------------------------------------------------
+	\section{Introduzione}
+	\subsection{Scopo del documento}
+	Questo documento ha lo scopo di definire e descrivere le Norme di Progetto, ovvero l'insieme dei metodi, delle regole e delle procedure operative (il cosiddetto \textit{Way of Working} o \glo{WoW}) adottate dal team per la realizzazione del progetto software. 
+	
+	L'obiettivo principale della stesura di questo documento è fornire una guida chiara e condivisa per tutti i membri del gruppo. Al suo interno vengono specificati gli strumenti utilizzati e le relative motivazioni, le metodologie di lavoro, gli standard di codifica e le regole di collaborazione, al fine di garantire un approccio strutturato, coerente, efficiente e tracciabile per l'intero ciclo di vita del progetto, limitando il rischio di problemi organizzativi.
+	
+	La stesura di questo documento segue un approccio incrementale: le norme qui descritte verranno costantemente aggiornate, ampliate e affinate nel tempo per riflettere nuove decisioni tecniche e per supportare il miglioramento continuo dei processi del gruppo.
+	
+	Per strutturare le attività, il team prende come principale riferimento metodologico le \textit{\glo{best practice}} suggerite dallo \glo{standard} \textbf{ISO/IEC 12207:1995}, adattandole alle specifiche esigenze progettuali. In particolare, lo standard individua tre macro-categorie di processi per il ciclo di vita del software:
+	\begin{itemize}
+		\item \textbf{Processi primari:} includono tutti i processi direttamente coinvolti nella creazione del prodotto software, ovvero le attività di fornitura e sviluppo.
+		\item \textbf{Processi di supporto:} comprendono i processi che assistono e sostengono i processi primari garantendone la qualità, la correttezza e la tracciabilità. Tra questi vi sono la documentazione, la gestione della configurazione, l'accertamento della qualità, la verifica e la validazione.
+		\item \textbf{Processi organizzativi:} riguardano i processi utilizzati per governare il modo in cui il gruppo lavora, per gestire e coordinare le risorse e per migliorare i flussi operativi. Includono la gestione dei processi, le infrastrutture, la formazione e il miglioramento continuo.
+	\end{itemize}
+	
+	\subsection{Glossario}
+	Al fine di evitare ambiguità e garantire una comprensione chiara e uniforme della terminologia utilizzata, è stato redatto un documento dedicato denominato \textbf{Glossario}. Questo strumento raccoglie e definisce in modo univoco i termini tecnici, gli acronimi, le abbreviazioni e i concetti specifici del dominio del progetto.   Per agevolare la consultazione e la fruizione della documentazione, tutti i vocaboli presenti nel Glossario sono contrassegnati all'interno del testo mediante una ``G'' in pedice (ad esempio: \texttt{termine\textsubscript{G}}). L'impiego del Glossario assicura la coerenza terminologica tra i membri del gruppo e verso gli \glo{stakeholder} esterni, oltre a facilitare l'inserimento operativo di nuovi partecipanti al progetto.  
+	
+	\section{Processi Primari}
+	
+	\subsection{Fornitura}
+	Il processo di \glo{Fornitura} definisce e regolamenta l'insieme delle attività necessarie per avviare, pianificare, realizzare e consegnare il prodotto software in modo controllato, condiviso e verificabile. In qualità di \glo{fornitore}, il gruppo stabilisce le modalità operative, gli strumenti di lavoro e la documentazione contrattuale iniziale per chiarire vincoli, risorse e \glo{requisiti} concordati con la \glo{proponente}. Il processo presidia inoltre il coordinamento delle risorse, il controllo dell'avanzamento e della qualità, nonché la gestione delle comunicazioni verso il \glo{committente} e il supporto nelle fasi di accettazione finale, garantendo la piena conformità del rilascio ai vincoli temporali ed economici pattuiti.
+	
+	\subsubsection{Documentazione Fornita}
+	In seguito sono elencati i documenti che, oltre al presente, sono necessari per la consegna del progetto.
+	
+	\subsubsubsection{Verbali}
+	I verbali, distinti in interni ed esterni, documentano gli incontri svolti: i primi tengono traccia delle riunioni del team, mentre i secondi riassumono i meeting con l'azienda proponente.
+	
+	\subsubsubsection{Analisi dei capitolati}
+	Il documento di Analisi dei Capitolati viene redatto durante la fase di Candidatura con lo scopo di valutare formalmente le proposte d'appalto per il progetto didattico, individuando quella maggiormente allineata alle competenze, agli interessi e agli obiettivi del gruppo.
+	
+	Per ciascun \glo{capitolato} esaminato, il documento struttura la trattazione secondo i seguenti punti:
+	\begin{itemize}
+		\item \textbf{Descrizione generale:} riassume brevemente il prodotto richiesto e i suoi obiettivi principali;
+		\item \textbf{Caratteristiche funzionali e tecnologie:} analizza le funzionalità chiave emerse e lo \glo{stack tecnologico} proposto e/o vincolato;
+		\item \textbf{Colloqui informativi:} raccoglie i chiarimenti e i riscontri ottenuti durante gli incontri conoscitivi con l'azienda proponente;
+		\item \textbf{Valutazione del gruppo:} esamina i punti di forza, le criticità riscontrate e il livello di gradimento espresso dai membri del team, motivando la scelta finale.
+	\end{itemize}
+	
+	\subsubsubsection{Dichiarazione Impegni}
+	Il documento di Dichiarazione degli Impegni viene redatto durante la fase di Candidatura con lo scopo di formalizzare l'impegno del gruppo nello sviluppo del \glo{capitolato} scelto, definendo la pianificazione economica, oraria e temporale a cui il team si vincola per l'intero \glo{ciclo di vita} del progetto.
+	
+	In particolare, il documento si articola attraverso i seguenti elementi chiave:
+	\begin{itemize}
+		\item \textbf{Ripartizione dei ruoli e monte ore:} definisce la stima del monte ore complessivo e la sua distribuzione per ciascun ruolo ricoperto dai membri del team;
+		\item \textbf{Preventivo dei costi:} determina il costo orario per ruolo e quantifica l'investimento economico complessivo stimato per la realizzazione del prodotto;
+		\item \textbf{Scadenza di consegna:} stabilisce la data presunta di rilascio finale del progetto didattico;
+		\item \textbf{Formalizzazione dell'impegno:} esplicita la conformità e l'adesione responsabile del gruppo a tali vincoli durante tutte le attività progettuali.
+	\end{itemize}
+	
+	\subsubsubsection{Glossario}
+	Il Glossario costituisce un documento ad aggiornamento continuo lungo l'intero ciclo di vita del progetto, concepito per chiarire e contestualizzare i termini appartenenti al \glo{dominio applicativo} che potrebbero risultare ambigui o di complessa interpretazione. Raccogliendo e formalizzando definizioni per vocaboli tecnici, acronimi e abbreviazioni utilizzati nella documentazione di progetto, esso assicura una comunicazione chiara, coerente e priva di fraintendimenti tra i membri del team, l'azienda proponente, il committente e i lettori esterni.
+	
+	\subsubsubsection{Lettera di candidatura}
+	La Lettera di Candidatura rappresenta il documento formale con cui il gruppo GitPushTeam ufficializza la propria candidatura per l'appalto del \glo{capitolato} proposto dall'azienda Eggon. Al suo interno vengono esposte le motivazioni che hanno guidato la decisione del team, valorizzando in particolare l'interesse verso lo stack tecnologico e le opportunità di crescita formativa. Il documento richiama inoltre i principali vincoli operativi assunti dal gruppo tra cui la data di consegna stimata, il preventivo economico e la ripartizione del monte ore, fornendo il necessario raccordo formale con i documenti di Dichiarazione degli Impegni e Analisi dei Capitolati a supporto della proposta.
+	
+	
+	
+	\section{Processi di Supporto}
+	
+	\subsection{Documentazione}
+	Il processo di Documentazione costituisce un processo di supporto fondamentale all'interno del ciclo di vita del software, volto a garantire la tracciabilità, la trasparenza e la continuità di tutte le decisioni prese e delle attività svolte dal gruppo. Essa raccoglie l'insieme delle informazioni scritte necessarie a descrivere il sistema ed i processi, fungendo da mezzo di comunicazione primario sia internamente sia verso l'esterno.
+	
+	L'obiettivo di questa sezione è definire un insieme di norme, convenzioni e procedure ripetibili atte a:
+	\begin{itemize}
+		\item \textbf{Uniformare la produzione documentale:} stabilire uno stile grafico, strutturale e sintattico omogeneo per tutti gli artefatti del gruppo.
+		\item \textbf{Garantire la qualità dei processi:} ridurre ambiguità ed errori tramite regole chiare di stesura e verifica.
+		\item \textbf{Semplificare il lavoro del team:} fornire modelli e linee guida operative per agevolare i redattori nella stesura dei documenti.
+	\end{itemize}
+	
+	Per la gestione e la produzione della documentazione, il gruppo adotta la filosofia \glo{Documentation as Code}, trattando i sorgenti dei documenti (redatti in LaTeX) alla stesso modo del codice sorgente, avvalendosi dei sistemi di controllo versione  per la loro gestione e tracciabilità. Nelle sottosezioni seguenti vengono nel dettaglio analizzate le regole operative riguardanti la documentazione.
+	
+	\subsubsection{Template}
+	Al fine di garantire l'omogeneità grafica, tipografica e strutturale di tutti gli artefatti prodotti dal gruppo, nonché di agevolare le attività di stesura da parte dei redattori, sono stati realizzati diversi modelli personalizzati. Tutti i file di supporto e i sorgenti dei template sono conservati all'interno della directory \texttt{template/modelli} nel repository GitHub del gruppo.
+	
+	I principali modelli disponibili per la redazione comprendono:
+	
+	\begin{itemize}
+		\item \texttt{verbale-interno.tex}: template con la struttura per la documentazione degli incontri interni del gruppo.
+		\item \texttt{verbale-esterno.tex}: template con la struttura per la documentazione degli incontri esterni tra il gruppo e il proponente.
+		\item \texttt{lettera.tex}: template utilizzato per la stesura della lettera di presentazione (\autoref{sec:lettera_di_presentazione}) e utilizzabile per documentazione in formato lettera.
+		\item \texttt{documento.tex}: template di documentazione generica utilizzato nel caso in cui un template più specifico non sia presente.
+	\end{itemize}
+	
+	\subsubsection{Versionamento}
+	Per il versionamento dei nostri documenti e codice abbiamo adottato una versione generalizzata della formula del \glo{versionamento semantico} seguendo lo schema:
+	\begin{center}
+		\Large \texttt{\textbf{Major.Minor.Patch}}
+	\end{center}
+	
+	in cui ciascuna cifra risponde al seguente criterio generale:
+	
+	\begin{itemize}
+		\item \textbf{\textit{Major}:} incrementato dalla persona con ruolo di \textit{Responsabile} in sede di approvazione formale.
+		\item \textbf{\textit{Minor}:} incrementato in presenza di una modifica sostanziale.
+		\item \textbf{\textit{Patch}:} incrementato in caso di modifiche leggere, come la correzione di refusi o typo.
+	\end{itemize}
+	
+	Le regole operative che disciplinano il flusso di lavoro all'interno del registro delle modifiche sono le seguenti:
+	\begin{itemize}
+		\item \textbf{Esecuzione delle modifiche:} Chiunque nel gruppo, ad esclusione del \textit{Verificatore}, può effettuare una modifica.
+		\item \textbf{Verifica:} Ogni modifica deve essere verificata dal \textit{Verificatore}, il quale, dopo aver completato il controllo, aggiunge il proprio nome al campo verificatore. Questa operazione risulta particolarmente necessaria nel caso in cui in quel momento esistano più verificatori.
+		\item \textbf{Approvazione:} Quando il documento raggiunge un punto di maturazione adatto (ad esempio prima di essere inviato al proponente o al committente), la persona che ricopre il ruolo di \textit{Responsabile} approva formalmente il documento e incrementa la versione \textit{Major}.
+	\end{itemize}
+	
+	\subsubsection{Nomenclatura}
+	Al fine di garantire un'identificazione univoca, ordinata ed immediata di ciascun artefatto, il gruppo adotta una convenzione di nomenclatura standardizzata per la denominazione dei file. La struttura del nome varia in base alla tipologia di documento.
+	
+	\paragraph{Verbali}
+	I documenti appartenenti alla categoria dei verbali vengono identificati in modo univoco secondo il seguente schema di nomenclatura:
+	
+	\begin{center}
+		\sffamily\bfseries VX-YYYY-MM-DD
+	\end{center}
+	
+	in cui:
+	\begin{itemize}
+		\item \textbf{\textit{V}:} rappresenta l'appartenenza alla categoria di documentazione dei verbali.
+		\item \textbf{\textit{X}:} rappresenta la categoria di verbale, sarà presente una I in caso di verbale interno oppure una E in caso di verbale esterno.
+		\item \textbf{\textit{YYYY-MM-DD}:} indica la data di svolgimento della riunione espressa nel \glo{formato ISO} (\textit{Anno-Mese-Giorno}).
+	\end{itemize}
+	
+	\subsection{Gestione della configurazione}
+	\subsubsection{Identificazione}
+	\subsubsection{Controllo}
+	\subsubsection{Registrazione}
+	
+	% GESTIONE DEI PROCESSI (ALESSIO)
+	\section{Processi Organizzativi}
+	
+	\subsection{Gestione dei Processi}
+	La Gestione dei Processi si prefigge lo scopo di stabilire e standardizzare le metodologie operative ottimali per organizzare il lavoro del team. Attraverso un'attenta supervisione e la regolamentazione dei flussi delle attività, il gruppo punta a prevenire colli di bottiglia e a massimizzare la resa delle risorse a disposizione. Un pilastro di questo processo è l'accurata tracciabilità documentale, necessaria per conservare la memoria delle decisioni e per supportare un'evoluzione qualitativa del prodotto rilasciato.
+	
+	\subsubsection{Attività previste}
+	Il processo si articola nelle seguenti macro-attività:
+	\begin{itemize}
+		\item \textbf{Definizione e Inizializzazione:} identificazione del perimetro di lavoro, analisi preliminare degli obiettivi da traguardare e delineazione delle regole base per l'intervento;
+		\item \textbf{Programmazione delle attività:} allocazione delle risorse umane, stima delle tempistiche e redazione di un piano strategico per fronteggiare i rischi e monitorare le scadenze;
+		\item \textbf{Svolgimento e Monitoraggio:} implementazione pratica dei compiti assegnati, accompagnata da una verifica costante dell'avanzamento lavori per assicurare la massima conformità organizzativa;
+		\item \textbf{Valutazione in itinere:} analisi critica dei risultati parziali, volta ad accertare l'aderenza alle specifiche e a integrare eventuali strategie di miglioramento;
+		\item \textbf{Conclusione:} formalizzazione del termine dei lavori, aggiornamento delle \glo{baseline} di progetto e consegna del materiale definitivo.
+	\end{itemize}
+	
+	\subsubsection{Ruoli di progetto}
+	Al fine di garantire una formazione trasversalmente completa e una distribuzione equa dei carichi, ogni componente del gruppo ricoprirà a rotazione i sei ruoli previsti dal \glo{Way of Working}. Ciascun ruolo è caratterizzato da precise responsabilità e mansioni operative, fondamentali per la buona riuscita del progetto. L'assegnazione avverrà all'inizio di ogni \glo{sprint} e rifletterà le esigenze specifiche di quella particolare fase di sviluppo.
+	
+	\paragraph{Responsabile}
+	Questa figura detiene il coordinamento esecutivo del gruppo, assicurandosi che tutte le mansioni convergano verso gli obiettivi prefissati. Stabilisce le scadenze, orchestra le fasi di lavoro e funge da portavoce ufficiale nei confronti della \glo{proponente}. È suo onere, inoltre, anticipare e mitigare eventuali rischi che potrebbero compromettere il progetto.
+	I suoi compiti sono:
+	\begin{itemize}
+		\item Curare le relazioni e le comunicazioni esterne;
+		\item Aggiornare costantemente il \textit{Piano di Progetto};
+		\item Redigere i Verbali formali per gli incontri interni ed esterni;
+		\item Indire le riunioni, coordinare i lavori e gestire i diari di bordo.
+	\end{itemize}
+	
+	\paragraph{Amministratore}
+	L'Amministratore vigila sull'efficienza e sull'integrità dell'ecosistema di lavoro. Predispone le tecnologie necessarie, configura gli ambienti e si accerta che tutti i membri possano operare senza ostacoli tecnici. Mantiene l'infrastruttura documentale e supporta il \glo{team} nell'adozione degli strumenti scelti.
+	I suoi compiti sono:
+	\begin{itemize}
+		\item Strutturare e manutenere i \glo{repository} GitHub;
+		\item Distribuire il carico di lavoro tramite l'assegnazione delle \glo{issue};
+		\item Gestire i canali e le piattaforme di comunicazione interna;
+		\item Redigere, aggiornare e perfezionare le \textit{Norme di Progetto} e il \textit{Piano di Qualifica}.
+	\end{itemize}
+	
+	\paragraph{Analista}
+	L'Analista funge da ponte tra le esigenze del committente e il reparto tecnico. Si occupa di recepire, destrutturare e formalizzare le richieste, traducendole in specifiche chiare, inequivocabili e pronte per essere elaborate nelle successive fasi di \glo{design}.
+	I suoi compiti sono:
+	\begin{itemize}
+		\item Approfondire la conoscenza del dominio applicativo e dei relativi vincoli di business;
+		\item Interfacciarsi con la \glo{proponente} per validare i requisiti estratti;
+		\item Curare la stesura del documento di \textit{Analisi dei Requisiti}.
+	\end{itemize}
+	
+	\paragraph{Progettista}
+	Questa figura ha il compito di delineare l'architettura logica e tecnologica del prodotto. Partendo dall'output degli analisti, il Progettista seleziona le tecnologie idonee e modella la struttura del \glo{software}, garantendo scalabilità, robustezza e modularità al sistema.
+	I suoi compiti sono:
+	\begin{itemize}
+		\item Valutare e selezionare lo \glo{stack tecnologico} ottimale, pesandone pro e contro;
+		\item Definire l'impianto architetturale e le logiche di interazione tra i vari componenti;
+		\item Vigilare affinché l'implementazione pratica del codice rispetti i \glo{design pattern} e l'architettura delineata.
+	\end{itemize}
+	
+	\paragraph{Programmatore}
+	Il Programmatore traduce le direttive del Progettista in codice eseguibile. Si concentra sull'implementazione pratica delle funzionalità, mantenendo un'elevata attenzione alla qualità del codice sorgente, alla sua manutenibilità e all'aderenza agli standard di progetto.
+	I suoi compiti sono:
+	\begin{itemize}
+		\item Sviluppare il codice sorgente nel rigoroso rispetto delle \textit{Norme di Progetto};
+		\item Individuare e correggere prontamente i \glo{bug} emersi in fase di esecuzione;
+		\item Realizzare adeguate suite di \glo{test} per validare il comportamento e la sicurezza dei moduli sviluppati.
+	\end{itemize}
+	
+	\paragraph{Verificatore}
+	Il Verificatore agisce come garante ultimo della qualità del progetto. Sottopone a rigorosi controlli ogni \glo{artefatto} prodotto dal team, che si tratti di documentazione o codice sorgente, accertandosene della conformità prima dell'approvazione e del rilascio finale.
+	I suoi compiti sono:
+	\begin{itemize}
+		\item Ispezionare i documenti redatti per assicurarne coerenza strutturale, assenza di refusi e correttezza formale;
+		\item Eseguire procedure di verifica strutturale e \glo{code review} per garantire un \glo{software} affidabile, ben commentato e stilisticamente coerente.
+	\end{itemize}
+	
+	\subsubsection{Rendicontazione oraria e controllo dell'avanzamento}\label{sec:rendicontazione}
+	Per garantire che il consumo delle ore e dei costi rimanga allineato al preventivo di 552 ore e 11.250,00\,\texteuro{} stabilito nel \textit{Piano di Progetto}, ogni attività svolta all'interno di uno \glo{sprint} deve essere tracciata mediante una \glo{issue} sul GitHub Project del gruppo.
+	
+	La rendicontazione segue queste regole operative:
+	\begin{itemize}
+		\item \textbf{Pianificazione centralizzata:} all'apertura di ciascuno sprint, obiettivi, date di inizio e fine, ruoli assegnati e ore preventivate per ciascun membro vengono registrati nel file \texttt{pianificazione.toml} contenuto nel repository \texttt{.github};
+		\item \textbf{Registrazione delle ore svolte:} ciascun membro registra le ore effettivamente impiegate commentando direttamente la issue su cui ha lavorato mediante il comando \texttt{/ore} seguito dall'intervallo di inizio e fine nel formato \texttt{ora\_inizio-ora\_fine} (ad esempio \texttt{/ore 17:00-17:30});
+		\item \textbf{Chiusura delle attività:} nessuna issue operativa può essere chiusa con valore di ore effettive nullo; eventuali dimenticanze o incongruenze rispetto ai ruoli pianificati vengono segnalate in automatico dal cruscotto di monitoraggio (\S~\ref{sec:cruscotto-monitoraggio}) e devono essere sanate prima della chiusura dello sprint.
+	\end{itemize}
+	
+	\clearpage
+	\subsection{Comunicazione}
+	Verranno di seguito elencate le modalità di comunicazione, sincrone e non, che verranno adottate dal gruppo per mantenere un contatto proficuo e attivo tra i propri componenti interni e i soggetti esterni.
+	\paragraph{Comunicazioni interne}
+	Per quanto riguarda la comunicazione interna, il gruppo ha deciso di adottare le seguenti modalità:
+	\begin{itemize}
+		\item Asincrone: \begin{itemize}
+			\item \textbf{WhatsApp}: è stato creato un gruppo WhatsApp per il progetto, ove tutti i membri del gruppo sono presenti, ed è stato scelto, in accordo con tutti i componenti del team, di renderlo il canale principale per comunicazioni asincrone e organizzative. La motivazione della scelta è data dalla versatilità dello strumento, la familiarità che tutti i membri del gruppo hanno in esso, e la sua estrema semplicità d'uso. Le attività principali che vengono svolte in questo canale sono:\begin{itemize}
+				\item Discussioni semplici affrontabili in modalità differita.
+				\item Organizzazione di incontri straordinari o modulazione degli orari standard.
+				\item Chiarimento di dubbi e difficoltà progettuali che non richiedono un incontro sincrono.
+				\item Recap delle principali attività assegnate ad ogni membro del team dopo una riunione interna.
+			\end{itemize}
+			\item \textbf{Chat testuale di Discord}: utilizzata per scambio di informazioni utili allo svolgimento di determinate task (nel canale generale) e per scambio di informazioni e documenti durante fasi di lavoro collaborativo (nei sotto-canali dedicati).
+		\end{itemize}
+		\item Sincrone: \begin{itemize}
+			\item \textbf{Discord}: è la piattaforma che è stata scelta come mezzo per svolgere le riunioni interne. Discord consente di effettuare sia chiamate vocali standard che videoconferenze, con anche la possibilità di condividere lo schermo durante le fasi di presentazione. Il canale inoltre è stato suddiviso in sotto-canali, dove parte dei membri del team possono trovarsi per sessioni di lavoro collaborativo e discussioni interne, sono inoltre presenti dei canali testuali, già descritti nella parte precdente.
+			\item \textbf{Incontri in presenza}: Si è scelto di non effettuare incontri in presenza con cadenza standard, ma solo in situazioni straordinarie decise in comunione dall'intero team.
+		\end{itemize}
+	\end{itemize}
+	\paragraph{Riunioni Interne}
+	Come precedentemente descritto, le riunioni interne vengono svolte in remoto via Discord, preferito per la facilità di organizzazione e la maggiore integrazione con gli impegni e le necessità dei singoli membri del team, anche per la distanza geografica presente tra i componenti.
+	Vengono svolte:
+	\begin{itemize}
+		\item Una riunione \textbf{interna} a cadenza settimanale ogni mercoledì alle ore 18:00 (spostata dal lunedì inizialmente previsto in fase di avvio), subito a seguito dell'incontro settimanale esterno con l'azienda proponente.
+		\item Riunioni \textbf{straordinarie} qualora si ritenesse necessario un ulteriore incontro causato da difficoltà critiche o necessità di lavoro collaborativo per moli di lavoro straordinarie.
+	\end{itemize}
+	Nel caso delle riunioni straordinarie, la data e l'ora vengono discusse su WhatsApp e adattate in base alle esigenze dei membri. Le riunioni settimanali non vedono rimodulazione di data se non in casi straordinari dati da impegni improrogabili di due o più membri del team.
+	\paragraph{Comunicazioni Esterne}
+	Per le comunicazioni asincrone con l'azienda proponente Eggon S.r.l.\ e con il committente, il gruppo adotta i seguenti canali:
+	\begin{itemize}
+		\item \textbf{Posta elettronica (Gmail)}: utilizzata per la corrispondenza formale e istituzionale sia con il committente sia con l'azienda proponente;
+		\item \textbf{Telegram}: è stato creato un gruppo Telegram condiviso con i referenti di Eggon S.r.l.\ dedicato alle comunicazioni veloci e al chiarimento di dubbi rapidi risolvibili in velocità senza attendere l'incontro periodico.
+	\end{itemize}
+	\paragraph{Riunioni Esterne con Proponente e Committente}
+	Gli incontri con l'azienda proponente Eggon S.r.l.\ si svolgono in forma telematica una volta a settimana, ogni mercoledì dalle ore 17:00 alle ore 18:00. Al termine dell'incontro esterno (ore 18:00), il gruppo prosegue direttamente con la propria riunione interna settimanale per fare il punto su quanto emerso e ripartire i compiti operativi.
+	\paragraph{Pianificazione degli Impegni}
+	Per semplificare la pianificazione degli impegni dei singoli membri del team, per incontri straordinari e non, si utilizzaono principalmente dei sondaggi su WhatsApp di volta in volta per definire orari consoni con gli impegni dei singoli membri. In fase di valutazione l'utilizzo di un calendario condiviso (Es. Google Calendar dell'account del team) ove esplicitare formalmente gli impegni settimanali dei vari membri.
+	
+	\subsection{Infrastruttura}
+	Il processo di Infrastruttura ha lo scopo di predisporre e mantenere nel tempo
+	l'insieme di strumenti, servizi e ambienti di lavoro di cui hanno bisogno tutti
+	gli altri processi: dalla stesura della documentazione alla sua verifica e
+	pubblicazione, dalla pianificazione delle attività alla comunicazione interna
+	ed esterna. Un'infrastruttura adeguata permette a ogni membro del gruppo di
+	lavorare senza ostacoli tecnici, con gli stessi strumenti e le stesse regole,
+	qualunque sia il ruolo che ricopre in quel momento.
+	
+	La responsabilità del processo è dell'\textbf{Amministratore}, che crea,
+	configura e mantiene gli strumenti. Ogni membro del gruppo è tenuto a usarli
+	secondo quanto descritto in queste Norme e a segnalare tempestivamente
+	qualsiasi malfunzionamento.
+	
+	\subsubsection{Attività previste}
+	Le attività previste dal processo di Infrastruttura sono:
+	\begin{itemize}
+		\item \textbf{Implementazione del processo:} individuazione dei bisogni dei
+		processi da supportare, scelta degli strumenti che li soddisfano e
+		definizione delle regole con cui devono essere usati. Le scelte sono
+		documentate nel presente documento;
+		\item \textbf{Creazione dell'infrastruttura:} configurazione degli
+		strumenti scelti e loro messa a disposizione di tutto il gruppo,
+		verificandone il funzionamento prima dell'adozione;
+		\item \textbf{Manutenzione dell'infrastruttura:} aggiornamento,
+		correzione ed evoluzione degli strumenti, così che restino
+		disponibili e adeguati alle esigenze del progetto in ogni sua fase.
+	\end{itemize}
+	
+	\subsubsection{Principi adottati}
+	Nella scelta e nella configurazione degli strumenti il gruppo segue questi
+	principi:
+	\begin{itemize}
+		\item \textbf{Un'unica fonte ufficiale:} il \glo{repository} della
+		documentazione è l'unico luogo in cui risiede la versione ufficiale di
+		ogni documento. Bozze e appunti possono nascere altrove (si veda
+		\S~\ref{sec:strumenti-collaborazione}), ma un contenuto diventa
+		ufficiale solo quando entra nel repository tramite \glo{pull request}
+		verificata;
+		\item \textbf{Automazione dei controlli ripetitivi:} compilazione,
+		controlli di forma e pubblicazione sono svolti in automatico, così
+		da ridurre gli errori manuali e lasciare alla verifica umana il
+		controllo dei contenuti;
+		\item \textbf{Nessuna modifica diretta al ramo principale:} il ramo
+		\texttt{main} è protetto e si aggiorna solo tramite pull request
+		approvata da un membro diverso dall'autore;
+		\item \textbf{Strumenti gratuiti e accessibili:} sono adottati solo
+		strumenti senza costi, disponibili su tutti i sistemi operativi usati
+		dai membri del gruppo;
+		\item \textbf{Riproducibilità:} un documento produce lo stesso risultato
+		sul computer di ciascun membro e nel sistema di integrazione
+		continua, perché template, configurazione e script di compilazione
+		sono versionati insieme ai documenti.
+	\end{itemize}
+	
+	\subsubsection{Infrastruttura del gruppo}
+	L'infrastruttura del gruppo è costituita dai seguenti elementi.
+	
+	\paragraph{Organizzazione GitHub}
+	Tutte le risorse del progetto risiedono nell'organizzazione GitHub
+	\textbf{Git-Push-Team} (\url{https://github.com/Git-Push-Team}), di cui fanno
+	parte tutti i membri del gruppo.
+	
+	\paragraph{Repository della documentazione}
+	Il repository \texttt{docs} (\url{https://github.com/Git-Push-Team/docs})
+	contiene i sorgenti \LaTeX{} di tutti i documenti, organizzati per milestone:
+	\begin{itemize}
+		\item \texttt{Candidatura/}, \texttt{RTB/} e \texttt{PB/}: una cartella per
+		milestone, ciascuna suddivisa in \texttt{documenti/} e
+		\texttt{verbali/}, a loro volta divise in \texttt{interni/} ed
+		\texttt{esterni/};
+		\item \texttt{template/}: la classe \LaTeX{} comune \texttt{gpt.cls}, i dati
+		del gruppo, i modelli da cui partire per ogni nuovo documento e alcuni
+		esempi completi;
+		\item \texttt{scripts/}: gli script Python che compilano i documenti, ne
+		controllano la forma e generano il sito;
+		\item \texttt{.github/}: le automazioni, i modelli delle \glo{issue} e il
+		modello delle pull request;
+		\item \texttt{GUIDA.md}: il manuale operativo che descrive passo per passo
+		come svolgere ogni attività sul repository.
+	\end{itemize}
+	
+	\paragraph{Integrazione continua}
+	Il repository usa GitHub Actions per tre automazioni:
+	\begin{itemize}
+		\item \textbf{Anteprima delle pull request:} a ogni modifica proposta
+		vengono compilati tutti i documenti e nella pull request compare un
+		commento con il PDF dei documenti modificati, gli eventuali errori di
+		compilazione e gli avvisi sui controlli automatici (registro delle
+		modifiche, termini del Glossario, posizione dei file);
+		\item \textbf{Pubblicazione:} dopo l'unione in \texttt{main} i documenti
+		vengono ricompilati, i PDF vengono salvati nel repository accanto ai
+		sorgenti e il sito della documentazione viene aggiornato;
+		\item \textbf{Rilascio delle milestone:} alla creazione di un'etichetta
+		di versione (\textit{tag}) viene prodotta una \textit{release} che
+		contiene i PDF della milestone consegnata.
+	\end{itemize}
+	
+	\paragraph{Sito della documentazione}
+	I documenti approvati sono pubblicati con GitHub Pages all'indirizzo
+	\url{https://git-push-team.github.io/docs/}. Il sito espone per ogni
+	milestone la Lettera di Presentazione, i documenti e i verbali, sempre
+	nell'ultima versione, e la pagina del Glossario. Ogni risorsa si apre in una
+	scheda dedicata.
+	
+	\paragraph{Gestione delle attività}
+	Le attività sono tracciate con le issue del repository e raccolte nel
+	GitHub Project \textbf{GIT PUSH TEAM}, dove per ognuna sono registrati stato,
+	priorità, ruolo, ore stimate, ore effettive, data di inizio e scadenza.
+	Le issue si aprono con due modelli: \textit{Attività}, per un compito da
+	svolgere su un documento, e \textit{Errore}, per un errore trovato in un
+	documento.
+	
+	\paragraph{Cruscotto di monitoraggio}\label{sec:cruscotto-monitoraggio}
+	Per avere una visione costantemente aggiornata dell'avanzamento dei lavori, del
+	consumo del budget e della coerenza delle registrazioni orarie, il gruppo ha
+	realizzato un cruscotto automatico ospitato nel repository
+	\texttt{.github} (\url{https://github.com/Git-Push-Team/.github}). Lo script
+	Python di generazione legge i dati del GitHub Project \textbf{GIT PUSH TEAM}, i
+	commenti \texttt{/ore} (espressi nel formato \texttt{ora\_inizio-ora\_fine}, ad
+	esempio \texttt{/ore 17:00-17:30}) registrati sulle issue e il file di
+	configurazione \texttt{pianificazione.toml}, e aggiorna il file
+	\texttt{README.md}, che viene mostrato
+	direttamente nella pagina principale dell'organizzazione GitHub ed è visibile ai
+	soli membri del gruppo. Il cruscotto viene rigenerato in automatico ogni notte
+	tramite GitHub Actions ed è aggiornabile manualmente in qualsiasi momento
+	avviando il workflow dedicato (\textit{Actions $\rightarrow$ Cruscotto
+		$\rightarrow$ Run workflow}).
+	
+	Il cruscotto si articola dall'alto verso il basso in tre parti:
+	\begin{enumerate}
+		\item \textbf{Scadenze e sprint in corso:}
+		\begin{itemize}
+			\item \textit{Conto alla rovescia:} mostra i giorni rimanenti alle
+			scadenze principali del progetto (revisione RTB e consegna finale
+			fissata al 23 marzo 2027);
+			\item \textit{Stato dello sprint corrente:} indica il giorno attuale dello
+			\glo{sprint} con barra di avanzamento percentuale, l'elenco degli
+			obiettivi del periodo (distinti tra completati, in corso su issue
+			collegate e da valutare in retrospettiva) e una tabella che
+			confronta per ciascun membro il ruolo e le ore pianificate con le
+			ore effettivamente svolte;
+			\item \textit{Attività dello sprint:} elenca tutte le issue del periodo
+			riportando stato di chiusura, collegamento alla issue, colonna nel
+			GitHub Project (\texttt{Backlog}, \texttt{Todo},
+			\texttt{In progress}, \texttt{In review}, \texttt{Done}), ruolo,
+			assegnatari, ore stimate e ore effettive.
+		\end{itemize}
+		\item \textbf{Ore del progetto, costi e andamento per sprint:}
+		\begin{itemize}
+			\item \textit{Ore consumate rispetto al preventivo:} riporta in una
+			tabella compatta il rapporto tra ore svolte e ore preventivate per
+			ogni componente e per ogni ruolo (indicato tramite le sigle
+			\texttt{Re}, \texttt{Am}, \texttt{An}, \texttt{Pt}, \texttt{Pr},
+			\texttt{Ve} accompagnate da legenda), insieme al totale individuale
+			su 92 ore, al residuo e alla barra di consumo;
+			\item \textit{Costi per ruolo:} confronta per ciascun ruolo la tariffa
+			oraria, il preventivo economico, la spesa maturata, il budget
+			residuo e la percentuale di consumo rispetto al budget complessivo
+			di 11.250,00\,\texteuro;
+			\item \textit{Andamento per sprint:} riassume per ogni sprint concluso,
+			in corso e successivo il periodo di riferimento, le ore pianificate
+			ed effettive con il relativo scarto, i costi pianificati ed
+			effettivi e le ore effettive cumulate. Oltre alle tabelle in
+			Markdown, lo script genera i corrispondenti file \LaTeX{} per i
+			consuntivi del \textit{Piano di Progetto}.
+		\end{itemize}
+		\item \textbf{Metriche operative, controlli di coerenza e Diario di Bordo:}
+		\begin{itemize}
+			\item \textit{Metriche interne:} calcola tramite il modulo
+			\texttt{gestione/metriche.py} cinque indicatori operativi
+			(Tabella~\ref{tab:metriche-cruscotto}), affiancati da un indicatore
+			visivo che segnala se il valore rientra nella norma, richiede
+			attenzione o non è ancora applicabile;
+			\item \textit{Sezione «Da sistemare»:} elenca automaticamente le anomalie
+			di rendicontazione da correggere prima della chiusura dello sprint,
+			tra cui comandi \texttt{/ore} con sintassi errata, ore registrate in
+			un ruolo non previsto dalla pianificazione per quel membro e issue
+			chiuse senza ore;
+			\item \textit{Sintesi «Per il diario di bordo»:} produce un riepilogo
+			pronto all'uso, sia per l'ultimo sprint concluso sia per quello in
+			corso, con ore svolte, costi, attività chiuse, stato degli
+			obiettivi, ripartizione delle ore per ruolo ed elenco delle
+			attività completate e in lavorazione.
+		\end{itemize}
+	\end{enumerate}
+	
+	\begin{table}[H]
+		\centering
+		\small
+		\caption{Indicatori operativi calcolati nel cruscotto interno\label{tab:metriche-cruscotto}}
+		\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}p{4.2cm}>{\raggedright\arraybackslash}X@{}}
+			\toprule
+			\intestazione{Codice} & \intestazione{Metrica} & \intestazione{Criterio di calcolo} \\
+			\midrule
+			\texttt{M-SPRINT}    & Ore effettive rispetto alle pianificate &
+			$(\text{ore effettive} - \text{ore pianificate}) / \text{ore pianificate}$, calcolato sugli sprint conclusi. \\
+			\addlinespace
+			\texttt{M-BUDGET}    & Consumo del budget rispetto al tempo &
+			$(\text{costo consumato} / \text{preventivo}) / (\text{giorni trascorsi} / \text{giorni totali})$: un valore inferiore a $1$ indica una spesa inferiore al ritmo temporale previsto, un valore superiore a $1$ indica un consumo più rapido. \\
+			\addlinespace
+			\texttt{M-STIME}     & Scostamento delle stime &
+			$(\text{ore effettive} - \text{ore stimate}) / \text{ore stimate}$, calcolato sulle issue chiuse dotate sia di stima sia di ore registrate. \\
+			\addlinespace
+			\texttt{M-OBIETTIVI} & Obiettivi raggiunti negli sprint conclusi &
+			Rapporto tra gli obiettivi con tutte le issue collegate chiuse e il totale degli obiettivi tracciati tramite issue. \\
+			\addlinespace
+			\texttt{M-PIANO}     & Ore fuori pianificazione &
+			Incidenza percentuale delle ore registrate in un ruolo non pianificato per lo sprint o al di fuori dei periodi di sprint rispetto alle ore totali. \\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	\subsubsection{Strumenti}
+	Di seguito sono elencati gli strumenti adottati, raggruppati per funzione, con
+	l'uso che ne fa il gruppo.
+	
+	\paragraph{Gestione della configurazione e del progetto}
+	\begin{description}
+		\item[Git] (\url{https://git-scm.com/}) \hfill \\
+		Sistema di controllo di versione distribuito. Ogni attività si svolge
+		in un \glo{branch} dedicato, creato a partire dalla issue
+		corrispondente.
+		\item[GitHub] (\url{https://github.com/}) \hfill \\
+		Servizio che ospita i repository del gruppo. Oltre al codice e ai
+		documenti, il gruppo ne usa le \textit{pull request} per la verifica,
+		le \textit{issue} e i \textit{Projects} per la pianificazione,
+		\textit{Actions} per l'integrazione continua e \textit{Pages} per il
+		sito.
+		\item[GitHub Desktop] (\url{https://desktop.github.com/}) \hfill \\
+		Applicazione grafica per usare Git senza riga di comando: permette di
+		creare branch, registrare le modifiche e pubblicarle con pochi click.
+	\end{description}
+	
+	\paragraph{Documentazione}
+	\begin{description}
+		\item[\LaTeX{} e TeX Live] (\url{https://www.tug.org/texlive/}) \hfill \\
+		Linguaggio e distribuzione usati per scrivere tutti i documenti. La
+		compilazione è affidata a \texttt{latexmk}, sia in locale sia
+		nell'integrazione continua.
+		\item[Template del gruppo] \hfill \\
+		La classe \texttt{gpt.cls} genera da sola copertina, registro delle
+		modifiche, indici, intestazioni e piè di pagina, e controlla durante
+		la compilazione la correttezza formale di dati come versioni, date e
+		nomi dei membri.
+		\item[Visual Studio Code] (\url{https://code.visualstudio.com/}) \hfill \\
+		Editor consigliato per la stesura, con l'estensione \textit{LaTeX
+			Workshop} che compila il documento e ne mostra il PDF a ogni
+		salvataggio. Il repository ne contiene già la configurazione.
+		\item[Overleaf] (\url{https://www.overleaf.com/}) \hfill \\
+		Editor \LaTeX{} online, usato quando più membri devono scrivere
+		contemporaneamente sullo stesso testo. Il testo prodotto va poi
+		riportato nel repository con una pull request: solo allora diventa
+		parte del documento ufficiale.
+		\item[Python] (\url{https://www.python.org/}) \hfill \\
+		Linguaggio degli script che compilano i documenti, eseguono i
+		controlli automatici, aggiornano il cruscotto di monitoraggio e
+		generano il sito.
+	\end{description}
+	
+	\paragraph{Comunicazione}
+	\begin{description}
+		\item[Discord] (\url{https://discord.com/}) \hfill \\
+		Piattaforma per le riunioni interne e le sessioni di lavoro
+		collaborativo, con canali vocali, testuali e condivisione dello
+		schermo.
+		\item[WhatsApp] (\url{https://www.whatsapp.com/}) \hfill \\
+		Canale principale per le comunicazioni asincrone e organizzative.
+		\item[Telegram] (\url{https://telegram.org/}) \hfill \\
+		Canale di messaggistica utilizzato, tramite un gruppo condiviso con i
+		referenti di Eggon S.r.l., per comunicazioni veloci e chiarimenti
+		rapidi con l'azienda proponente.
+		\item[Gmail] (\url{https://mail.google.com/}) \hfill \\
+		Ospita l'indirizzo del gruppo, \texttt{gitpushteam@gmail.com}, usato
+		per tutte le comunicazioni ufficiali con il committente e con le
+		aziende proponenti.
+		\item[Google Meet e Microsoft Teams] (\url{https://meet.google.com/},
+		\url{https://www.microsoft.com/microsoft-teams/}) \hfill \\
+		Piattaforme per le videochiamate con le aziende proponenti. La
+		piattaforma è scelta dall'azienda che organizza l'incontro.
+	\end{description}
+	
+	\paragraph{Collaborazione}\label{sec:strumenti-collaborazione}
+	\begin{description}
+		\item[Google Drive, Documenti e Fogli] (\url{https://drive.google.com/})
+		\hfill \\
+		Spazio condiviso per bozze, appunti presi durante le riunioni e
+		calcoli preliminari, come le stime di ore e costi. Questi file sono
+		materiale di lavoro e non sostituiscono i documenti ufficiali: il
+		loro contenuto definitivo va riportato nel repository.
+	\end{description}
+	
+	\subsubsection{Manutenzione e modifica dell'infrastruttura}
+	\begin{itemize}
+		\item Chi riscontra un malfunzionamento di uno strumento, del template o
+		delle automazioni lo segnala con una issue, descrivendo il problema e
+		come riprodurlo.
+		\item Le modifiche a template, script e automazioni sono svolte
+		dall'Amministratore in un branch dedicato e passano, come ogni altra
+		modifica, da una pull request verificata da un altro membro. Prima
+		di essere unite, quelle di maggiore impatto sono provate in un
+		repository di prova, per non introdurre errori nel repository
+		ufficiale.
+		\item Ogni modifica che cambia il modo di lavorare del gruppo viene
+		descritta nel manuale operativo \texttt{GUIDA.md} e, se riguarda le
+		regole, anche nelle presenti Norme. Il resto del gruppo viene
+		informato nella riunione successiva.
+		\item L'adozione di un nuovo strumento, o l'abbandono di uno esistente, è
+		una decisione del gruppo: viene presa in riunione e registrata nel
+		verbale.
+	\end{itemize}
+	
+	% ---------------------------------------------------------------------
+	
+	\subsection{Miglioramento}
+	Il processo di Miglioramento ha lo scopo di valutare in modo sistematico i
+	processi adottati dal gruppo e di modificarli quando non risultano efficaci o
+	efficienti. Le Norme di Progetto non sono quindi un documento definitivo: si
+	aggiornano ogni volta che il gruppo individua un modo migliore di lavorare, e
+	ogni aggiornamento è tracciato nel registro delle modifiche.
+	
+	Il processo segue il ciclo \textbf{PDCA} (\textit{Plan, Do, Check, Act}), che
+	viene ripetuto a ogni sprint:
+	\begin{itemize}
+		\item \textbf{Plan:} si individua un problema o un'opportunità e si
+		pianifica l'azione per affrontarlo;
+		\item \textbf{Do:} si attua l'azione pianificata;
+		\item \textbf{Check:} si verifica se l'azione ha prodotto l'effetto atteso;
+		\item \textbf{Act:} se l'esito è positivo, la nuova pratica diventa una
+		regola e si registra nelle Norme; altrimenti si corregge l'azione e
+		il ciclo riparte.
+	\end{itemize}
+	
+	\subsubsection{Attività previste}
+	Le attività previste dal processo di Miglioramento sono:
+	\begin{itemize}
+		\item \textbf{Implementazione del processo:} definizione dei processi del
+		gruppo, delle occasioni in cui vengono valutati e di chi se ne
+		occupa;
+		\item \textbf{Valutazione del processo:} raccolta di dati e riscontri
+		sull'andamento dei processi, per individuarne punti di forza e
+		criticità;
+		\item \textbf{Miglioramento del processo:} definizione, attuazione e
+		controllo delle azioni correttive, fino al loro consolidamento nelle
+		Norme.
+	\end{itemize}
+	
+	\subsubsection{Implementazione del processo}
+	I processi del gruppo sono formalizzati nel presente documento, che ne
+	costituisce il riferimento, e nel manuale operativo \texttt{GUIDA.md} per gli
+	aspetti pratici. Essendo versionati nel repository, ogni loro modifica è
+	tracciabile: si sa che cosa è cambiato, quando, chi l'ha proposta e chi l'ha
+	verificata.
+	
+	I ruoli coinvolti nel processo sono:
+	\begin{itemize}
+		\item il \textbf{Responsabile}, che conduce la retrospettiva, raccoglie le
+		proposte di miglioramento e ne pianifica l'attuazione;
+		\item l'\textbf{Amministratore}, che attua le modifiche a strumenti e
+		procedure e aggiorna le Norme di Progetto e la \texttt{GUIDA.md};
+		\item il \textbf{Verificatore}, che controlla che le modifiche siano
+		coerenti con il resto delle Norme;
+		\item \textbf{ogni membro del gruppo}, che può proporre un miglioramento in
+		qualsiasi momento, aprendo una issue o portandolo alla riunione
+		successiva.
+	\end{itemize}
+	
+	\subsubsection{Valutazione del processo}
+	Il gruppo lavora per \glo{sprint} di due settimane, che coincidono con il
+	periodo di rotazione dei ruoli. La valutazione dei processi avviene nella
+	\textbf{retrospettiva}, un punto fisso della riunione interna che chiude
+	ogni sprint, prima del cambio dei ruoli. Durante la retrospettiva ciascun
+	membro risponde a tre domande:
+	\begin{itemize}
+		\item \textbf{che cosa ha funzionato}, e va quindi mantenuto;
+		\item \textbf{che cosa non ha funzionato}, e perché;
+		\item \textbf{che cosa cambiamo} nello sprint successivo.
+	\end{itemize}
+	
+	Per rendere la valutazione oggettiva, la retrospettiva si basa anche su dati
+	raccolti durante lo sprint e sintetizzati nel cruscotto di monitoraggio
+	(\S~\ref{sec:cruscotto-monitoraggio}):
+	\begin{itemize}
+		\item il confronto tra ore stimate e ore effettive delle attività,
+		registrate nel GitHub Project tramite il comando \texttt{/ore};
+		\item le attività concluse in ritardo, rimaste aperte rispetto a quelle
+		pianificate o segnalate nella sezione «Da sistemare» del cruscotto;
+		\item il numero di correzioni richieste in verifica e gli avvisi ricorrenti
+		dei controlli automatici;
+		\item i valori degli indicatori operativi del cruscotto e delle metriche di
+		processo definite nel Piano di Qualifica, quando disponibili.
+	\end{itemize}
+	
+	Oltre alla retrospettiva, sono occasioni di valutazione i riscontri esterni:
+	le osservazioni del committente (ad esempio in sede di aggiudicazione e alle
+	revisioni di avanzamento) e quelle dell'azienda proponente negli incontri
+	periodici. Ogni osservazione ricevuta viene esaminata nella prima riunione
+	utile.
+	
+	\subsubsection{Miglioramento del processo}
+	Ogni criticità emersa dalla valutazione segue lo stesso percorso, così che
+	nessun miglioramento resti solo un'intenzione:
+	\begin{enumerate}
+		\item la criticità e la soluzione scelta sono registrate come
+		\textbf{decisione} nel verbale della riunione;
+		\item dalla decisione nasce un'\textbf{azione tracciabile}: una issue con
+		un incaricato e una scadenza, riportata anche nel verbale;
+		\item l'incaricato attua l'azione e, se cambia una regola, aggiorna le
+		Norme di Progetto con una pull request verificata;
+		\item nella retrospettiva successiva il gruppo controlla se l'azione ha
+		risolto la criticità. In caso positivo la nuova pratica resta in
+		vigore; in caso contrario si pianifica un'azione correttiva diversa.
+	\end{enumerate}
+	
+	\subsubsection{Miglioramenti attuati}
+	La Tabella~\ref{tab:miglioramenti} raccoglie i miglioramenti già attuati dal
+	gruppo, con la criticità da cui sono nati e l'azione intrapresa. La tabella
+	viene aggiornata a ogni nuovo miglioramento.
+	
+	\begin{table}[H]
+		\centering
+		\small
+		\caption{Miglioramenti attuati\label{tab:miglioramenti}}
+		\begin{tabularx}{\textwidth}{@{}p{1.9cm}XX@{}}
+			\toprule
+			\intestazione{Data} & \intestazione{Criticità rilevata} &
+			\intestazione{Azione intrapresa} \\
+			\midrule
+			2026-10-20 &
+			Nella prima struttura del repository i documenti erano divisi per
+			tipo, mentre la suddivisione per milestone compariva solo sul sito:
+			chi cercava un file non lo trovava nello stesso posto nei due luoghi. &
+			Riorganizzazione del repository per milestone, poi per documenti e
+			verbali, interni ed esterni, come sul sito. La nuova struttura è stata
+			provata in un repository di prova prima dell'adozione (verbale
+			interno del 2026-10-20). \\
+			\addlinespace
+			2026-10-29 &
+			Dall'esame delle osservazioni del committente ai gruppi degli anni
+			precedenti è emerso che alcune righe dei nostri registri delle
+			modifiche avevano una versione senza verifica, righe di sola
+			``Verifica'' senza autore e date non coerenti. &
+			Nuove regole di versionamento: ogni riga ha autore e verificatore
+			distinti, la versione cambia solo dopo una verifica superata e la
+			versione 1.0.0 indica l'approvazione. Correzione dei registri esistenti
+			e controllo automatico del registro in ogni pull request. \\
+			\addlinespace
+			2026-10-29 &
+			Dalle stesse osservazioni: le risorse di un sito di documentazione
+			devono aprirsi in una scheda dedicata, che ne riporti il nome reale. &
+			Sul sito ogni documento si apre in una nuova scheda, intitolata con il
+			titolo e la versione del documento. \\
+			\addlinespace
+			2026-11-11 &
+			Necessità di monitorare in tempo reale ore svolte, costi maturati,
+			anomalie nelle issue (chiusure senza ore o comandi \texttt{/ore} errati)
+			e dati per il Diario di Bordo senza conteggi manuali. &
+			Introduzione nel repository \texttt{.github} del cruscotto automatico
+			rigenerato ogni notte tramite GitHub Actions a partire dal GitHub Project
+			e da \texttt{pianificazione.toml}.\\
+			\bottomrule
+		\end{tabularx}
+		
+	\end{table}
+	
 \end{document}
