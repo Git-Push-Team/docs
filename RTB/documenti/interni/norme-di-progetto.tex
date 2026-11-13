@@ -129,13 +129,57 @@
 		\item \textbf{\textit{Patch}:} incrementato in caso di modifiche leggere, come la correzione di refusi o typo.
 	\end{itemize}
 	
-	Le regole operative che disciplinano il flusso di lavoro all'interno del registro delle modifiche sono le seguenti:
-	\begin{itemize}
-		\item \textbf{Esecuzione delle modifiche:} Chiunque nel gruppo, ad esclusione del \textit{Verificatore}, può effettuare una modifica.
-		\item \textbf{Verifica:} Ogni modifica deve essere verificata dal \textit{Verificatore}, il quale, dopo aver completato il controllo, aggiunge il proprio nome al campo verificatore. Questa operazione risulta particolarmente necessaria nel caso in cui in quel momento esistano più verificatori.
-		\item \textbf{Approvazione:} Quando il documento raggiunge un punto di maturazione adatto (ad esempio prima di essere inviato al proponente o al committente), la persona che ricopre il ruolo di \textit{Responsabile} approva formalmente il documento e incrementa la versione \textit{Major}.
-	\end{itemize}
+	Le versioni non vengono scritte a mano: il registro delle modifiche di ogni documento è compilato automaticamente a partire dalle \glo{pull request}. In questo modo ogni riga corrisponde a una modifica verificata, ed è sempre possibile risalire alla discussione che l'ha prodotta.
 	
+	\paragraph{Registro delle modifiche}
+	Le righe del registro sono conservate in un file affiancato al sorgente del documento, con lo stesso nome seguito da \texttt{.registro.tex} (ad esempio \texttt{norme-di-progetto.registro.tex}). La classe \LaTeX{} comune lo include automaticamente nella tabella del registro, nella copertina e nel piè di pagina. Nel sorgente del documento non si scrive alcuna riga di versione. Finché un documento nuovo non ha ricevuto la sua prima versione, la copertina riporta la dicitura \textit{bozza}.
+	
+	\paragraph{Etichette di versione}
+	Il tipo di modifica è dichiarato apponendo alla pull request un'etichetta (\textit{label}), che determina quale cifra della versione viene incrementata (Tabella~\ref{tab:etichette-versione}). Se una pull request riporta più etichette prevale la più forte, nell'ordine \texttt{stesura-e-approvazione}, \texttt{approvazione}, \texttt{contenuto}, \texttt{correzione}.
+	
+	\begin{table}[H]
+		\centering
+		\small
+		\caption{Etichette di versione delle pull request\label{tab:etichette-versione}}
+		\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{3.2cm}@{}}
+			\toprule
+			\intestazione{Etichetta} & \intestazione{Quando si usa} & \intestazione{Effetto sulla versione} \\
+			\midrule
+			\texttt{correzione} & Modifiche leggere: refusi, piccole correzioni formali. & \textit{Patch}: da 0.2.0 a 0.2.1. \\
+			\addlinespace
+			\texttt{contenuto} & Prima stesura o modifica sostanziale, come una sezione nuova. & \textit{Minor}: da 0.2.1 a 0.3.0; un documento nuovo parte da 0.1.0. \\
+			\addlinespace
+			\texttt{approvazione} & Approvazione formale del documento, in una pull request separata da quelle di contenuto. & \textit{Major}: da 0.3.0 a 1.0.0, da 1.2.1 a 2.0.0. \\
+			\addlinespace
+			\texttt{stesura-e-}\newline\texttt{approvazione} & Contenuto e approvazione nella stessa pull request, ad esempio un verbale scritto, verificato e approvato subito. & Due righe: \textit{Minor} (ad esempio 0.1.0) e sopra \textit{Major} (1.0.0). \\
+			\addlinespace
+			nessuna & Ritocchi che non alterano il contenuto del documento, come commenti nel sorgente. & Nessuna versione e nessuna riga. \\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	\paragraph{Compilazione delle righe}
+	Dopo l'unione della pull request nel ramo principale, un'automazione aggiunge in cima al registro di ogni documento modificato (anche tramite un capitolo o un'immagine della sua cartella) una riga con i seguenti campi:
+	\begin{itemize}
+		\item \textbf{Versione:} quella più recente del registro, incrementata secondo l'etichetta;
+		\item \textbf{Data:} il giorno dell'unione della pull request; per le approvazioni, il giorno in cui è stata apposta l'etichetta, se successivo; le date, risalendo il registro, non tornano mai indietro;
+		\item \textbf{Autore:} chi ha aperto la pull request e chi vi ha contribuito con un \textit{commit}, anche come co-autore, escluso chi l'ha approvata;
+		\item \textbf{Verificatore:} il membro che ha approvato la pull request (\textit{Review changes $\rightarrow$ Approve}), necessariamente diverso dall'autore;
+		\item \textbf{Descrizione:} il testo della riga \texttt{Descrizione:} nella descrizione della pull request, che deve indicare che cosa è cambiato e dove; in sua assenza viene usato il titolo della pull request.
+	\end{itemize}
+	Ogni riga termina con il riferimento alla pull request di origine (\texttt{\% PR \#N}), che rende la modifica verificabile su GitHub. Prima dell'unione, un commento automatico nella pull request mostra la riga che verrà aggiunta, e il PDF di anteprima riporta già la versione futura.
+	
+	\paragraph{Approvazione}
+	L'approvazione può essere dichiarata soltanto dal \textit{Responsabile} dello sprint in corso, che appone l'etichetta \texttt{approvazione} o \texttt{stesura-e-approvazione}. L'automazione verifica che l'etichetta sia stata messa dal Responsabile indicato nella pianificazione dello sprint; in caso contrario non scrive alcuna riga e ne spiega il motivo nella pull request. Nella riga di approvazione compare soltanto il Responsabile, nella colonna dell'autore, mentre il campo del verificatore è vuoto (\texttt{-}). Anche la pull request di approvazione deve essere approvata dal \textit{Verificatore} per poter essere unita, ma questa verifica non viene registrata nella riga. Con \texttt{stesura-e-approvazione} vengono invece scritte due righe: sotto la riga di contenuto, con autore e verificatore come di consueto, e sopra la riga di approvazione del Responsabile.
+	
+	\paragraph{Regole operative}
+	\begin{itemize}
+		\item \textbf{Esecuzione delle modifiche:} chiunque nel gruppo può proporre una modifica tramite pull request, indicando l'etichetta di versione e la riga \texttt{Descrizione:};
+		\item \textbf{Verifica:} ogni modifica con etichetta deve essere approvata da un membro diverso dall'autore, che ne diventa il verificatore. Una versione esiste soltanto se è verificata: le righe prive di verificatore, tranne quelle di approvazione, vengono segnalate dai controlli automatici;
+		\item \textbf{Approvazione:} quando il documento raggiunge un punto di maturazione adatto (ad esempio prima di essere inviato alla \glo{proponente} o al \glo{committente}), il Responsabile lo approva formalmente con le etichette descritte sopra, incrementando la versione \textit{Major};
+		\item \textbf{Correzione del registro:} una riga già scritta può essere corretta modificando il file \texttt{.registro.tex} con una pull request priva di etichetta, che non genera una nuova versione.
+	\end{itemize}
+
 	\subsubsection{Nomenclatura}
 	Al fine di garantire un'identificazione univoca, ordinata ed immediata di ciascun artefatto, il gruppo adotta una convenzione di nomenclatura standardizzata per la denominazione dei file. La struttura del nome varia in base alla tipologia di documento.
 	
@@ -233,15 +277,51 @@
 	\end{itemize}
 	
 	\subsubsection{Rendicontazione oraria e controllo dell'avanzamento}\label{sec:rendicontazione}
-	Per garantire che il consumo delle ore e dei costi rimanga allineato al preventivo di 552 ore e 11.250,00\,\texteuro{} stabilito nel \textit{Piano di Progetto}, ogni attività svolta all'interno di uno \glo{sprint} deve essere tracciata mediante una \glo{issue} sul GitHub Project del gruppo.
+	Il consumo delle ore e dei costi deve rimanere allineato al preventivo di 552 ore e 11.250,00\,\texteuro{} stabilito nel \textit{Piano di Progetto}. Per questo ogni attività svolta all'interno di uno \glo{sprint} è tracciata mediante una \glo{issue} sul GitHub Project del gruppo, e ogni ora di lavoro è registrata su quella issue. La rendicontazione è verificabile perché si registra l'intervallo di tempo in cui il lavoro è stato svolto, e non soltanto la sua durata.
 	
-	La rendicontazione segue queste regole operative:
+	\paragraph{Pianificazione}
+	All'apertura di ciascuno sprint il Responsabile registra nel file \texttt{pianificazione.toml}, contenuto nel repository \texttt{.github}, le date di inizio e fine, gli obiettivi (eventualmente collegati alle issue che li realizzano) e, per ciascun membro, i ruoli assegnati con le ore preventivate. Sull'intero progetto, le ore di ogni membro per ruolo coincidono con il preventivo della \textit{Dichiarazione di Impegni}. Si tratta di 92 ore a testa: 9 da Responsabile, 12 da Amministratore, 13 da Analista, 17 da Progettista, 22 da Programmatore e 19 da Verificatore. Il file si modifica soltanto tramite \glo{pull request}.
+	
+	\paragraph{Registrazione delle ore}
+	Al termine di ogni blocco di lavoro, ciascun membro scrive un commento sulla issue su cui ha lavorato con il comando \texttt{/ore}, seguito dall'intervallo di inizio e fine; il sistema ne calcola la durata. La sintassi è la seguente:
 	\begin{itemize}
-		\item \textbf{Pianificazione centralizzata:} all'apertura di ciascuno sprint, obiettivi, date di inizio e fine, ruoli assegnati e ore preventivate per ciascun membro vengono registrati nel file \texttt{pianificazione.toml} contenuto nel repository \texttt{.github};
-		\item \textbf{Registrazione delle ore svolte:} ciascun membro registra le ore effettivamente impiegate commentando direttamente la issue su cui ha lavorato mediante il comando \texttt{/ore} seguito dall'intervallo di inizio e fine nel formato \texttt{ora\_inizio-ora\_fine} (ad esempio \texttt{/ore 17:00-17:30});
-		\item \textbf{Chiusura delle attività:} nessuna issue operativa può essere chiusa con valore di ore effettive nullo; eventuali dimenticanze o incongruenze rispetto ai ruoli pianificati vengono segnalate in automatico dal cruscotto di monitoraggio (\S~\ref{sec:cruscotto-monitoraggio}) e devono essere sanate prima della chiusura dello sprint.
+		\item \texttt{/ore 14:00-16:30}: lavoro dalle 14:00 alle 16:30 (2,5 ore), attribuito al ruolo pianificato per il membro nello sprint in corso (se ne ha più d'uno, quello con più ore preventivate);
+		\item \texttt{/ore 9-11 verificatore}: il ruolo, se indicato, sostituisce quello predefinito;
+		\item \texttt{/ore 21:00-22:30 analista 2026-11-05}: la data, nel \glo{formato ISO}, si indica quando il lavoro è stato svolto in un giorno diverso da quello del commento;
+		\item \texttt{/ore 23:30-00:30}: un intervallo a cavallo della mezzanotte viene attribuito al giorno in cui è iniziato.
+	\end{itemize}
+	Un commento può contenere più righe \texttt{/ore}, una per ogni blocco di lavoro, e ogni comando ammette al massimo 12 ore. Per compatibilità con le registrazioni già effettuate resta valida la forma con la sola durata (ad esempio \texttt{/ore 1,5}), che però non permette alcun controllo sull'orario ed è quindi da evitare.
+	
+	Si applicano inoltre le seguenti regole:
+	\begin{itemize}
+		\item \textbf{Ore personali:} le ore sono attribuite a chi scrive il commento; nessun membro può registrare ore per conto di un altro;
+		\item \textbf{Lavoro su pull request:} le ore scritte in una pull request, ad esempio quelle del Verificatore, vengono attribuite alla issue che la pull request chiude (\texttt{Closes \#N}); per questo ogni pull request deve chiudere una issue;
+		\item \textbf{Ore già svolte:} un intervallo non può terminare oltre mezz'ora dopo il momento in cui è stato scritto il commento; il lavoro svolto successivamente va registrato in un nuovo commento;
+		\item \textbf{Correzioni:} per correggere una registrazione si modifica o si cancella il proprio commento; i totali vengono ricalcolati automaticamente.
 	\end{itemize}
 	
+	\paragraph{Riscontro immediato}
+	A ogni commento con \texttt{/ore}, un'automazione rilegge tutte le registrazioni della issue e delle pull request che la chiudono e:
+	\begin{itemize}
+		\item aggiunge al commento una reazione di conferma (pollice in su) se il comando è valido, oppure una di dubbio se contiene un errore, che viene spiegato nel riepilogo;
+		\item aggiorna il campo \textit{Ore effettive} della issue nel GitHub Project;
+		\item mantiene nella issue un unico commento di riepilogo con le ore per persona e per ruolo, il dettaglio delle registrazioni con data, orario e ruolo, e gli eventuali comandi non validi.
+	\end{itemize}
+	
+	\paragraph{Controlli automatici}
+	Le registrazioni vengono controllate sia nel riepilogo di ciascuna issue sia, ogni notte, sull'insieme di tutte le issue nella sezione \textit{Da sistemare} del cruscotto di monitoraggio (\S~\ref{sec:cruscotto-monitoraggio}). Le ore segnalate vengono comunque conteggiate, ma ogni segnalazione deve essere verificata e, se necessario, corretta:
+	\begin{itemize}
+		\item \textbf{Intervalli sovrapposti:} due intervalli dello stesso membro che si sovrappongono, anche se registrati su issue diverse, indicano ore contate due volte;
+		\item \textbf{Ore giornaliere eccessive:} più di 8 ore dello stesso membro nello stesso giorno;
+		\item \textbf{Registrazioni tardive:} ore registrate più di 3 giorni dopo il lavoro a cui si riferiscono;
+		\item \textbf{Ruolo non pianificato:} ore registrate in un ruolo non previsto per il membro nello sprint, oppure al di fuori dei periodi di sprint;
+		\item \textbf{Comandi non validi:} sintassi errata, ruolo sconosciuto, data futura o intervallo non ancora concluso; queste registrazioni non vengono conteggiate finché non sono corrette;
+		\item \textbf{Issue chiuse senza ore:} nessuna issue operativa può essere chiusa con valore di ore effettive nullo.
+	\end{itemize}
+	
+	\paragraph{Chiusura dello sprint}
+	Prima della chiusura di ciascuno sprint tutte le anomalie segnalate devono essere sanate. Il Responsabile confronta le ore effettive con quelle pianificate per ogni membro e ruolo, come riportato dal cruscotto. Riporta poi nel diario di bordo e nel \textit{Piano di Progetto} il consuntivo del periodo e gli eventuali scostamenti, con le loro cause.
+
 	\clearpage
 	\subsection{Comunicazione}
 	Verranno di seguito elencate le modalità di comunicazione, sincrone e non, che verranno adottate dal gruppo per mantenere un contatto proficuo e attivo tra i propri componenti interni e i soggetti esterni.
