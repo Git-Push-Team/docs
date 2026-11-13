@@ -84,7 +84,7 @@
 	\subsubsubsection{Glossario}
 	Il Glossario costituisce un documento ad aggiornamento continuo lungo l'intero ciclo di vita del progetto, concepito per chiarire e contestualizzare i termini appartenenti al \glo{dominio applicativo} che potrebbero risultare ambigui o di complessa interpretazione. Raccogliendo e formalizzando definizioni per vocaboli tecnici, acronimi e abbreviazioni utilizzati nella documentazione di progetto, esso assicura una comunicazione chiara, coerente e priva di fraintendimenti tra i membri del team, l'azienda proponente, il committente e i lettori esterni.
 	
-	\subsubsubsection{Lettera di candidatura}
+	\subsubsubsection{Lettera di candidatura}\label{sec:lettera_di_presentazione}
 	La Lettera di Candidatura rappresenta il documento formale con cui il gruppo GitPushTeam ufficializza la propria candidatura per l'appalto del \glo{capitolato} proposto dall'azienda Eggon. Al suo interno vengono esposte le motivazioni che hanno guidato la decisione del team, valorizzando in particolare l'interesse verso lo stack tecnologico e le opportunità di crescita formativa. Il documento richiama inoltre i principali vincoli operativi assunti dal gruppo tra cui la data di consegna stimata, il preventivo economico e la ripartizione del monte ore, fornendo il necessario raccordo formale con i documenti di Dichiarazione degli Impegni e Analisi dei Capitolati a supporto della proposta.
 	
 	
@@ -115,7 +115,7 @@
 		\item \texttt{documento.tex}: template di documentazione generica utilizzato nel caso in cui un template più specifico non sia presente.
 	\end{itemize}
 	
-	\subsubsection{Versionamento}
+	\subsubsection{Versionamento}\label{sec:versionamento}
 	Per il versionamento dei nostri documenti e codice abbiamo adottato una versione generalizzata della formula del \glo{versionamento semantico} seguendo lo schema:
 	\begin{center}
 		\Large \texttt{\textbf{Major.Minor.Patch}}
@@ -444,18 +444,39 @@
 	\end{itemize}
 	
 	\paragraph{Integrazione continua}
-	Il repository usa GitHub Actions per tre automazioni:
+	Il repository usa GitHub Actions per le seguenti automazioni:
 	\begin{itemize}
 		\item \textbf{Anteprima delle pull request:} a ogni modifica proposta
 		vengono compilati tutti i documenti e nella pull request compare un
 		commento con il PDF dei documenti modificati, gli eventuali errori di
 		compilazione e gli avvisi sui controlli automatici (registro delle
 		modifiche, termini del Glossario, posizione dei file);
+		\item \textbf{Registro delle modifiche:} in ogni pull request un
+		commento mostra la riga del registro che verrà aggiunta, in base
+		all'etichetta di versione, e si aggiorna quando cambiano etichetta,
+		descrizione o approvazione. Dopo l'unione in \texttt{main} la riga
+		viene scritta automaticamente nel registro del documento
+		(\autoref{sec:versionamento});
+		\item \textbf{Analisi dei testi:} a ogni modifica proposta i documenti
+		toccati vengono controllati per ortografia e grammatica, con lo
+		strumento LanguageTool, per gli errori tipografici più comuni e per la
+		leggibilità, misurata con l'indice Gulpease. Il risultato arriva come
+		commento nella pull request, con in evidenza le righe modificate.
+		L'analisi non blocca l'unione: le segnalazioni sono suggerimenti da
+		valutare. Dopo ogni unione in \texttt{main} viene ripetuta su tutti i
+		documenti;
 		\item \textbf{Pubblicazione:} dopo l'unione in \texttt{main} i documenti
-		vengono ricompilati, i PDF vengono salvati nel repository accanto ai
-		sorgenti e il sito della documentazione viene aggiornato;
-		\item \textbf{Rilascio delle milestone:} alla creazione di un'etichetta
-		di versione (\textit{tag}) viene prodotta una \textit{release} che
+		vengono ricompilati, le righe del registro e i PDF vengono salvati nel
+		repository accanto ai sorgenti e il sito della documentazione viene
+		aggiornato;
+		\item \textbf{Collegamento al GitHub Project:} le nuove issue entrano
+		nel Project con ruolo, ore stimate e sprint; all'apertura di una pull
+		request le issue che chiude passano nella colonna \texttt{In review};
+		\item \textbf{Registrazione delle ore:} i commenti con il comando
+		\texttt{/ore} vengono elaborati come descritto in
+		\autoref{sec:rendicontazione};
+		\item \textbf{Rilascio delle milestone:} alla creazione di un
+		\textit{tag} di versione viene prodotta una \textit{release} che
 		contiene i PDF della milestone consegnata.
 	\end{itemize}
 	
