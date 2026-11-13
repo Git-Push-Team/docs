@@ -1,0 +1,141 @@
+% =====================================================================
+%  MODELLO: VERBALE ESTERNO  (incontro con un proponente o con i docenti)
+%
+%  1. Copiate questo file nella cartella della milestone in corso:
+%       Candidatura/verbali/esterni/   RTB/verbali/esterni/   PB/verbali/esterni/
+%     e chiamatelo VE-AAAA-MM-GG.tex (data dell'incontro)
+%  2. Cambiate i campi qui sotto (dopo il simbolo % c'è un commento).
+%  3. Scrivete il contenuto dopo \begin{document}.
+% =====================================================================
+\documentclass[verbale=esterno]{gpt}
+
+\titolo{Primo incontro dopo l'aggiudicazione}    % es. Chiarimenti sul capitolato C2
+\data{2026-11-11}                  % data dell'incontro: AAAA-MM-GG
+\orario{16:15}{16:45}              % ora di inizio, ora di fine
+\luogo{Google Meet}                % oppure: sede dell'azienda, Discord...
+\redattore{Enrico Biasini, Luca Cesco Bolla}                % chi scrive il verbale (la sua chiave)
+\verificatore{corro}             % chi lo controlla (diverso dal redattore)
+
+% Chi faceva parte del gruppo il giorno dell'incontro.
+\componenti{biasini,cescobolla,guglielmo,mazzurana,spagnoli,corro}
+\assenti{corro}                         % chi mancava, es. \assenti{spagnoli}
+
+% Persone esterne presenti: una riga per persona
+\esterno{Gianpaolo Ferrarin}{Founder \& CEO, Eggon}
+\esterno{Luca Iuzzolino}{Referente tecnico, Eggon}
+
+% Chi firma il verbale per l'azienda (compare nel riquadro firma finale)
+\firma{Gianpaolo Ferrarin}{Eggon}
+
+% Destinatari: ai docenti aggiungete l'azienda (\newline = a capo)
+\destinatari{Prof.~Tullio Vardanega\newline Prof.~Riccardo Cardin\newline Eggon}
+
+% Solo DOPO l'assegnazione del capitolato (togliete il % davanti):
+% \capitolato{C2 -- NEXUM Concierge (Eggon)}
+
+% ---------------------------------------------------------------------
+%  REGISTRO DELLE MODIFICHE  --  la riga più recente va IN CIMA.
+%  La versione del documento è quella della PRIMA riga.
+%
+%  \modifica{versione}{data}{autore}{verificatore}{cosa è cambiato}
+% ---------------------------------------------------------------------
+
+%\modifica{0.1.0}{2026-11-12}{biasini,cescobolla}{corro}{Prima stesura}
+
+
+\begin{document}
+
+\section{Ordine del giorno}
+\begin{enumerate}
+  \item Organizzazione degli incontri periodici e dei canali di comunicazione.
+  \item Modalità di conduzione dell'analisi dei requisiti.
+  \item Chiarimenti sui requisiti funzionali.
+  \item Gestione dei documenti, tracciabilità delle fonti e autorizzazioni.
+  \item Stack tecnologico e accesso ai modelli linguistici.
+  \item Uso dei coding agent nello sviluppo.
+  \item Prossimi passi.
+\end{enumerate}
+
+\section{Svolgimento}
+L'incontro è il primo con il proponente dopo l'aggiudicazione del capitolato C2 (NEXUM AI Concierge) al gruppo. Per Eggon erano presenti Gianpaolo Ferrarin, che seguirà il gruppo come riferimento di prodotto e di supporto generale, e Luca Iuzzolino, referente tecnico del progetto. Il gruppo ha concordato con il proponente l'organizzazione degli incontri, ha posto le prime domande sui requisiti del capitolato e ha raccolto indicazioni sullo stack tecnologico e sull'uso dei coding agent.
+
+\subsection{Organizzazione e comunicazione}
+
+\domanda{Con quale cadenza e in quale giorno si terranno gli incontri con il proponente?}{%
+  Gli incontri saranno settimanali, il mercoledì alle 17:00; il lunedì è stato escluso. Gianpaolo Ferrarin invierà l'invito di calendario ai componenti del gruppo.}
+
+\domanda{Quale canale va usato per le comunicazioni rapide?}{%
+  Luca Iuzzolino crea un gruppo Telegram dedicato, da usare per dubbi rapidi e comunicazioni operative. Il gruppo deve inviare nel gruppo Telegram un file Excel con nome, email e nickname Telegram di ciascun componente, così che Eggon abbia traccia dei partecipanti e possa inviare gli inviti settimanali.}
+
+\subsection{Analisi dei requisiti}
+
+\domanda{Come va condotta l'analisi dei requisiti?}{%
+  Eggon agisce come cliente e il gruppo come fornitore. Il capitolato è volutamente generico: spetta al gruppo formulare le domande e trasformare i requisiti di base in specifiche condivise. Il gruppo preparerà una prima bozza dei requisiti basata sul capitolato, da discutere al prossimo incontro insieme ai dubbi e ai requisiti opzionali. Il confronto potrà avvenire tramite domande dirette o con una revisione condivisa del documento.}
+
+\subsection{Requisiti funzionali}
+
+\domanda{Una richiesta di ferie già registrata può essere modificata o eliminata?}{%
+  L'eliminazione della richiesta prima dell'approvazione è un requisito desiderabile. La modifica non è prevista: in caso di errore la richiesta va eliminata e ricreata.}
+
+\domanda{Va gestito il caso di aziende con più sedi e regole sulle ferie diverse?}{%
+  No, non rientra nel perimetro attuale. La piattaforma NEXUM prevede già una logica multisede e il gruppo può inserirla tra le funzionalità facoltative.}
+
+\subsection{Documenti, tracciabilità e autorizzazioni}
+
+\domanda{Come vanno gestiti l'aggiornamento e la rimozione dei documenti caricati?}{%
+  È preferibile il versionamento alla semplice cancellazione, perché i regolamenti aziendali sono soggetti a nuove versioni e sostituzioni. Il sistema deve permettere di aggiungere, aggiornare o rimuovere documenti dall'elenco di quelli attivi, mantenendo per ciascun documento le versioni che si susseguono nel tempo.}
+
+\domanda{Quale livello di tracciabilità delle fonti è richiesto?}{%
+  Per PoC e MVP la tracciabilità è ridimensionata. Le chat dell'utente non vengono storicizzate: ogni riapertura crea una nuova interazione. Collegare ogni richiesta alla versione storica della fonte usata è poco rilevante per l'uso finale; la storicizzazione di conversazioni e fonti può tuttavia avere valore interno per analizzare la qualità e migliorare il servizio.}
+
+\domanda{Quali livelli di autorizzazione sono previsti?}{%
+  Due: l'amministratore, autorizzato a modificare i bucket, e il dipendente, autorizzato a leggere i contenuti tramite la chat. Per la prima versione non sono previsti schemi autorizzativi più articolati.}
+
+\subsection{Stack tecnologico}
+
+\domanda{Quali tecnologie è consigliato adottare?}{%
+  La direzione preferenziale è l'integrazione con le tecnologie di NEXUM: backend in Ruby on Rails e frontend in Angular, così da facilitare il porting dalla versione autonoma alla piattaforma. Come database è previsto PostgreSQL con l'estensione pgvector per vettorializzare fonti e unità di conoscenza. Sono ammesse le versioni più recenti e il gruppo è libero di adottare tecnologie alternative se utili alla sperimentazione.}
+
+\domanda{Come avverrà l'accesso ai modelli linguistici?}{%
+  Tramite Amazon Bedrock, con un budget di utilizzo fissato; l'accesso sarà fornito da Luca Iuzzolino.}
+
+  \domanda{Come conviene impostare il lavoro con i coding agent?}{%
+  Il proponente ha dato le seguenti indicazioni:
+  \begin{itemize}
+    \item inizializzare un file \texttt{CLAUDE.md} (o equivalente) con il contesto del repository, separando la documentazione in file Markdown dedicati raccolti da un indice centrale, per non caricare contesto inutile;
+    \item mantenere il codice leggibile e senza commenti ridondanti, configurando l'agent di conseguenza ed esplicitando gli standard di programmazione del gruppo nella documentazione principale;
+    \item usare i test automatici come vincolo e come documentazione: scriverli prima del codice quando possibile e impedire all'agent di modificarli senza una richiesta esplicita;
+    \item usare la modalità di pianificazione (\textit{plan mode}), così che l'agent proponga un piano da rivedere e approvare prima di modificare il codice;
+    \item skill e comandi dedicati (per esempio per avviare il server o i test) sono opzionali.
+  \end{itemize}
+  Eggon valuterà inoltre la condivisione dei file Markdown che usa nei propri progetti, per aiutare il gruppo ad allinearsi ai paradigmi di programmazione preferiti.}
+
+\section{Prossimi passi}
+Il gruppo procede alla redazione formale del verbale e alla sua condivisione con il proponente per l'approvazione e la firma digitale, come concordato durante la chiamata. Successivamente, inizierà la valutazione dell'architettura e lo studio del protocollo MCP.
+
+\section{Decisioni}
+\begin{decisioni}
+  \decisione{Incontro settimanale con il proponente il mercoledì alle 17:00.}
+  \decisione{Gruppo Telegram con Eggon come canale per le comunicazioni rapide.}
+  \decisione{Eliminazione di una richiesta di ferie prima dell'approvazione come requisito desiderabile; nessuna funzione di modifica della richiesta.}
+  \decisione{Gestione di aziende multisede come funzionalità non necessaria.}
+  \decisione{Gestione dei documenti tramite versionamento, con possibilità di aggiungere, aggiornare o ritirare un documento dall'elenco di quelli attivi.}
+  \decisione{Nessuna storicizzazione delle conversazioni per PoC e MVP.}
+  \decisione{Due soli livelli di autorizzazione: amministratore e dipendente.}
+  \decisione{Stack di riferimento: Ruby on Rails, Angular, PostgreSQL con pgvector, modelli su Amazon Bedrock tramite RubyLLM.}
+\end{decisioni}
+
+\newpage
+
+\section{Azioni da intraprendere}
+\begin{azioni}
+  \azione{Inviare nel gruppo Telegram il file Excel con nome, email e nickname Telegram dei componenti.}{tutti}{--}
+  \azione[\#87]{Preparare la prima bozza dei requisiti, con dubbi ed elementi opzionali, da presentare al prossimo incontro.}{tutti}{2026-11-18}
+  \azione[\#104]{Studiare le tecnologie dello stack indicato dal proponente (Ruby on Rails).}{tutti}{--}
+  \azione[\#102]{Stesura del presente verbale e invio al proponente per la firma.}{biasini,cescobolla}{2026-11-12}
+  \azione{Creare il gruppo Telegram e condividere il link di invito.}{Luca Iuzzolino}{2026-11-11}
+  \azione{Fornire al gruppo l'accesso ad Amazon Bedrock.}{Luca Iuzzolino}{--}
+  \azione{Valutare la condivisione dei file Markdown usati da Eggon nei propri progetti.}{Luca Iuzzolino, Gianpaolo Ferrarin}{--}
+\end{azioni}
+
+\end{document}
