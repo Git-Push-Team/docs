@@ -74,7 +74,8 @@ L'assistente permetterà agli utenti di cercare informazioni, comprendere le pro
 Per garantire un approccio graduale e verificabile, il dominio del \glo[MVP]{\textit{Minimum Viable Product}} (MVP) sarà focalizzato unicamente sull'area ferie e permessi.
 
 \subsection{Glossario}
-Al fine di evitare ambiguità e incomprensioni, e per massimizzare la chiarezza formale del testo, i termini tecnici, gli acronimi e le parole che necessitano di una definizione rigorosa sono raccolti all'interno del documento \textit{Glossario}. Tali termini sono contrassegnati all'interno dei testi di progetto tramite l'apposito pedice \ped{G}.
+Al fine di evitare ambiguità e incomprensioni, e per massimizzare la chiarezza formale del testo, i termini tecnici, gli acronimi e le parole che necessitano di una definizione rigorosa sono raccolti all'interno del documento \textit{Glossario}. Tali termini sono contrassegnati all'interno dei testi di progetto tramite l'apposito pedice \ped{G}.  
+
 
 \subsection{Riferimenti}
 % \subsubsection{Riferimenti normativi}
@@ -397,6 +398,38 @@ ruolo, obiettivi raggiunti e scostamento delle stime.
 {Incontro di recupero; comunicazione scritta delle decisioni in sospeso
  con una proposta del gruppo su cui il proponente possa rispondere.}
 
+\rischio{RO6}{Rendicontazione oraria incompleta o non uniforme}{Media}{Medio}{Medio}
+{Il consuntivo deriva dalle ore che ogni membro registra con il comando
+ \texttt{/ore}. Ore dimenticate, registrate in ritardo, con il ruolo
+ sbagliato o in commenti che non vengono letti rendono il consuntivo
+ diverso dal lavoro reale. Nello \glo[Sprint]{\textit{sprint}} 1 è successo
+ soprattutto per le ore di verifica.}
+{Attività chiuse senza ore registrate; ore effettive molto sotto il
+ preventivo in un ruolo che ha comunque svolto il proprio lavoro;
+ segnalazioni del riepilogo automatico (ore in ritardo, comandi non
+ validi).}
+{Registrazione delle ore il giorno stesso, come descritto nelle
+ \textit{Norme di Progetto}; controllo delle ore registrate da parte
+ dell'Amministratore prima della chiusura dello \glo[Sprint]{\textit{sprint}};
+ riepilogo automatico delle ore su ogni \glo[Issue]{\textit{issue}}.}
+{Recupero delle ore mancanti con registrazioni datate prima del
+ consuntivo; segnalazione nel consuntivo delle ore non registrate.}
+
+\rischio{RO7}{Stime orarie inaffidabili}{Alta}{Medio}{Alto}
+{Senza dati storici il gruppo fatica a stimare le ore di ogni attività e
+ di ogni \glo[Sprint]{\textit{sprint}}, in eccesso come in difetto. Un
+ preventivo lontano dal lavoro reale rende poco utile il confronto con il
+ consuntivo e porta a distribuire male le ore tra i ruoli.}
+{Scarto tra preventivo e consuntivo superiore al 20\,\% nel totale o in
+ un ruolo; ore stimate assenti nelle \glo[Issue]{\textit{issue}}.}
+{Stima delle ore su ogni \glo[Issue]{\textit{issue}} al momento
+ dell'apertura; confronto tra stime e ore effettive a ogni retrospettiva;
+ uso dei consuntivi degli \glo[Sprint]{\textit{sprint}} precedenti come base
+ per i preventivi successivi.}
+{Revisione del preventivo dello \glo[Sprint]{\textit{sprint}} successivo e,
+ se serve, ridistribuzione delle ore tra i ruoli negli
+ \glo[Sprint]{\textit{sprint}} seguenti nel rispetto del totale.}
+
 % ---------------------------------------------------------------------
 \subsection{Rischi personali e interpersonali}
 
@@ -452,6 +485,7 @@ gli altri a ogni cambio di fase (RTB, PB).
     RT2 & Qualità e affidabilità delle risposte del modello & Alta & Alto & Alto \\
     RO2 & Sottostima delle attività e ritardi            & Alta  & Alto  & Alto \\
     RO1 & Sovrapposizione con lezioni, esami e festività  & Alta  & Medio & Alto \\
+    RO7 & Stime orarie inaffidabili                      & Alta  & Medio & Alto \\
     RT3 & Integrazione con i servizi di NEXUM            & Media & Alto  & Alto \\
     RR1 & Ampliamento del perimetro                      & Media & Alto  & Alto \\
     RR2 & Requisiti incompresi o incompleti              & Media & Alto  & Alto \\
@@ -461,6 +495,7 @@ gli altri a ogni cambio di fase (RTB, PB).
     RO3 & Rotazione dei ruoli e passaggio di consegne    & Media & Medio & Medio \\
     RP1 & Indisponibilità di un membro                   & Media & Medio & Medio \\
     RP3 & Comunicazione interna insufficiente            & Media & Medio & Medio \\
+    RO6 & Rendicontazione oraria incompleta o non uniforme & Media & Medio & Medio \\
     RR3 & Operazioni errate o duplicate                  & Bassa & Alto  & Medio \\
     RR4 & Sicurezza, riservatezza e autorizzazioni       & Bassa & Alto  & Medio \\
     RO5 & Comunicazione discontinua con il proponente    & Bassa & Alto  & Medio \\
@@ -914,31 +949,308 @@ riassume per ruolo con il relativo costo.
 \end{table}
 
 \subsubsubsection{Retrospettiva}
+La retrospettiva dello \glo[Sprint]{\textit{sprint}} si è svolta il 2026-11-18,
+in una riunione straordinaria dopo l'incontro settimanale con Eggon. È
+slittata di qualche giorno perché l'analisi preliminare dei
+\glo[Requisito]{requisiti} ha richiesto più tempo del previsto.
+
+\textbf{Obiettivi.} La Tabella~\ref{tab:obiettivi-sprint-1} riporta l'esito
+degli obiettivi fissati in apertura dello \glo[Sprint]{\textit{sprint}}.
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Sprint 1 -- Esito degli obiettivi\label{tab:obiettivi-sprint-1}}
+  \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{4.2cm}>{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \intestazione{Obiettivo} & \intestazione{Esito} \\
+    \midrule
+    Piano di Progetto & raggiunto: rischi, calendario, impegno orario,
+      pianificazione e consuntivo dello sprint 1 (versione 0.3.0) \\
+    \addlinespace
+    Norme di Progetto & raggiunto: prima stesura completa (versione 0.3.0),
+      non ancora approvata \\
+    \addlinespace
+    Infrastruttura di gestione & raggiunto e superato: oltre a GitHub Project,
+      comando \texttt{/ore} e cruscotto, il gruppo ha introdotto il registro
+      delle modifiche automatico tramite etichette e l'analisi automatica dei
+      testi, con indice Gulpease e controllo ortografico e grammaticale \\
+    \addlinespace
+    Glossario & raggiunto: riorganizzato per lettere e ampliato con i primi
+      termini del dominio (versione 1.1.0) \\
+    \addlinespace
+    Rapporti con la proponente & raggiunto: primo incontro il 2026-11-11,
+      con incontro settimanale fisso il mercoledì alle 17:00 e un gruppo
+      Telegram per le comunicazioni rapide \\
+    \addlinespace
+    Analisi dei Requisiti & non raggiunto ma pronosticato: c'è una lista preliminare dei
+      \glo[Requisito]{requisiti}, ma non ancora il documento né i casi d'uso.
+      L'obiettivo passa allo \glo[Sprint]{\textit{sprint}} 2 \\
+    \addlinespace
+    Studio delle tecnologie & raggiunto: avviato lo studio di
+      \glo{Ruby on Rails}; accesso all'ambiente \glo{AWS} della proponente
+      ottenuto \\
+    \addlinespace
+    Verifica & raggiunto: ogni documento e verbale è stato verificato prima
+      dell'approvazione \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\textbf{Rischi incontrati.} Dei rischi attesi:
+\begin{itemize}
+  \item \textbf{RR2 -- Requisiti incompresi o incompleti}: si è verificato.
+        Lo studio del capitolato ha fatto emergere più punti ambigui del
+        previsto, per esempio i destinatari dei \glo[Bucket]{\textit{bucket}}
+        e l'autenticazione. La mitigazione, cioè raccogliere le domande per
+        l'incontro con Eggon, ha funzionato, ma non in tempo per la prima
+        bozza dei casi d'uso;
+  \item \textbf{RO5 -- Comunicazione discontinua con il proponente}: la
+        mitigazione ha funzionato. Già dal primo incontro sono stati fissati
+        una cadenza settimanale e un canale rapido;
+  \item \textbf{RT1 -- Inesperienza con le tecnologie del capitolato}:
+        ancora aperto, perché lo studio delle tecnologie è appena iniziato.
+\end{itemize}
+Si sono presentati anche due rischi non previsti, ora aggiunti alla
+sezione~\ref{sec:rischi}:
+\begin{itemize}
+  \item \textbf{RO6 -- Rendicontazione oraria incompleta o non uniforme}
+        (sezione~\ref{rischio:RO6}): il gruppo non era ancora allineato
+        sull'uso del comando \texttt{/ore}. Alcune ore non sono state
+        registrate o sono state registrate nel posto sbagliato, soprattutto
+        quelle di verifica. Il consuntivo del Verificatore (3,25 ore su 9,5)
+        è quindi sottostimato;
+  \item \textbf{RO7 -- Stime orarie inaffidabili}
+        (sezione~\ref{rischio:RO7}): senza dati storici il preventivo dello
+        \glo[Sprint]{\textit{sprint}} si è rivelato difficile da formulare.
+        Le ore registrate sono state 38,25 sulle 53 previste.
+\end{itemize}
+
+\clearpage
+
+\textbf{Cosa ha funzionato.}
+\begin{itemize}
+  \item Le automazioni sono pronte già dal primo
+        \glo[Sprint]{\textit{sprint}}: registrazione delle ore, cruscotto,
+        versionamento con le etichette e analisi dei testi. Riducono il
+        lavoro manuale per tutto il resto del progetto.
+  \item Le approvazioni sono state rapide: i verbali sono stati approvati
+        in uno o due giorni.
+  \item Il rapporto con Eggon è stato impostato subito, con un incontro
+        fisso ogni settimana.
+  \item La divisione del lavoro sui \glo[Requisito]{requisiti} per sezioni
+        del capitolato, unite poi in riunione, ha permesso di coprire tutto
+        il capitolato.
+\end{itemize}
+
+\textbf{Cosa migliorare.}
+\begin{itemize}
+  \item Stabilire prima di ogni incontro con il proponente chi conduce e
+        chi interviene su ciascun argomento.
+  \item Allinearsi e abituarsi all'uso della rendicontazione oraria:
+        ognuno registra le ore il giorno stesso, con un commento normale e
+        non dentro una revisione, comprese le ore di verifica.
+  \item Aggiornare subito le \textit{Norme di Progetto}: una piccola
+        \glo[Pull request]{\textit{pull request}} per ogni decisione di
+        processo, invece di accumulare le modifiche.
+  \item Usare meglio le date di scadenza nelle \glo[Issue]{\textit{issue}},
+        così che il cruscotto segnali per tempo le attività in ritardo.
+\end{itemize}
+
+\textbf{Aggiornamento della pianificazione.} L'Analisi dei Requisiti, con
+lo studio dei casi d'uso, diventa l'obiettivo principale dello
+\glo[Sprint]{\textit{sprint}} 2. Ruoli e ore degli \glo[Sprint]{\textit{sprint}}
+successivi restano quelli pianificati. Le 14,75 ore non consumate non
+vengono recuperate: restano nel budget dei ruoli corrispondenti
+(Tabella~\ref{tab:rimanenti-sprint-1}).
+
+% ---------------------------------------------------------------------
+\subsubsection{Sprint 2: dal 2026-11-16 al 2026-11-29}\label{sec:sprint-2}
+% ---------------------------------------------------------------------
+
+\subsubsubsection{Panoramica e obiettivi}
+Il secondo \glo[Sprint]{\textit{sprint}} è dedicato soprattutto all'Analisi
+dei Requisiti, l'obiettivo che lo \glo[Sprint]{\textit{sprint}} 1 non ha
+completato. Il periodo si apre con la riunione interna del 2026-11-16, in
+cui il gruppo ha unito e rivisto i \glo[Requisito]{requisiti} individuati
+da ciascun membro. Segue l'incontro con Eggon del 2026-11-18, in cui la
+lista preliminare viene discussa con la proponente. Gli obiettivi fissati
+sono:
+\begin{itemize}
+  \item \textbf{Analisi dei Requisiti}: studio dei casi d'uso a partire
+        dalla lista discussa con Eggon; prima stesura del documento, con
+        attori, casi d'uso e \glo[Requisito]{requisiti} tracciati verso la
+        loro fonte (capitolato o verbale). È l'obiettivo principale;
+  \item \textbf{Piano di Qualifica}: per quanto possibile, prima stesura
+        con la strategia di verifica e le prime metriche di qualità per
+        processi e documenti;
+  \item \textbf{Norme di Progetto}: aggiornamento con le decisioni di
+        processo prese nello \glo[Sprint]{\textit{sprint}}, ciascuna con una
+        piccola \glo[Pull request]{\textit{pull request}}, come deciso nella
+        retrospettiva dello \glo[Sprint]{\textit{sprint}} 1;
+  \item \textbf{Glossario}: inserimento dei termini che emergono
+        dall'Analisi dei Requisiti;
+  \item \textbf{Studio delle tecnologie}: prosecuzione dello studio di
+        \glo{Ruby on Rails} e dei servizi \glo{AWS} messi a disposizione
+        dalla proponente, a sostegno della definizione dei casi d'uso;
+  \item \textbf{Verifica}: revisione di ogni documento e verbale prodotto
+        nel periodo prima della sua approvazione.
+\end{itemize}
+
+\subsubsubsection{Rischi attesi}
+Per il secondo \glo[Sprint]{\textit{sprint}} il gruppo prevede i seguenti rischi:
+\begin{itemize}
+  \item \textbf{RT1 -- Inesperienza con le tecnologie del capitolato}
+        (sezione~\ref{rischio:RT1}): il gruppo non conosce ancora a fondo
+        le tecnologie, e questo può rendere incerti i casi d'uso che ne
+        dipendono. Il Progettista prosegue lo studio e ne condivide i
+        risultati nelle riunioni interne;
+  \item \textbf{RR2 -- Requisiti incompresi o incompleti}
+        (sezione~\ref{rischio:RR2}): già verificato nello
+        \glo[Sprint]{\textit{sprint}} 1. I dubbi ancora aperti vengono
+        discussi con Eggon negli incontri settimanali, e ogni caso d'uso
+        viene validato con la proponente prima di considerarlo stabile;
+  \item \textbf{RR1 -- Ampliamento del perimetro}
+        (sezione~\ref{rischio:RR1}): la discussione dei
+        \glo[Requisito]{requisiti} con la proponente può far emergere nuove
+        richieste. Il gruppo distingue fin da subito i requisiti
+        obbligatori da quelli desiderabili e opzionali;
+  \item \textbf{RO2 -- Sottostima delle attività e ritardi}
+        (sezione~\ref{rischio:RO2}): Analisi dei Requisiti e Piano di
+        Qualifica sono documenti nuovi per tutti. Il lavoro è diviso in
+        \glo[Issue]{\textit{issue}} piccole, con una data di scadenza, e il
+        Piano di Qualifica cede il passo all'Analisi dei Requisiti se il
+        tempo non basta;
+  \item \textbf{RO3 -- Rotazione dei ruoli e passaggio di consegne}
+        (sezione~\ref{rischio:RO3}): cambiano gli Analisti e il
+        Responsabile. Chi ha lavorato sui \glo[Requisito]{requisiti} nello
+        \glo[Sprint]{\textit{sprint}} 1 affianca i nuovi Analisti nei primi
+        giorni;
+  \item \textbf{RO6 -- Rendicontazione oraria incompleta o non uniforme}
+        (sezione~\ref{rischio:RO6}): l'Amministratore controlla le ore
+        registrate prima della chiusura dello \glo[Sprint]{\textit{sprint}}.
+\end{itemize}
+
+\subsubsubsection{Ruoli assegnati}
+I ruoli del secondo \glo[Sprint]{\textit{sprint}} sono riportati nella
+Tabella~\ref{tab:ruoli-sprint-2}. Il Responsabile ha poche ore in questo
+periodo, quindi \nome{biasini} ricopre anche il ruolo di Verificatore. In
+questo modo i Verificatori sono due e possono dividersi la revisione dei
+documenti.
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Sprint 2 -- Ruoli assegnati\label{tab:ruoli-sprint-2}}
+  \begin{tabular}{@{}llr@{}}
+    \toprule
+    \intestazione{Ruolo} & \intestazione{Membro} & \intestazione{Ore pianificate} \\
+    \midrule
+    Responsabile   & \nome{biasini}    & 4,5 \\
+    Amministratore & \nome{mazzurana}  & 12 \\
+    Analista       & \nome{corro}      & 13 \\
+                   & \nome{spagnoli}   & 13 \\
+    Progettista    & \nome{cescobolla} & 12 \\
+    Programmatore  & --                & -- \\
+    Verificatore   & \nome{guglielmo}  & 11 \\
+                   & \nome{biasini}    & 3,5 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Anche in questo periodo non è previsto un Programmatore, perché il codice
+del \glo{PoC} comincia nello \glo[Sprint]{\textit{sprint}} 3. Il peso
+maggiore resta sull'analisi (26 ore), coerente con l'obiettivo principale.
+
+\subsubsubsection{Preventivo}
+La Tabella~\ref{tab:preventivo-sprint-2} riporta le ore pianificate per
+membro e ruolo; la Tabella~\ref{tab:preventivo-economico-sprint-2} le
+riassume per ruolo con il relativo costo.
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Sprint 2 -- Preventivo orario per membro e ruolo\label{tab:preventivo-sprint-2}}
+  \begin{tabular}{@{}lrrrrrrr@{}}
+    \toprule
+    \intestazione{Membro} & \intestazione{Re} & \intestazione{Am} & \intestazione{An} &
+      \intestazione{Pt} & \intestazione{Pr} & \intestazione{Ve} & \intestazione{Totale} \\
+    \midrule
+    \nome{biasini}    & 4,5 & -- & -- & -- & -- & 3,5 & 8 \\
+    \nome{cescobolla} & --  & -- & -- & 12 & -- & --  & 12 \\
+    \nome{corro}      & --  & -- & 13 & -- & -- & --  & 13 \\
+    \nome{guglielmo}  & --  & -- & -- & -- & -- & 11  & 11 \\
+    \nome{mazzurana}  & --  & 12 & -- & -- & -- & --  & 12 \\
+    \nome{spagnoli}   & --  & -- & 13 & -- & -- & --  & 13 \\
+    \midrule
+    \textbf{Totale ore}         & 4,5    & 12     & 26     & 12     & -- & 14,5   & 69 \\
+    \textbf{Costo (\texteuro)}  & 135,00 & 240,00 & 650,00 & 300,00 & -- & 217,50 & 1.542,50 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Sprint 2 -- Preventivo economico per ruolo\label{tab:preventivo-economico-sprint-2}}
+  \begin{tabular}{@{}lrrr@{}}
+    \toprule
+    \intestazione{Ruolo} & \intestazione{Ore} & \intestazione{Quota ore} & \intestazione{Costo} \\
+    \midrule
+    Responsabile   & 4,5  &  6,5\,\% & 135,00\,\texteuro \\
+    Amministratore & 12   & 17,4\,\% & 240,00\,\texteuro \\
+    Analista       & 26   & 37,7\,\% & 650,00\,\texteuro \\
+    Progettista    & 12   & 17,4\,\% & 300,00\,\texteuro \\
+    Programmatore  & --   & --       & -- \\
+    Verificatore   & 14,5 & 21,0\,\% & 217,50\,\texteuro \\
+    \midrule
+    \textbf{Totale} & \textbf{69} & 100\,\% & \textbf{1.542,50\,\texteuro} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[x=0.32cm, y=0.62cm, font=\small]
+    % una barra per ruolo, lunga quanto le ore preventivate
+    \foreach \ruolo/\ore/\testo [count=\i] in
+      {Responsabile/4.5/4{,}5, Amministratore/12/12, Analista/26/26,
+       Progettista/12/12, Programmatore/0/0, Verificatore/14.5/14{,}5} {
+      \node[anchor=east] at (-0.4, -\i) {\ruolo};
+      \ifdim \ore pt > 0pt
+        \fill[gptaccento] (0, -\i-0.32) rectangle (\ore, -\i+0.32);
+      \fi
+      \node[anchor=west, text=gptinchiostro] at (\ore+0.3, -\i) {\testo\ h};
+    }
+    \draw[gptgrigio] (0, -0.4) -- (0, -6.6);
+  \end{tikzpicture}
+  \caption{Sprint 2 -- Ore preventivate per ruolo\label{fig:preventivo-sprint-2}}
+\end{figure}
+
+\subsubsubsection{Consuntivo}
+\textit{Da compilare alla chiusura dello \glo[Sprint]{\textit{sprint}}.}
+
+% ---------------------------------------------------------------------
+% Le tabelle si trovano nel cruscotto (repository .github-private):
+%   tabelle/consuntivo-sprint-2.tex             ore per membro e ruolo
+%   tabelle/consuntivo-economico-sprint-2.tex   ore e costi per ruolo
+% Incollatele qui al posto della riga "Da compilare...".
+% ---------------------------------------------------------------------
+
+\subsubsubsection{Risorse rimanenti}
+\textit{Da compilare alla chiusura dello \glo[Sprint]{\textit{sprint}}.}
+
+% ---------------------------------------------------------------------
+% Tabella nel cruscotto: tabelle/rimanenti-sprint-2.tex
+% ---------------------------------------------------------------------
+
+\subsubsubsection{Retrospettiva}
 \textit{Da compilare dopo la riunione di retrospettiva di fine sprint.}
 
 % ---------------------------------------------------------------------
-% Traccia (togliete i % e completate):
-%
-% \textbf{Rischi incontrati.} Quali dei rischi attesi si sono verificati,
-% con che effetto, e se la mitigazione prevista ha funzionato. Eventuali
-% rischi non previsti (in quel caso aggiungeteli alla sezione dei rischi).
-%
-% \textbf{Cosa ha funzionato.}
-% \begin{itemize}
-%   \item ...
-% \end{itemize}
-%
-% \textbf{Cosa migliorare.}
-% \begin{itemize}
-%   \item ...
-% \end{itemize}
-%
-% \textbf{Obiettivi.} Quali obiettivi sono stati raggiunti e quali
-% passano allo sprint 2, con il motivo.
-%
-% \textbf{Aggiornamento della pianificazione.} Le azioni correttive
-% decise per lo sprint 2 e le eventuali modifiche a ruoli o ore
-% (in quel caso aggiornate anche il file di pianificazione).
+% Traccia: la stessa della retrospettiva dello sprint 1 (esito degli
+% obiettivi, rischi incontrati, cosa ha funzionato, cosa migliorare,
+% aggiornamento della pianificazione).
 % ---------------------------------------------------------------------
 
 \end{document}
