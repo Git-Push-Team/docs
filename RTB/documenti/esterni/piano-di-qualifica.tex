@@ -1,0 +1,310 @@
+\documentclass[documento]{gpt}
+
+\titolo{Piano di qualifica}
+\capitolato{C2 -- NEXUM Concierge}
+\uso{esterno}
+\destinatari{Prof.~Tullio Vardanega\newline Prof.~Riccardo Cardin}
+
+% Registro delle modifiche: le righe sono nel file
+%     piano-di-qualifica.registro.tex
+% accanto a questo, e le aggiunge il bot dopo il merge in base
+% all'etichetta della pull request (GUIDA.md, sezione 5).
+% Qui non si scrive nulla.
+
+\begin{document}
+
+\section{Introduzione}
+
+\subsection{Finalità del documento}
+Il presente documento, denominato \textit{Piano di Qualifica}, ha lo scopo di formalizzare le strategie operative, le procedure di \glo{verifica} e gli indicatori quantitativi adottati dal \textbf{Git Push Team} per garantire la qualità sia dei processi sia del prodotto \glo{software} relativo al \glo{capitolato} d'appalto \textbf{C2 -- NEXUM Concierge}, commissionato dall'azienda \textbf{Eggon}.
+
+In particolare, il documento persegue i seguenti obiettivi:
+\begin{itemize}
+    \item \textbf{Definire gli obiettivi di qualità:} fissare target qualitativi quantitativi e misurabili sia per i processi di ciclo di vita sia per il \glo{software}, assumendo come quadri normativi gli \glo[Standard]{standard} \glo{ISO/IEC 12207:1995} e \glo{ISO/IEC 9126};
+    \item \textbf{Identificare le metriche di misurazione:} selezionare un insieme esaustivo di indicatori oggettivi, stabilendo per ciascuno le relative soglie di accettabilità e ottimalità;
+    \item \textbf{Inquadrare le metodologie di verifica e \glo{validazione}:} descrivere le procedure di \glo{analisi statica} e \glo[Analisi dinamica]{dinamica} (testing), stabilendo la tassonomia e il tracciamento dei \glo[Test di sistema (TS)]{test di sistema} e di \glo[Test di accettazione (TA)]{accettazione};
+    \item \textbf{Predisporre il monitoraggio continuo:} strutturare il \textit{Cruscotto di valutazione della qualità}, all'interno del quale verranno rendicontati e commentati criticamente i valori consuntivi al termine di ciascun periodo di avanzamento (\glo[Sprint]{\textit{sprint}}).
+\end{itemize}
+
+\subsection{Scopo del prodotto}
+Il progetto, basato sul \glo{capitolato} C2 denominato \textit{NEXUM Concierge}, ha come obiettivo l'introduzione di un assistente conversazionale all'interno della piattaforma aziendale NEXUM. Tale piattaforma, realizzata come \glo[PWA]{\textit{Progressive Web App}} (PWA), è pensata per avvicinare aziende e personale, semplificando le attività quotidiane legate alla comunicazione e alla gestione dei processi \glo{HR}.
+
+L'assistente permetterà agli utenti di cercare informazioni, comprendere le procedure aziendali e accedere ai servizi utilizzando direttamente il linguaggio naturale, collegando la conoscenza aziendale alle funzionalità operative. Per garantire un approccio graduale e verificabile, il dominio dell'\glo[MVP]{\textit{Minimum Viable Product}} (MVP) è focalizzato sull'area ferie e permessi.
+
+\subsection{Glossario}
+Al fine di prevenire ambiguità semantiche e garantire uniformità lessicale tra i membri del gruppo, il \glo{committente} e i referenti aziendali, è stato redatto un documento esterno denominato \textit{Glossario}. Tutti i termini tecnici, gli acronimi e i vocaboli propri del dominio applicativo sono contrassegnati nel testo da una ``G'' in pedice (ad esempio \glo{baseline}). La relativa definizione formale è consultabile all'interno del documento citato.
+
+\subsection{Riferimenti}
+
+\subsubsection{Riferimenti normativi}
+\begin{itemize}
+    \item \textbf{Capitolato d'appalto C2 -- NEXUM Concierge (Eggon):}\\
+    \url{https://www.math.unipd.it/~tullio/IS-1/2026/Progetto/C2.pdf}\\
+    (Ultimo accesso: 2026-11-19);
+    \item \textbf{Regolamento del Progetto Didattico:}\\
+    \url{https://www.math.unipd.it/~tullio/IS-1/2026/Dispense/PD1.pdf}\\
+    (Ultimo accesso: 2026-11-19);
+    \item \textbf{Norme di Progetto -- Git Push Team:} documento interno.
+\end{itemize}
+
+\subsubsection{Riferimenti informativi}
+\begin{itemize}
+    \item \textbf{Standard ISO/IEC 12207:1995:} \textit{Information Technology -- Software Life Cycle Processes};
+    \item \textbf{Standard ISO/IEC 9126:2001:} \textit{Software Engineering -- Product Quality};
+    \item \textbf{Glossario -- Git Push Team:} documento interno;
+    \item \textbf{Piano di Progetto -- Git Push Team:} documento esterno;
+    \item \textbf{Verbali esterni -- Git Push Team}.
+\end{itemize}
+
+
+\section{Qualità di processo}
+La qualità di processo attiene all'efficacia, all'efficienza e alla sostenibilità delle attività svolte durante il ciclo di vita del \glo{software}. Il gruppo adotta come riferimento il modello dei processi definito dallo \glo{standard} ISO/IEC 12207:1995, opportunamente integrato nel \glo{Way of Working} interno.
+
+Le misurazioni di processo sono identificate dal prefisso \textbf{MPC} (\textit{Metrica di Processo e Controllo}). Per ciascuna metrica vengono definite due soglie:
+\begin{itemize}
+    \item \textbf{Valore accettabile:} livello minimo al di sotto del quale l'attività è considerata non conforme, richiedendo l'attivazione immediata di contromisure;
+    \item \textbf{Valore ottimale:} traguardo auspicato verso cui il gruppo tende per massimizzare la qualità organizzativa.
+\end{itemize}
+
+\subsection{Processi primari}
+
+\subsubsection{Fornitura}
+Le metriche di \glo{fornitura} monitorano l'aderenza ai vincoli economici e temporali concordati in sede di candidatura, applicando i principi dell'\glo[Earned Value Management (EVM)]{\textit{Earned Value Management} (EVM)}. Il \glo[Budget at Completion (BAC)]{\textit{Budget at Completion} (BAC)} formalmente approvato per il progetto ammonta a \textbf{11.250,00\,\texteuro}, a fronte di un monte ore complessivo di \textbf{552 ore} rendicontate.
+
+\begin{table}[H]
+\centering
+\caption{Metriche per i processi primari -- Fornitura}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPC-EV   & \glo{Earned Value (EV)}              & $\ge 0$                & $\le \text{EAC}$ \\
+MPC-PV   & \glo{Planned Value (PV)}             & $\ge 0$                & $\le \text{BAC}$ (11.250,00\,\texteuro) \\
+MPC-AC   & \glo{Actual Cost (AC)}               & $\ge 0$                & $\le \text{EAC}$ \\
+MPC-CV   & \glo{Cost Variance (CV)}             & $\ge -5\%$             & $\ge 0\%$ \\
+MPC-SV   & \glo{Schedule Variance (SV)}         & $\ge -5\%$             & $\ge 0\%$ \\
+MPC-CPI  & \glo{Cost Performance Index (CPI)}   & $\ge 0.90$             & $1.00$ \\
+MPC-SPI  & \glo{Schedule Performance Index (SPI)} & $\ge 0.90$           & $1.00$ \\
+MPC-EAC  & \glo{Estimated at Completion (EAC)}  & $\pm 5\%$ del BAC      & BAC (11.250,00\,\texteuro) \\
+MPC-ETC  & \glo{Estimate to Complete (ETC)}     & $\ge 0$                & $\le \text{EAC}$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection{Sviluppo}
+Misura la stabilità e la convergenza dei \glo[Requisito]{requisiti} concordati con Eggon durante l'avanzamento dell'analisi.
+
+\begin{table}[H]
+\centering
+\caption{Metriche per i processi primari -- Sviluppo}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPC-RSI  & \glo{Requirements Stability Index (RSI)} & $\ge 75\%$         & $100\%$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Processi di supporto}
+
+\subsubsection{Documentazione}
+Assicura la leggibilità, la correttezza grammaticale e l'assenza di refusi tipografici nei documenti di progetto. Le misurazioni sono eseguite in modo automatico tramite lo script di analisi dei testi integrato nella pipeline di \glo[Integrazione continua (CI)]{integrazione continua} (\texttt{analisi\_testo.py} con \glo{LanguageTool}).
+
+\begin{table}[H]
+\centering
+\caption{Metriche per i processi di supporto -- Documentazione}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPC-GULP & \glo{Indice di Gulpease}             & $\ge 40$               & $\ge 60$ \\
+MPC-ORT  & Correttezza ortografica              & $0$ errori             & $0$ errori \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection{Verifica}
+Monitora l'efficacia delle procedure di verifica condotte su codice sorgente e documentazione.
+
+\begin{table}[H]
+\centering
+\caption{Metriche per i processi di supporto -- Verifica}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPC-TSR  & \glo[Test Success Rate (TSR)]{Test Success Rate} & $100\%$    & $100\%$ \\
+MPC-CC   & \glo{Code Coverage}                  & $\ge 90\%$             & $100\%$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection{Gestione della qualità}
+Misura il grado di soddisfazione complessivo delle metriche di processo definite nel piano.
+
+\begin{table}[H]
+\centering
+\caption{Metriche per la gestione della qualità}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPC-QMS  & \glo[Quality Metrics Satisfied (QMS)]{Quality Metrics Satisfied} & $\ge 80\%$ & $100\%$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Processi organizzativi}
+
+\subsubsection{Gestione dei processi}
+Valuta la precisione del team nella previsione dei rischi e l'efficienza nell'impiego delle risorse orarie.
+
+\begin{table}[H]
+\centering
+\caption{Metriche per i processi organizzativi -- Gestione dei processi}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPC-PRI  & Percentuale rischi inattesi          & $\le 25\%$             & $0\%$ \\
+MPC-EO   & Efficienza oraria                    & $\ge 80\%$             & $100\%$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\section{Qualità di prodotto}
+La qualità di prodotto stabilisce le caratteristiche funzionali e non funzionali attese per l'applicazione \textbf{NEXUM Concierge}, secondo lo \glo{standard} ISO/IEC 9126. Gli indicatori sono contraddistinti dal prefisso \textbf{MPD} (\textit{Metrica di Prodotto}).
+
+\subsection{Funzionalità}
+Rappresenta la capacità del sistema di fornire le quattro capacità operative previste dal \glo{capitolato} (conoscenza aziendale, istruzioni NEXUM, lettura dati e inoltro richieste ferie/permessi).
+
+\begin{table}[H]
+\centering
+\caption{Metriche di prodotto -- Funzionalità}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPD-RO   & Requisiti obbligatori soddisfatti    & $100\%$                & $100\%$ \\
+MPD-RD   & Requisiti desiderabili soddisfatti   & $\ge 50\%$             & $100\%$ \\
+MPD-ROP  & Requisiti opzionali soddisfatti      & $\ge 0\%$              & $\ge 50\%$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Affidabilità}
+Misura la robustezza e la stabilità delle risposte e delle funzionalità applicative integrate.
+
+\begin{table}[H]
+\centering
+\caption{Metriche di prodotto -- Affidabilità}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPD-BC   & \glo{Branch Coverage}                & $\ge 60\%$             & $\ge 80\%$ \\
+MPD-SC   & \glo{Statement Coverage}             & $\ge 70\%$             & $\ge 90\%$ \\
+MPD-DD   & \glo{Defect Density}                 & $\le 3\text{ / }$\glo{KLOC} & $0\text{ / KLOC}$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Usabilità}
+Valuta la linearità dell'esperienza conversazionale e il tempo richiesto al personale per comprendere e completare le richieste guidate.
+
+\begin{table}[H]
+\centering
+\caption{Metriche di prodotto -- Usabilità}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPD-NAV  & Profondità massima di navigazione (\glo{backoffice}) & $\le 4\text{ livelli}$ & $\le 2\text{ livelli}$ \\
+MPD-LRN  & Tempo medio di apprendimento         & $\le 10\text{ min}$    & $\le 5\text{ min}$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Efficienza}
+Misura i tempi di reazione dell'interfaccia utente e la \glo{latenza} delle chiamate verso i modelli linguistici (\glo{LLM}) e i servizi esterni.
+
+\begin{table}[H]
+\centering
+\caption{Metriche di prodotto -- Efficienza}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPD-LAT  & Latenza risposta interfaccia         & $\le 1\text{ s}$       & $\le 0.5\text{ s}$ \\
+MPD-LLM  & Latenza generazione e risposta LLM   & $\le 8\text{ s}$       & $\le 4\text{ s}$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Mantenibilità}
+Garantisce la modularità del codice sorgente, l'assenza di \glo{debito tecnico} e il rispetto delle convenzioni di codifica.
+
+\begin{table}[H]
+\centering
+\caption{Metriche di prodotto -- Mantenibilità}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPD-CC   & \glo{Complessità ciclomatica} per metodo & $\le 15$           & $\le 10$ \\
+MPD-CS   & \glo{Code Smell}                     & $0$                    & $0$ \\
+MPD-CBO  & \glo{Coupling Between Objects (CBO)} & $\le 8$                & $\le 5$ \\
+MPD-COC  & \glo{Coefficient of Coupling (COC)}  & $\le 30\%$             & $\le 10\%$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\section{Metodologie di verifica e testing}
+Le attività di verifica e validazione forniscono evidenza empirica della rispondenza della documentazione e del \glo{software} alle specifiche concordate nel \glo{capitolato} d'appalto.
+
+\subsection{Analisi statica}
+Per la documentazione, l'analisi statica è supportata in modo automatico dal workflow di integrazione continua (\texttt{analisi\_testo.py}), che verifica a ogni \textit{pull request} ortografia, grammatica, tipografia (tramite LanguageTool) e leggibilità (indice di Gulpease), affiancato dalla revisione manuale del Verificatore.
+
+\subsection{Livelli di test}
+In conformità alle disposizioni del \glo{committente} per la fase \glo[RTB (Requirements and Technology Baseline)]{RTB}, la pianificazione si articola in:
+\begin{itemize}
+    \item \textbf{\glo{Test di accettazione (TA)}:} accertano il completo soddisfacimento dei casi d'uso e dei bisogni dell'utente descritti nell'\textit{Analisi dei Requisiti}, in collaborazione con i referenti di Eggon;
+    \item \textbf{\glo{Test di sistema (TS)}:} verificano il corretto funzionamento dell'applicazione nel suo insieme, validando la piena aderenza a ciascun requisito obbligatorio, desiderabile e opzionale;
+    \item \textbf{\glo{Test di integrazione (TI)}:} verificano la corretta comunicazione tra i moduli \glo{software} e i servizi dell'ecosistema NEXUM. \textit{Nota metodologica:} la specifica dei TI verrà formalizzata in fase \glo[PB (Product Baseline)]{PB}, a seguito della definizione dell'architettura logica e dei contratti di integrazione;
+    \item \textbf{\glo{Test di unità (TU)}:} verificano il corretto funzionamento delle singole unità minime di codice sorgente in isolamento. \textit{Nota metodologica:} la progettazione sistematica dei TU avverrà a seguito della progettazione di dettaglio in fase PB.
+\end{itemize}
+
+\subsection{Strumenti di testing}
+TODO
+
+\subsection{Codifica e stati dei test}
+Ciascun test è individuato univocamente dalla sintassi:
+\begin{center}
+\textbf{T[Tipo]-[ID]}
+\end{center}
+dove \textbf{Tipo} assume i valori \texttt{A} (Accettazione) o \texttt{S} (Sistema), seguito da un progressivo numerico a tre cifre.
+
+Lo stato di avanzamento viene monitorato mediante la seguente tassonomia:
+\begin{itemize}
+    \item \textbf{NI (Non Implementato):} il test è stato formalizzato ma la procedura non è ancora stata codificata;
+    \item \textbf{I (Implementato):} la procedura di test è pronta per l'esecuzione ma non ancora validata;
+    \item \textbf{S (Superato):} il test è stato eseguito con esito positivo;
+    \item \textbf{NS (Non Superato):} il test ha riscontrato difetti, richiedendo interventi correttivi.
+\end{itemize}
+
+
+\section{Cruscotto di valutazione della qualità}
+Il \textit{Cruscotto di valutazione della qualità} accoglie la misurazione e la rendicontazione puntuale di tutti gli indicatori quantitativi definiti nel presente documento.
+
+A partire dalla chiusura del primo periodo di avanzamento (\glo[Sprint]{\textit{sprint}} 1), questa sezione conterrà:
+\begin{itemize}
+    \item I dati consuntivi e l'andamento delle metriche di \glo{fornitura} parametrati sul BAC di progetto (11.250,00\,\texteuro);
+    \item L'analisi dell'indice di leggibilità e della correttezza ortografica sui documenti ufficiali rilasciati;
+    \item La discussione critica dello stato di ogni indicatore, evidenziando le motivazioni di eventuali scostamenti dalle soglie prefissate.
+\end{itemize}
+Eventuali azioni correttive e decisioni di automiglioramento conseguenti agli scostamenti rilevati verranno tracciate formalmente all'interno dei verbali delle riunioni \glo[Retrospettiva]{retrospettive} del gruppo.
+
+\end{document}
