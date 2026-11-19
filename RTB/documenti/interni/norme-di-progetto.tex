@@ -338,7 +338,7 @@
 			\item \textbf{Chat testuale di Discord}: utilizzata per scambio di informazioni utili allo svolgimento di determinate task (nel canale generale) e per scambio di informazioni e documenti durante fasi di lavoro collaborativo (nei sotto-canali dedicati).
 		\end{itemize}
 		\item Sincrone: \begin{itemize}
-			\item \textbf{Discord}: è la piattaforma che è stata scelta come mezzo per svolgere le riunioni interne. Discord consente di effettuare sia chiamate vocali standard che videoconferenze, con anche la possibilità di condividere lo schermo durante le fasi di presentazione. Il canale inoltre è stato suddiviso in sotto-canali, dove parte dei membri del team possono trovarsi per sessioni di lavoro collaborativo e discussioni interne, sono inoltre presenti dei canali testuali, già descritti nella parte precdente.
+			\item \textbf{Discord}: è la piattaforma che è stata scelta come mezzo per svolgere le riunioni interne. Discord consente di effettuare sia chiamate vocali standard che videoconferenze, con anche la possibilità di condividere lo schermo durante le fasi di presentazione. Il canale inoltre è stato suddiviso in sotto-canali, dove parte dei membri del team possono trovarsi per sessioni di lavoro collaborativo e discussioni interne, sono inoltre presenti dei canali testuali, già descritti nella parte precedente.
 			\item \textbf{Incontri in presenza}: Si è scelto di non effettuare incontri in presenza con cadenza standard, ma solo in situazioni straordinarie decise in comunione dall'intero team.
 		\end{itemize}
 	\end{itemize}
@@ -359,7 +359,7 @@
 	\paragraph{Riunioni Esterne con Proponente e Committente}
 	Gli incontri con l'azienda proponente Eggon S.r.l.\ si svolgono in forma telematica una volta a settimana, ogni mercoledì dalle ore 17:00 alle ore 18:00. Al termine dell'incontro esterno (ore 18:00), il gruppo prosegue direttamente con la propria riunione interna settimanale per fare il punto su quanto emerso e ripartire i compiti operativi.
 	\paragraph{Pianificazione degli Impegni}
-	Per semplificare la pianificazione degli impegni dei singoli membri del team, per incontri straordinari e non, si utilizzaono principalmente dei sondaggi su WhatsApp di volta in volta per definire orari consoni con gli impegni dei singoli membri. In fase di valutazione l'utilizzo di un calendario condiviso (Es. Google Calendar dell'account del team) ove esplicitare formalmente gli impegni settimanali dei vari membri.
+	Per semplificare la pianificazione degli impegni dei singoli membri del team, per incontri straordinari e non, si utilizzano principalmente dei sondaggi su WhatsApp di volta in volta per definire orari consoni con gli impegni dei singoli membri. In fase di valutazione l'utilizzo di un calendario condiviso (Es. Google Calendar dell'account del team) ove esplicitare formalmente gli impegni settimanali dei vari membri.
 	
 	\subsection{Infrastruttura}
 	Il processo di Infrastruttura ha lo scopo di predisporre e mantenere nel tempo
@@ -552,7 +552,7 @@
 		\item \textbf{Metriche operative, controlli di coerenza e Diario di Bordo:}
 		\begin{itemize}
 			\item \textit{Metriche interne:} calcola tramite il modulo
-			\texttt{gestione/metriche.py} cinque indicatori operativi
+			\texttt{gestione/metriche.py} sei indicatori operativi
 			(Tabella~\ref{tab:metriche-cruscotto}), affiancati da un indicatore
 			visivo che segnala se il valore rientra nella norma, richiede
 			attenzione o non è ancora applicabile;
@@ -591,6 +591,9 @@
 			\addlinespace
 			\texttt{M-PIANO}     & Ore fuori pianificazione &
 			Incidenza percentuale delle ore registrate in un ruolo non pianificato per lo sprint o al di fuori dei periodi di sprint rispetto alle ore totali. \\
+			\addlinespace
+			\texttt{MPC-TV}      & Tempo medio di verifica di una \glo{pull request} &
+			Media delle ore tra la richiesta di revisione di una \glo{pull request} (apertura, o passaggio da bozza a pronta) e la sua prima approvazione, sulle \glo[Pull request]{pull request} collegate a una \glo{issue} del Project. È la metrica MPC-TV del Piano di Qualifica. \\
 			\bottomrule
 		\end{tabularx}
 	\end{table}
