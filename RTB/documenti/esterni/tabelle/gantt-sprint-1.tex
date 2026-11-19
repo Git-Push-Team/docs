@@ -1,0 +1,30 @@
+% File generato automaticamente da scripts/gantt.py -- non modificare a mano
+\begin{figure}[H]
+  \centering
+  \begin{ganttchart}[
+    hgrid,
+    vgrid={*1{gptlinea, dotted}},
+    x unit=0.66cm,
+    y unit title=0.48cm,
+    y unit chart=0.48cm,
+    title/.style={fill=gptsfondo, draw=gptlinea},
+    title label font=\sffamily\scriptsize\bfseries,
+    bar/.style={fill=gptaccento!75, draw=gptaccento, rounded corners=1.5pt},
+    bar label font=\sffamily\scriptsize,
+    milestone/.style={fill=gptaccento, draw=gptaccento},
+    milestone label font=\sffamily\scriptsize\bfseries,
+    link/.style={->, >=stealth, gptgrigio}
+  ]{1}{14}
+    \gantttitle{Settimana 1 (2--8/11)}{7}
+    \gantttitle{Settimana 2 (9--15/11)}{7} \\
+    \gantttitlelist{1,...,14}{1} \\
+
+    \ganttbar{Attività 1}{1}{6} \\
+    \ganttbar{Attività 2}{3}{8} \\
+    \ganttbar{Attività 3}{5}{10} \\
+    \ganttbar{Attività 4}{7}{12} \\
+    \ganttmilestone{Call Eggon + Riunione (04/11)}{3} \\
+    \ganttmilestone{Call Eggon + Riunione (11/11)}{10}
+  \end{ganttchart}
+  \caption{Sprint 1 -- Pianificazione temporale delle attività\label{fig:gantt-sprint-1}}
+\end{figure}

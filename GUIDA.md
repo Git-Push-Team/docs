@@ -33,6 +33,7 @@ Non serve conoscere LaTeX né Git: seguite le ricette e copiate i comandi così 
     - [R16. Il Glossario: crearlo, aggiungere termini, marcarli](#r16-il-glossario-crearlo-aggiungere-termini-marcarli)
     - [R17. Segnare le ore (comando `/ore`)](#r17-segnare-le-ore-comando-ore)
     - [R18. Ortografia e leggibilità (🔎 Analisi dei testi)](#r18-ortografia-e-leggibilità--analisi-dei-testi)
+    - [R19. Diagrammi di Gantt automatici nel Piano di Progetto](#r19-diagrammi-di-gantt-automatici-nel-piano-di-progetto)
 5. [Le versioni: le regole del registro](#5-le-versioni-le-regole-del-registro)
 6. [Prontuario dei comandi](#6-prontuario-dei-comandi)
 7. [Quando qualcosa va storto](#7-quando-qualcosa-va-storto)
@@ -804,6 +805,35 @@ La prima riga controlla un documento (o una cartella: `RTB`), la seconda dà in 
 
 ---
 
+---
+
+### R19. Diagrammi di Gantt automatici nel Piano di Progetto
+
+Il *Piano di Progetto* (`RTB/documenti/esterni/piano-di-progetto.tex`) include i **diagrammi di Gantt** generati automaticamente in LaTeX tramite il pacchetto `pgfgantt` dallo script `scripts/gantt.py` (già supportato dalla CI senza pacchetti aggiuntivi).
+
+**Dove stanno i file generati.** Dentro `RTB/documenti/esterni/tabelle/` (stesso meccanismo dei file `.registro.tex`):
+
+- `gantt-progetto.tex` — Gantt macroscopico dell'intero progetto su tutti i 10 sprint (fasi **RTB** e **PB**, attività parallele e date di candidatura).
+- `gantt-sprint-<N>.tex` — mini-Gantt operativo dei 14 giorni dello sprint *N*, con le barre delle attività del periodo e le milestone automatiche di ogni mercoledì (*Call Eggon + Riunione*).
+
+**Come si includono nel documento.** Nel preambolo di `piano-di-progetto.tex` serve `\usepackage{pgfgantt}`; nei punti del testo in cui far comparire i grafici si usano:
+
+```latex
+\InputIfFileExists{tabelle/gantt-progetto.tex}{}{}
+\InputIfFileExists{tabelle/gantt-sprint-1.tex}{}{}
+```
+
+**Come si aggiornano.**
+
+- **In automatico (CI):** nelle pull request il workflow `.github/workflows/anteprima-pr.yml` genera i diagrammi al volo per il PDF di anteprima; dopo ogni merge su `main` e ogni notte alle 02:30 UTC (subito dopo il cruscotto), `.github/workflows/pubblica-sito.yml` esegue `scripts/gantt.py`, salva i file `.tex` aggiornati su `main`, ricompila il PDF e pubblica il sito.
+- **Sul vostro computer (facoltativo):**
+
+```bash
+PIANIFICAZIONE=../.github/gestione/pianificazione.toml python3 scripts/gantt.py
+```
+
+> **Consiglio pratico:** per avere barre realistiche nel Gantt dello sprint, impostate sempre i campi **Data inizio** e **Scadenza** sulle issue del GitHub Project quando le assegnate all'apertura dello sprint.
+
 ## 5. Le versioni: le regole del registro
 
 Il registro delle modifiche racconta la storia del documento: il committente lo legge e lo valuta. **Non si scrive a mano**: lo compila il bot a partire dalle pull request, così ogni riga corrisponde a una PR approvata e si può verificare su GitHub.
@@ -1065,6 +1095,7 @@ Poi **cancellate i due file** dal computer: non servono più e la parte segreta 
 - **Branch aperti prima di questa novità**: dopo *Update branch* togliete dal `.tex` le righe `\modifica` che avevate aggiunto e mettete etichetta e descrizione alla PR (se le lasciate, il bot le sposta da solo).
 - **Ore con l'orario**: `/ore 14:00-16:30` al posto di `/ore 2,5`; il bot calcola la durata e segnala sovrapposizioni, giorni oltre 8 ore e ore segnate in ritardo ([R17](#r17-segnare-le-ore-comando-ore)). La vecchia forma vale ancora.
 - **Analisi dei testi**: nelle PR il commento **🔎 Analisi dei testi** segnala errori di ortografia, grammatica e tipografia e dà l'indice Gulpease dei documenti. Non blocca nulla ([R18](#r18-ortografia-e-leggibilità--analisi-dei-testi)).
+- **Diagrammi di Gantt automatici**: lo script `scripts/gantt.py`, integrato in `anteprima-pr.yml` e `pubblica-sito.yml`, genera e aggiorna da solo i diagrammi di Gantt (`pgfgantt`) in `RTB/documenti/esterni/tabelle/` a partire da `pianificazione.toml` e dalle issue del Project ([R19](#r19-diagrammi-di-gantt-automatici-nel-piano-di-progetto)).
 
 **Novità precedenti: le regole delle versioni.**
 

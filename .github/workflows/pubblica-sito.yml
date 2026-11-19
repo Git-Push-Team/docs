@@ -19,6 +19,8 @@ name: Pubblica il sito
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '30 2 * * *'   # ogni notte alle 02:30 UTC, dopo il cruscotto
   workflow_dispatch:
 
 permissions:
@@ -66,6 +68,20 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PIANIFICAZIONE: .gestione/gestione/pianificazione.toml
         run: python3 scripts/registro.py aggiorna
+
+      - name: Aggiorna i diagrammi di Gantt
+        continue-on-error: true   # un problema dei Gantt non ferma il sito
+        env:
+          GH_TOKEN: ${{ secrets.GESTIONE_APP_KEY || github.token }}
+          PIANIFICAZIONE: .gestione/gestione/pianificazione.toml
+        run: |
+          python3 scripts/gantt.py
+          git add RTB/documenti/esterni/tabelle/gantt-*.tex
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit --quiet -m "Diagrammi di Gantt aggiornati dal bot [skip ci]"
+          fi
 
       - name: Installa LaTeX
         uses: ./.github/actions/setup-latex

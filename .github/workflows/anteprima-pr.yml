@@ -56,6 +56,13 @@ jobs:
           PIANIFICAZIONE: .gestione/gestione/pianificazione.toml
         run: python3 scripts/registro.py anteprima --pr "${{ github.event.pull_request.number }}" --scrivi > /dev/null
 
+      - name: Diagrammi di Gantt previsti
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GESTIONE_APP_KEY || github.token }}
+          PIANIFICAZIONE: .gestione/gestione/pianificazione.toml
+        run: python3 scripts/gantt.py > /dev/null
+
       - name: Installa LaTeX
         uses: ./.github/actions/setup-latex
 

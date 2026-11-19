@@ -37,6 +37,7 @@ docs/
 ├── allegati/              immagini usate nei documenti
 ├── scripts/build.py       compila i documenti (lo usa anche la CI)
 ├── scripts/sito.py        costruisce la pagina del sito
+├── scripts/gantt.py       genera i diagrammi di Gantt in LaTeX dal Project
 ├── latexmkrc              dice a LaTeX dove trovare classe, logo e immagini
 ├── GUIDA.md               la guida passo passo
 └── .github/               automazioni, modelli di issue e pull request
@@ -91,7 +92,7 @@ Con **VS Code** e l'estensione *LaTeX Workshop* basta salvare il file: la compil
 | Workflow | Quando parte | Cosa fa |
 | --- | --- | --- |
 | `anteprima-pr.yml` | A ogni pull request verso `main` | Compila **tutto** (documenti, modelli ed esempi) e commenta nella PR i documenti toccati con il link al PDF; diventa rosso se qualcosa non compila |
-| `pubblica-sito.yml` | A ogni merge su `main` | Compila tutti i documenti, salva il PDF accanto a ogni `.tex` cambiato (commit del bot, serve la chiave `CHIAVE_PDF`: [GUIDA, sezione 8](GUIDA.md#8-impostazioni-da-fare-una-volta-sola-amministratori)) e pubblica il sito su GitHub Pages, diviso per milestone |
+| `pubblica-sito.yml` | A ogni merge su `main` e ogni notte | Aggiorna registro e diagrammi di Gantt (`scripts/gantt.py`), compila tutti i documenti, salva i PDF accanto ai `.tex` cambiati (serve la chiave `CHIAVE_PDF`: [GUIDA, sezione 8](GUIDA.md#8-impostazioni-da-fare-una-volta-sola-amministratori)) e pubblica il sito su GitHub Pages |
 | `release-milestone.yml` | Su un tag `candidatura*`, `rtb*` o `pb*` | Crea una GitHub Release con i PDF della cartella di quella milestone |
 
 ## Membri
