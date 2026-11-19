@@ -1,0 +1,139 @@
+\documentclass[verbale=esterno]{gpt}
+
+\titolo{Revisione della prima bozza dei requisiti}
+\data{2026-11-18}
+\orario{17:00}{17:40}              % DA CONTROLLARE: fine stimata dalla durata della registrazione
+\luogo{Google Meet}
+\redattore{biasini}
+\verificatore{guglielmo}           % Verificatore dello sprint 2: cambiatelo se lo verifica un altro
+
+\componenti{biasini,cescobolla,corro,guglielmo,mazzurana,spagnoli}
+\assenti{}                         % DA CONTROLLARE: chi mancava, es. \assenti{spagnoli}
+
+\esterno{Gianpaolo Ferrarin}{Founder \& CEO, Eggon}
+\esterno{Luca Iuzzolino}{Referente tecnico, Eggon}
+
+\firma{Gianpaolo Ferrarin}{Eggon}
+
+\destinatari{Prof.~Tullio Vardanega\newline Prof.~Riccardo Cardin\newline Eggon}
+
+\capitolato{C2 -- NEXUM AI Concierge (Eggon)}
+
+% Registro delle modifiche: le righe sono nel file
+%     VE-2026-11-18.registro.tex
+% accanto a questo, e le aggiunge il bot dopo il merge in base
+% all'etichetta della pull request (GUIDA.md, sezione 5).
+% Qui non si scrive nulla.
+
+\begin{document}
+
+\section{Ordine del giorno}
+\begin{enumerate}
+  \item Presentazione e revisione della prima bozza dei requisiti.
+  \item Chiarimenti sui requisiti funzionali: conversazioni, stato e cancellazione delle richieste, accesso ai bucket.
+  \item Gestione e versionamento delle fonti, registri e tracciamento delle interazioni.
+  \item Qualità, sicurezza e perimetro della chat.
+  \item API di NEXUM e autenticazione.
+  \item Materiali da Eggon e prossimi passi.
+\end{enumerate}
+
+\section{Svolgimento}
+Per Eggon erano presenti Gianpaolo Ferrarin e Luca Iuzzolino, referente tecnico del progetto. Il gruppo ha presentato la prima bozza dei requisiti, condivisa in precedenza nel gruppo Telegram in un file Excel, con i requisiti divisi tra obbligatori, desiderabili e facoltativi. Il proponente ha esaminato con il gruppo i punti dubbi, chiarendo diversi requisiti e cambiando la priorità di alcuni. Alcune indicazioni aggiornano quanto emerso nell'incontro dell'11 novembre 2026, in particolare sulla cancellazione delle richieste e sul legame tra conversazioni e versioni delle fonti.
+
+\section{Domande e risposte}
+
+\subsection{Impostazione del documento dei requisiti}
+
+\domanda{Come va migliorato il documento dei requisiti?}{%
+  Il documento deve diventare più operativo: ogni requisito va letto insieme al suo contesto. Vanno aggiunti l'area di interesse, le storie coinvolte e le persone interessate. I requisiti legati ai registri vanno descritti con maggiore precisione, indicando chi, cosa, come, perché e quando. Il passo successivo sono i casi d'uso e gli scenari, con i relativi diagrammi.}
+
+\subsection{Requisiti funzionali}
+
+\domanda{Le conversazioni vanno conservate e rese consultabili all'utente?}{%
+  No. La chat serve a completare il compito corrente: chiuderla e riaprirla equivale a iniziare una nuova conversazione, e lo storico completo non è necessario per l'utente finale. Conservare le conversazioni è invece utile lato amministrazione, per validazione, controllo di qualità e analisi.}
+
+\domanda{Quali stati di una richiesta deve saper riferire il Concierge?}{%
+  Il Concierge deve rispondere sullo stato effettivo di una richiesta di ferie o permesso, distinguendo tra inserita, in attesa di approvazione e approvata. L'approvazione può essere automatica quando i requisiti risultano corretti; con un flusso di approvazione manuale può esserci un ritardo prima dell'approvazione.}
+
+\domanda{La cancellazione di una richiesta è obbligatoria?}{%
+  Sì. L'utente deve poter cancellare una propria richiesta e reinserirla, anche se già approvata. Resta da chiarire, o da limitare lato amministratore, la gestione delle richieste relative a periodi passati. Questo requisito sostituisce quello precedente sul ritiro della richiesta.}
+
+\domanda{Cosa significa che il gestore delle fonti vede i bucket del suo ambito?}{%
+  NEXUM non prevede ruoli amministrativi differenziati per ambito: tutti gli amministratori vedono tutti i bucket creati e tutti gli utenti accedono agli stessi contenuti. I requisiti su destinatari, gruppi e permessi specifici per bucket sono classificati come desiderabili o superabili.}
+
+\subsection{Fonti e versionamento}
+
+\domanda{Quali informazioni deve avere un bucket?}{%
+  La descrizione della finalità del bucket è obbligatoria e può essere un semplice campo nota. Le funzionalità avanzate di gestione delle fonti non sono utilizzate nel progetto. La validazione dei campi obbligatori è desiderabile.}
+
+\domanda{Come va gestita una nuova versione di una fonte?}{%
+  La nuova versione sostituisce la precedente senza eliminarne lo storico. Le conversazioni passate restano associate alle fonti disponibili in quel momento, mentre le risposte successive usano la nuova versione. Il metodo con cui riconoscere che un documento è una nuova versione di uno esistente va proposto dal gruppo.}
+
+\domanda{Il registro delle operazioni è obbligatorio e cosa deve contenere?}{%
+  Sì, è obbligatorio. Deve mostrare data, ora, persona, conferma ed esito; queste informazioni sono già presenti lato gestione delle richieste di ferie e permessi. Va distinto il registro delle richieste dal registro delle conversazioni.}
+
+\domanda{Cosa deve poter verificare l'amministratore di una singola interazione?}{%
+  L'abilità invocata, le fonti utilizzate e l'esito, insieme alla versione della fonte consultata, così da poter ricostruire la risposta. Il dettaglio dell'interfaccia amministrativa non è ancora definito. Indicare nella risposta la sezione o il punto della fonte utilizzato è un requisito desiderabile.}
+
+\subsection{Qualità e sicurezza}
+
+\domanda{Quanto è importante il monitoraggio delle conversazioni?}{%
+  È ritenuto importante: serve ad analizzare le risposte corrette e quelle errate e a valutare la qualità delle conversazioni. La memorizzazione dei dati è funzionale al miglioramento successivo del servizio.}
+
+\domanda{Come va gestita una richiesta estranea al dominio?}{%
+  System prompt e guardrail devono impedire l'uso della chat per richieste estranee. In questi casi il Concierge risponde che non ha fonti disponibili. È possibile un avviso iniziale che inviti a non inserire informazioni riservate, come dati personali, numeri di carta di credito o altre informazioni sensibili.}
+
+\domanda{A chi vanno segnalati gli errori di elaborazione delle fonti?}{%
+  All'amministratore. L'errore riguarda la trasformazione della fonte in unità di conoscenza, quindi la fase di caricamento ed elaborazione. Non è necessario mostrare all'utente il log tecnico dettagliato.}
+
+\domanda{Quale peso hanno i requisiti di sicurezza applicativa?}{%
+  Nella fase attuale possono essere tralasciati: l'applicativo è previsto come soluzione sostanzialmente autonoma e la sicurezza non è un elemento prioritario del primo passo, probabilmente nemmeno del secondo.}
+
+\subsection{API e autenticazione}
+
+\domanda{Come deve autenticarsi l'utente nell'applicativo?}{%
+  Il metodo di autenticazione dell'applicativo autonomo è a scelta del gruppo e non è determinante per PoC e MVP. Non è collegato ai sistemi interni di gestione utenti di NEXUM. Anche la gestione delle fonti e lo strumento LLM sono sotto la responsabilità del gruppo.}
+
+\domanda{Come avverranno le chiamate alle API di ferie e permessi?}{%
+  Le API di NEXUM saranno protette tramite OAuth: l'applicativo dovrà autenticarsi per effettuare le chiamate. Le chiamate di strumento del modello saranno indirizzate alle API esposte da NEXUM e ogni richiesta dovrà includere l'identificativo dell'utente per conto del quale viene eseguita.}
+
+\domanda{Chi definisce le specifiche delle API?}{%
+  Il gruppo, a partire dal capitolato: deve definire le chiamate necessarie per ferie, permessi e operazioni correlate, e NEXUM realizzerà le API secondo le specifiche ricevute. Come riferimento tecnico è stato proposto Bruno, alternativa a Postman: una sua collection può contenere chiamate, parametri, risposte ed esempi e fare da documentazione principale delle API. Dalla stessa firma delle API si possono costruire test e stub del backend e del frontend.}
+
+\subsection{Materiali e PoC}
+
+\domanda{Quali materiali fornirà Eggon?}{%
+  Un regolamento aziendale tipo e altri documenti amministrativi da usare come fonti del modello, oltre ad altri materiali di NEXUM se utili. Il proponente ha chiesto di non considerare vincolanti gli esempi di NEXUM per le idee del gruppo.}
+
+\domanda{Quando va avviato il PoC?}{%
+  Prima va completato il documento dei requisiti con scenari e diagrammi, poi si avvia il PoC. Il gruppo ha spazio interpretativo e può proporre soluzioni proprie, senza limitarsi a implementare le idee di NEXUM.}
+
+\section{Decisioni}
+\begin{decisioni}
+  \decisione{Le conversazioni sono sessioni temporanee per l'utente; vengono conservate solo per analisi e controllo di qualità.}
+  \decisione{La cancellazione di una richiesta, anche approvata, diventa obbligatoria e sostituisce il requisito sul ritiro.}
+  \decisione{Accesso ai bucket uniforme: tutti gli amministratori vedono tutti i bucket; i permessi per destinatari e gruppi diventano desiderabili.}
+  \decisione{Le fonti sono versionate: la nuova versione sostituisce la precedente mantenendone lo storico e il legame con le conversazioni passate.}
+  \decisione{Il registro amministrativo delle operazioni è obbligatorio, distinto dal registro delle conversazioni.}
+  \decisione{La citazione della sezione o del punto della fonte nella risposta è desiderabile.}
+  \decisione{I requisiti di sicurezza applicativa sono fuori dal perimetro della fase attuale.}
+  \decisione{Autenticazione dell'applicativo a scelta del gruppo; API di NEXUM protette con OAuth e specificate dal gruppo, documentate con Bruno.}
+\end{decisioni}
+
+\section{Azioni da intraprendere}
+\begin{azioni}
+  \azione[\#121]{Rendere più operativo il documento dei requisiti, aggiungendo area di interesse, storie coinvolte e persone interessate.}{biasini}{--}
+  \azione[\#121]{Completare il documento dei requisiti con scenari d'uso e diagrammi.}{mazzurana}{--}
+  \azione{Definire il modello di versionamento delle fonti.}{tutti}{--}
+  \azione{Preparare le specifiche delle API di ferie e permessi, documentarle e provarle con Bruno.}{tutti}{--}
+  \azione{Scegliere la modalità di autenticazione dell'applicativo.}{tutti}{--}
+  \azione{Avviare il PoC dopo il completamento del documento dei requisiti.}{tutti}{--}
+  \azione{Rivedere il documento dei requisiti e fornire un riscontro.}{Gianpaolo Ferrarin}{20/11/2026}
+  \azione{Fornire il regolamento aziendale tipo e altri documenti amministrativi di esempio.}{Gianpaolo Ferrarin}{--}
+  \azione{Condividere registrazione e note della riunione e la documentazione Markdown.}{Gianpaolo Ferrarin}{--}
+\end{azioni}
+
+\section{Prossimo incontro}
+Il prossimo incontro con il proponente è previsto per mercoledì 25 novembre 2026 alle 17:00, secondo la cadenza settimanale concordata.
+
+\end{document}
