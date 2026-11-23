@@ -280,7 +280,7 @@
 	Il consumo delle ore e dei costi deve rimanere allineato al preventivo di 552 ore e 11.250,00\,\texteuro{} stabilito nel \textit{Piano di Progetto}. Per questo ogni attività svolta all'interno di uno \glo{sprint} è tracciata mediante una \glo{issue} sul GitHub Project del gruppo, e ogni ora di lavoro è registrata su quella issue. La rendicontazione è verificabile perché si registra l'intervallo di tempo in cui il lavoro è stato svolto, e non soltanto la sua durata.
 	
 	\paragraph{Pianificazione}
-	All'apertura di ciascuno sprint il Responsabile registra nel file \texttt{pianificazione.toml}, contenuto nel repository \texttt{.github}, le date di inizio e fine, gli obiettivi (eventualmente collegati alle issue che li realizzano) e, per ciascun membro, i ruoli assegnati con le ore preventivate. Sull'intero progetto, le ore di ogni membro per ruolo coincidono con il preventivo della \textit{Dichiarazione di Impegni}. Si tratta di 92 ore a testa: 9 da Responsabile, 12 da Amministratore, 13 da Analista, 17 da Progettista, 22 da Programmatore e 19 da Verificatore. Il file si modifica soltanto tramite \glo{pull request}.
+	All'apertura di ciascuno sprint il Responsabile aggiorna il file \texttt{pianificazione.toml} nel repository \texttt{.github}. Nel file registra le date di inizio e fine, la fase di riferimento (\glo{RTB} o \glo{PB}), gli obiettivi (eventualmente collegati alle issue che li realizzano) e i ruoli assegnati con le ore preventivate. Per ciascun obiettivo è possibile indicare un intervallo interno allo sprint tramite i campi facoltativi \texttt{dal} e \texttt{al}; se omessi, l'obiettivo copre l'intera durata del periodo. Nel medesimo file sono inoltre definiti le principali scadenze di progetto (sezione \texttt{[scadenze]}) e l'incontro settimanale ricorrente con la proponente (sezione \texttt{[gantt]}). Sull'intero progetto, le ore di ogni membro per ruolo coincidono con il preventivo della \textit{Dichiarazione di Impegni}. Si tratta di 92 ore a testa: 9 da Responsabile, 12 da Amministratore, 13 da Analista, 17 da Progettista, 22 da Programmatore e 19 da Verificatore. Il file si modifica soltanto tramite \glo{pull request}, sottoposta alle prove automatiche che verificano anche la validità delle date e dell'incontro settimanale.
 	
 	\paragraph{Registrazione delle ore}
 	Al termine di ogni blocco di lavoro, ciascun membro scrive un commento sulla issue su cui ha lavorato con il comando \texttt{/ore}, seguito dall'intervallo di inizio e fine; il sistema ne calcola la durata. La sintassi è la seguente:
@@ -546,8 +546,22 @@
 			in corso e successivo il periodo di riferimento, le ore pianificate
 			ed effettive con il relativo scarto, i costi pianificati ed
 			effettivi e le ore effettive cumulate. Oltre alle tabelle in
-			Markdown, lo script genera i corrispondenti file \LaTeX{} per i
-			consuntivi del \textit{Piano di Progetto}.
+			Markdown, lo script genera in \texttt{.github-private/tabelle/} i
+			corrispondenti file \LaTeX{} per i preventivi e i consuntivi del
+			\textit{Piano di Progetto};
+			\item \textit{Diagrammi di Gantt:} genera nella stessa cartella
+			\texttt{.github-private/tabelle/} i \glo[Diagramma di Gantt]{diagrammi di Gantt} in \LaTeX{}
+			(basati sul pacchetto \texttt{pgfgantt}) a partire dai dati di
+			\texttt{pianificazione.toml}. In particolare produce
+			\texttt{gantt-progetto.tex}, che mostra tutti gli sprint raggruppati
+			per fase (RTB e PB) insieme alle scadenze come traguardi. Genera
+			inoltre un file \texttt{gantt-sprint-N.tex} per ogni sprint dotato di
+			obiettivi, con le relative barre e i traguardi dell'incontro
+			settimanale.
+			I file generati vengono copiati nella cartella \texttt{tabelle/} del
+			\textit{Piano di Progetto} a inizio sprint, insieme al preventivo,
+			e inclusi tramite \texttt{\textbackslash input\{tabelle/gantt-progetto\}} o \texttt{\textbackslash input\{tabelle/gantt-sprint-N\}}, così
+			da congelare la pianificazione iniziale del periodo.
 		\end{itemize}
 		\item \textbf{Metriche operative, controlli di coerenza e Diario di Bordo:}
 		\begin{itemize}
@@ -624,7 +638,10 @@
 		\item[\LaTeX{} e TeX Live] (\url{https://www.tug.org/texlive/}) \hfill \\
 		Linguaggio e distribuzione usati per scrivere tutti i documenti. La
 		compilazione è affidata a \texttt{latexmk}, sia in locale sia
-		nell'integrazione continua.
+		nell'integrazione continua. Per la rappresentazione grafica dei
+		diagrammi di Gantt nel \textit{Piano di Progetto} si utilizza il
+		pacchetto \texttt{pgfgantt}, già incluso nella distribuzione TeX Live
+		adottata dal gruppo.
 		\item[Template del gruppo] \hfill \\
 		La classe \texttt{gpt.cls} genera da sola copertina, registro delle
 		modifiche, indici, intestazioni e piè di pagina, e controlla durante
@@ -845,6 +862,16 @@
 			Introduzione nel repository \texttt{.github} del cruscotto automatico
 			rigenerato ogni notte tramite GitHub Actions a partire dal GitHub Project
 			e da \texttt{pianificazione.toml}.\\
+			\addlinespace
+			2026-11-23 &
+			Necessità di rappresentare in modo chiaro e coerente la pianificazione
+			temporale di progetto e di singolo sprint nel \textit{Piano di Progetto},
+			evitando la manutenzione manuale dei grafici e l'esposizione di segreti
+			nei workflow del repository \texttt{docs}. &
+			Estensione del cruscotto nel repository \texttt{.github} per generare
+			automaticamente i diagrammi di Gantt in \LaTeX{} (\texttt{pgfgantt})
+			in \texttt{.github-private/tabelle/} a partire da \texttt{pianificazione.toml}.
+			Il workflow \textit{Prove} valida inoltre date e giorno dell'incontro.\\
 			\bottomrule
 		\end{tabularx}
 		
