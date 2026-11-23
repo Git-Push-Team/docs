@@ -1,0 +1,71 @@
+\documentclass[interno]{gpt}
+
+\titolo{Stato dei lavori e revisione del Piano di qualifica}
+\data{2026-11-23}
+\orario{18:00}{19:00}
+\luogo{Discord}
+\redattore{guglielmo}
+\verificatore{biasini}
+%\assenti{}
+
+\componenti{biasini,cescobolla,corro,guglielmo,mazzurana,spagnoli}
+\begin{document}
+
+\section{Ordine del giorno}
+\begin{enumerate}
+  \item Stato dello studio delle tecnologie.
+  \item Allineamento sui requisiti dopo l'incontro con il proponente del 18 novembre 2026.
+  \item Stato del riscontro del proponente sui requisiti.
+  \item Revisione della prima stesura del \textit{Piano di qualifica}.
+\end{enumerate}
+
+\clearpage
+
+\section{Svolgimento}
+
+\subsection{Stato dello studio delle tecnologie}
+Il gruppo ha fatto il punto sullo studio delle tecnologie necessarie al progetto.
+Lo studio riguarda soprattutto Ruby on Rails, per la parte applicativa, e Bruno, lo strumento indicato da Eggon per descrivere e provare le API.
+Con Bruno il gruppo dovrà fornire a Eggon le specifiche delle API per le richieste di ferie e permessi.
+Lo studio prosegue nei prossimi giorni.
+
+\subsection{Allineamento sui requisiti}
+Il gruppo ha ripreso le indicazioni ricevute da Eggon nell'incontro del 18 novembre 2026, per avere una visione comune prima di aggiornare la lista dei requisiti.
+Tra i punti principali:
+\begin{itemize}
+  \item la conversazione con l'assistente è usa e getta per il dipendente, mentre lato amministrazione le conversazioni vengono conservate per il controllo di qualità;
+  \item le richieste di ferie e permessi non si modificano né si ritirano: il dipendente può solo cancellarle e reinserirle;
+  \item le fonti sono consultabili da tutti i dipendenti, quindi i requisiti sui destinatari dei \textit{bucket} perdono priorità;
+  \item la sostituzione di una fonte con una nuova versione deve conservare lo storico delle versioni usate nelle risposte.
+\end{itemize}
+
+\subsection{Stato del riscontro del proponente}
+Nell'incontro del 18 novembre 2026 Eggon si era impegnata a dare un riscontro scritto sulla lista dei requisiti entro venerdì 20 novembre 2026.
+Al momento della riunione il riscontro non è ancora arrivato.
+Il gruppo ha quindi discusso come procedere con l'\textit{Analisi dei requisiti} in base a quando il riscontro arriverà.
+
+\subsection{Revisione della prima stesura del Piano di qualifica}
+Il gruppo ha rivisto insieme la prima stesura del \textit{Piano di qualifica}.
+La revisione ha riguardato le metriche di processo e di prodotto, le relative soglie e la sezione del cruscotto con i valori dello sprint 1.
+
+\section{Decisioni}
+\begin{decisioni}
+    \decisione{Prosecuzione dello studio di Ruby on Rails e di Bruno.}
+    \decisione{Sollecito a Eggon del riscontro sui requisiti. Se il riscontro arriva prima dell'incontro di mercoledì 25 novembre 2026, il gruppo presenterà in quell'occasione una bozza dell'\textit{Analisi dei requisiti}; se arriva solo mercoledì, la stesura viene posticipata per integrarlo.}
+    \decisione{Aggiornamento delle \textit{Norme di progetto} con le decisioni di processo più recenti.}
+\end{decisioni}
+
+\section{Azioni da intraprendere}
+\begin{azioni}
+  \azione[\#141]{Stesura verbale interno della riunione odierna.}{guglielmo}{24/11/2026}
+  \azione[\#104]{Prosecuzione dello studio delle tecnologie (Ruby on Rails e Bruno).}{cescobolla}{29/11/2026}
+  \azione[\#139]{Aggiornamento delle \textit{Norme di progetto}.}{mazzurana}{29/11/2026}
+  \azione{Sollecito a Eggon del riscontro sui requisiti.}{biasini}{23/11/2026}
+  \azione[\#140]{Bozza dell'\textit{Analisi dei requisiti}, in base ai tempi del riscontro di Eggon.}{biasini,corro,spagnoli}{25/11/2026}
+\end{azioni}
+
+\section{Prossima riunione}
+Il prossimo appuntamento è l'incontro settimanale con Eggon di mercoledì 25 novembre 2026 alle 17:00.
+La data della prossima riunione interna sarà fissata in base al riscontro del proponente sui requisiti.
+
+\end{document}
