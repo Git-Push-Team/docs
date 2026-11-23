@@ -1,0 +1,546 @@
+\documentclass[documento]{gpt}
+
+\titolo{Piano di qualifica}
+\capitolato{C2 -- NEXUM Concierge}
+\uso{esterno}
+\destinatari{Prof.~Tullio Vardanega\newline Prof.~Riccardo Cardin}
+
+% Registro delle modifiche: le righe sono nel file
+%     piano-di-qualifica.registro.tex
+% accanto a questo, e le aggiunge il bot dopo il merge in base
+% all'etichetta della pull request (GUIDA.md, sezione 5).
+% Qui non si scrive nulla.
+
+\begin{document}
+
+\section{Introduzione}
+
+\subsection{Finalità del documento}
+Il presente documento, denominato \textit{Piano di Qualifica}, formalizza le strategie operative, le procedure di \glo{verifica} e gli indicatori quantitativi adottati dal \textbf{Git Push Team}. Il loro scopo è garantire la qualità sia dei processi sia del prodotto \glo{software} relativo al \glo{capitolato} d'appalto \textbf{C2 -- NEXUM Concierge}, proposto dall'azienda \textbf{Eggon}.
+
+In particolare, il documento persegue i seguenti obiettivi:
+\begin{itemize}
+    \item \textbf{Definire gli obiettivi di qualità:} fissare target qualitativi quantitativi e misurabili sia per i processi di ciclo di vita sia per il \glo{software}, assumendo come quadri normativi gli \glo[Standard]{standard} \glo[ISO/IEC 12207]{ISO/IEC 12207:1995} e \glo{ISO/IEC 9126};
+    \item \textbf{Identificare le metriche di misurazione:} selezionare un insieme esaustivo di indicatori oggettivi, stabilendo per ciascuno le relative soglie di accettabilità e ottimalità;
+    \item \textbf{Inquadrare le metodologie di verifica e \glo{validazione}:} descrivere le procedure di \glo{analisi statica} e \glo[Analisi dinamica]{dinamica} (testing), stabilendo la tassonomia e il tracciamento dei \glo[Test di sistema]{test di sistema} e di \glo[Test di accettazione]{accettazione};
+    \item \textbf{Predisporre il monitoraggio continuo:} strutturare il \textit{Cruscotto di valutazione della qualità}, all'interno del quale verranno rendicontati e commentati criticamente i valori consuntivi al termine di ciascun periodo di avanzamento (\glo[Sprint]{\textit{sprint}}).
+\end{itemize}
+
+\subsection{Scopo del prodotto}
+Il progetto, basato sul \glo{capitolato} C2 denominato \textit{NEXUM Concierge}, ha come obiettivo l'introduzione di un assistente conversazionale all'interno della piattaforma aziendale NEXUM. Tale piattaforma, realizzata come \glo[PWA]{\textit{Progressive Web App}} (PWA), è pensata per avvicinare aziende e personale, semplificando le attività quotidiane legate alla comunicazione e alla gestione dei processi \glo{HR}.
+
+L'assistente permetterà agli utenti di cercare informazioni, comprendere le procedure aziendali e accedere ai servizi utilizzando direttamente il linguaggio naturale, collegando la conoscenza aziendale alle funzionalità operative. Per garantire un approccio graduale e verificabile, il dominio dell'\glo[MVP]{\textit{Minimum Viable Product}} (MVP) è focalizzato sull'area ferie e permessi.
+
+\subsection{Glossario}
+Al fine di prevenire ambiguità semantiche e garantire uniformità lessicale tra i membri del gruppo, il \glo{committente} e i referenti aziendali, è stato redatto un documento interno denominato \textit{Glossario}. Tutti i termini tecnici, gli acronimi e i vocaboli propri del dominio applicativo sono contrassegnati nel testo da una ``G'' in pedice (ad esempio \glo{baseline}). La relativa definizione formale è consultabile all'interno del documento citato. Le metriche, invece, sono definite direttamente in questo documento, accanto alle rispettive soglie.
+
+\subsection{Riferimenti}
+
+\subsubsection{Riferimenti normativi}
+\begin{itemize}
+    \item \textbf{Capitolato d'appalto C2 -- NEXUM Concierge (Eggon):}\\
+    \url{https://www.math.unipd.it/~tullio/IS-1/2026/Progetto/C2.pdf}\\
+    (Ultimo accesso: 2026-11-19);
+    \item \textbf{Regolamento del Progetto Didattico:}\\
+    \url{https://www.math.unipd.it/~tullio/IS-1/2026/Dispense/PD1.pdf}\\
+    (Ultimo accesso: 2026-11-19);
+    \item \textbf{Norme di Progetto -- Git Push Team:} documento interno.
+\end{itemize}
+
+\subsubsection{Riferimenti informativi}
+\begin{itemize}
+    \item \textbf{Standard ISO/IEC 12207:1995:} \textit{Information Technology -- Software Life Cycle Processes};
+    \item \textbf{Standard ISO/IEC 9126:2001:} \textit{Software Engineering -- Product Quality};
+    \item \textbf{Glossario -- Git Push Team:} documento interno;
+    \item \textbf{Piano di Progetto -- Git Push Team:} documento esterno;
+    \item \textbf{Verbali esterni -- Git Push Team:} verbali degli incontri con Eggon, in particolare quelli del 2026-11-11 e del 2026-11-18.
+\end{itemize}
+
+
+\section{Qualità di processo}
+La qualità di processo si attiene all'efficacia, all'efficienza e alla sostenibilità delle attività svolte durante il ciclo di vita del \glo{software}. Il gruppo adotta come riferimento il modello dei processi definito dallo \glo{standard} ISO/IEC 12207:1995, opportunamente integrato nel \glo{Way of Working} interno.
+
+Le misurazioni di processo sono identificate dal prefisso \textbf{MPC} (\textit{Metrica di Processo e Controllo}). Per ciascuna metrica vengono definite due soglie:
+\begin{itemize}
+    \item \textbf{Valore accettabile:} livello minimo al di sotto del quale l'attività è considerata non conforme, richiedendo l'attivazione immediata di contromisure;
+    \item \textbf{Valore ottimale:} traguardo auspicato verso cui il gruppo tende per massimizzare la qualità organizzativa.
+\end{itemize}
+Sotto ogni tabella sono riportati cosa misura ciascuna metrica e come si calcola. Il trattino (--) indica una grandezza di base, che non ha una soglia propria ma serve a calcolare le altre.
+
+\subsection{Processi primari}
+
+\subsubsection{Fornitura}
+Le metriche di \glo{fornitura} monitorano l'aderenza ai vincoli economici e temporali concordati in sede di candidatura, applicando i principi dell'\glo[Earned Value Management (EVM)]{\textit{Earned Value Management} (EVM)}. Il \textit{Budget at Completion} (BAC) formalmente approvato per il progetto ammonta a \textbf{11.250,00\,\texteuro}, a fronte di un monte ore complessivo di \textbf{552 ore} preventivate.
+
+\begin{table}[H]
+\centering
+\caption{Metriche per i processi primari -- Fornitura}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPC-EV   & Earned Value (EV)              & --                     & -- \\
+MPC-PV   & Planned Value (PV)             & --                     & -- \\
+MPC-AC   & Actual Cost (AC)               & --                     & -- \\
+MPC-CV   & Cost Variance (CV)             & $\ge -5\%$             & $\ge 0\%$ \\
+MPC-SV   & Schedule Variance (SV)         & $\ge -5\%$             & $\ge 0\%$ \\
+MPC-CPI  & Cost Performance Index (CPI)   & $\ge 0{,}90$           & $\ge 1{,}00$ \\
+MPC-SPI  & Schedule Performance Index (SPI) & $\ge 0{,}90$         & $\ge 1{,}00$ \\
+MPC-EAC  & Estimate at Completion (EAC)   & entro $\pm 5\%$ del BAC & $\le \text{BAC}$ \\
+MPC-ETC  & Estimate to Complete (ETC)     & $\le 105\%$ di (BAC $-$ AC) & $\le \text{BAC} - \text{AC}$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent Definizioni (valori cumulati dall'inizio del progetto, aggiornati alla chiusura di ogni \glo[Sprint]{\textit{sprint}}):
+\begin{itemize}
+    \item \textbf{PV}: costo preventivato degli \glo[Sprint]{\textit{sprint}} conclusi, come riportato nei preventivi del \textit{Piano di Progetto};
+    \item \textbf{AC}: costo effettivo degli \glo[Sprint]{\textit{sprint}} conclusi, ricavato dalle ore registrate e riportato nei consuntivi del \textit{Piano di Progetto};
+    \item \textbf{EV}: valore del lavoro effettivamente completato. Per ogni \glo[Sprint]{\textit{sprint}} concluso si moltiplica il suo PV per la quota di obiettivi raggiunti, secondo l'esito riportato nella retrospettiva dello \glo[Sprint]{\textit{sprint}} nel \textit{Piano di Progetto}; l'EV è la somma di questi valori;
+    \item \textbf{CV} $= \text{EV} - \text{AC}$, espressa in percentuale come $\text{CV} / \text{EV}$: un valore negativo indica una spesa superiore al valore prodotto;
+    \item \textbf{SV} $= \text{EV} - \text{PV}$, espressa in percentuale come $\text{SV} / \text{PV}$: un valore negativo indica un ritardo rispetto alla pianificazione;
+    \item \textbf{CPI} $= \text{EV} / \text{AC}$ e \textbf{SPI} $= \text{EV} / \text{PV}$: un valore inferiore a 1 indica rispettivamente un costo superiore al previsto e un ritardo;
+    \item \textbf{EAC} $= \text{BAC} / \text{CPI}$: stima del costo totale a fine progetto, mantenendo l'efficienza fin qui osservata;
+    \item \textbf{ETC} $= \text{EAC} - \text{AC}$: stima di quanto resta da spendere, da confrontare con il budget residuo (BAC $-$ AC).
+\end{itemize}
+
+\subsubsection{Sviluppo}
+Misura la stabilità e la convergenza dei \glo[Requisito]{requisiti} concordati con Eggon durante l'avanzamento dell'analisi.
+
+\begin{table}[H]
+\centering
+\caption{Metriche per i processi primari -- Sviluppo}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPC-RSI  & Requirements Stability Index (RSI) & $\ge 75\%$         & $100\%$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent Definizione: $\text{RSI} = 1 - \dfrac{\text{requisiti aggiunti} + \text{modificati} + \text{rimossi}}{\text{requisiti totali all'inizio dello \textit{sprint}}}$, calcolato per ogni \glo[Sprint]{\textit{sprint}}. La misurazione inizia dopo l'approvazione della prima versione dell'\textit{Analisi dei Requisiti}.
+
+\subsection{Processi di supporto}
+
+\subsubsection{Documentazione}
+Assicura la leggibilità, la correttezza grammaticale e l'assenza di refusi tipografici nei documenti di progetto. Le misurazioni sono eseguite in modo automatico tramite lo script di analisi dei testi integrato nella pipeline di \glo{integrazione continua} (\texttt{analisi\_testo.py} con \glo{LanguageTool}).
+
+\begin{table}[H]
+\centering
+\caption{Metriche per i processi di supporto -- Documentazione}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPC-GULP & \glo{Indice di Gulpease}             & $\ge 40$               & $\ge 60$ \\
+MPC-ORT  & Correttezza ortografica              & $0$ errori non giustificati & $0$ errori \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent Definizioni:
+\begin{itemize}
+    \item \textbf{MPC-GULP}: $89 + \dfrac{300 \cdot \text{frasi} - 10 \cdot \text{lettere}}{\text{parole}}$, calcolato per ogni documento escludendo titoli, didascalie e intestazioni di tabella. La soglia vale per ciascun documento;
+    \item \textbf{MPC-ORT}: numero di errori di ortografia e grammatica segnalati da LanguageTool e non giustificati. Una segnalazione è giustificata quando è un falso positivo, per esempio un termine tecnico corretto; in quel caso il termine viene aggiunto all'elenco delle parole ammesse dallo script.
+\end{itemize}
+
+\subsubsection{Verifica}
+Monitora l'efficacia delle procedure di verifica condotte su codice sorgente e documentazione.
+
+\begin{table}[H]
+\centering
+\caption{Metriche per i processi di supporto -- Verifica}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPC-TSR  & Test Success Rate (TSR)              & $100\%$                & $100\%$ \\
+MPC-COV  & \glo{Code Coverage} (\textit{statement coverage}) & $\ge 80\%$ & $\ge 90\%$ \\
+MPC-BC   & \textit{Branch coverage}             & $\ge 70\%$             & $\ge 80\%$ \\
+MPC-TV   & Tempo medio di verifica di una \glo{pull request} & $\le 48$ ore & $\le 24$ ore \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent Definizioni:
+\begin{itemize}
+    \item \textbf{MPC-TSR}: percentuale di test eseguiti con esito positivo sul totale dei test eseguiti nella pipeline di integrazione continua;
+    \item \textbf{MPC-COV}: percentuale di istruzioni del codice eseguite almeno una volta dai test automatici;
+    \item \textbf{MPC-BC}: percentuale di rami delle istruzioni condizionali percorsi almeno una volta dai test automatici;
+    \item \textbf{MPC-TV}: tempo medio tra la richiesta di revisione di una \glo{pull request} e la sua approvazione, calcolato sulle \glo[Pull request]{pull request} chiuse nello \glo[Sprint]{\textit{sprint}}.
+\end{itemize}
+MPC-TSR, MPC-COV e MPC-BC si misurano a partire dal primo codice del \glo{PoC}; MPC-TV a partire dallo \glo[Sprint]{\textit{sprint}} 2.
+
+\subsubsection{Gestione della qualità}
+Misura il grado di soddisfazione complessivo delle metriche di processo definite nel piano.
+
+\begin{table}[H]
+\centering
+\caption{Metriche per la gestione della qualità}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPC-QMS  & Quality Metrics Satisfied (QMS) & $\ge 80\%$ & $100\%$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent Definizione: percentuale di metriche di processo che rispettano la soglia accettabile, calcolata solo sulle metriche con una soglia e già misurabili nello \glo[Sprint]{\textit{sprint}}.
+
+\subsection{Processi organizzativi}
+
+\subsubsection{Gestione dei processi}
+Valuta la precisione del team nella previsione dei rischi e l'efficienza nell'impiego delle risorse orarie.
+
+\begin{table}[H]
+\centering
+\caption{Metriche per i processi organizzativi -- Gestione dei processi}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPC-PRI  & Percentuale rischi inattesi          & $\le 25\%$             & $0\%$ \\
+MPC-EO   & Efficienza oraria                    & $\ge 80\%$             & $100\%$ \\
+MPC-SCA  & \glo[Issue]{\textit{Issue}} chiuse entro la scadenza & $\ge 80\%$ & $100\%$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent Definizioni:
+\begin{itemize}
+    \item \textbf{MPC-PRI}: rischi verificatisi nello \glo[Sprint]{\textit{sprint}} che non erano tra i rischi attesi del \textit{Piano di Progetto}, sul totale dei rischi verificatisi;
+    \item \textbf{MPC-EO}: $1 - \dfrac{|\text{ore effettive} - \text{ore pianificate}|}{\text{ore pianificate}}$ per lo \glo[Sprint]{\textit{sprint}}. Usa gli stessi dati dell'indicatore \texttt{M-SPRINT} delle \textit{Norme di Progetto}: uno scarto in eccesso o in difetto abbassa allo stesso modo l'efficienza;
+    \item \textbf{MPC-SCA}: \glo[Issue]{\textit{issue}} chiuse entro la data di scadenza sul totale delle \glo[Issue]{\textit{issue}} con scadenza chiuse nello \glo[Sprint]{\textit{sprint}}. Si misura a partire dallo \glo[Sprint]{\textit{sprint}} 2.
+\end{itemize}
+Il cruscotto interno descritto nelle \textit{Norme di Progetto} calcola ogni giorno altri indicatori operativi (\texttt{M-SPRINT}, \texttt{M-BUDGET}, \texttt{M-STIME}, \texttt{M-OBIETTIVI}, \texttt{M-PIANO}). Il gruppo li usa per accorgersi in anticipo degli scostamenti; le metriche di questo documento ne riportano i valori alla chiusura di ogni \glo[Sprint]{\textit{sprint}}.
+
+
+\section{Qualità di prodotto}
+La qualità di prodotto stabilisce le caratteristiche funzionali e non funzionali attese per l'applicazione \textbf{NEXUM Concierge}, secondo lo \glo{standard} ISO/IEC 9126. Gli indicatori sono contraddistinti dal prefisso \textbf{MPD} (\textit{Metrica di Prodotto}). Le metriche di prodotto si misurano a partire dal \glo{PoC} e, in modo completo, sull'\glo{MVP}.
+
+\subsection{Funzionalità}
+Rappresenta la capacità del sistema di fornire le quattro capacità operative previste dal \glo{capitolato} (conoscenza aziendale, istruzioni NEXUM, lettura dati e inoltro richieste ferie/permessi).
+
+\begin{table}[H]
+\centering
+\caption{Metriche di prodotto -- Funzionalità}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPD-RO   & Requisiti obbligatori soddisfatti    & $100\%$                & $100\%$ \\
+MPD-RD   & Requisiti desiderabili soddisfatti   & $\ge 50\%$             & $100\%$ \\
+MPD-ROP  & Requisiti opzionali soddisfatti      & $\ge 0\%$              & $\ge 50\%$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent Definizione: percentuale dei \glo[Requisito]{requisiti} di ciascuna classe, come classificati nell'\textit{Analisi dei Requisiti}, per cui il relativo \glo[Test di sistema]{test di sistema} è superato.
+
+\subsubsection{Accuratezza delle risposte e delle operazioni}
+Il capitolato chiede di valutare separatamente il recupero delle fonti, la generazione delle risposte e l'esecuzione delle operazioni. Le metriche seguenti, corrispondenti alla sottocaratteristica \textit{accuratezza} della ISO/IEC 9126, si misurano su un insieme di domande e scenari di prova concordato con Eggon. Le soglie saranno fissate con la proponente in base ai volumi di prova, come previsto dal capitolato, e riportate qui non appena disponibili.
+
+\begin{table}[H]
+\centering
+\caption{Metriche di prodotto -- Accuratezza delle risposte e delle operazioni}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPD-FON  & Completezza dell'elaborazione delle fonti & da concordare & da concordare \\
+MPD-REC  & Pertinenza del recupero              & da concordare          & da concordare \\
+MPD-RIS  & Correttezza delle risposte           & da concordare          & da concordare \\
+MPD-CIT  & Correttezza delle citazioni          & da concordare          & da concordare \\
+MPD-CAP  & Scelta corretta della capacità       & da concordare          & da concordare \\
+MPD-CTX  & Mantenimento del contesto            & da concordare          & da concordare \\
+MPD-DAT  & Correttezza dei dati restituiti      & $100\%$                & $100\%$ \\
+MPD-OPE  & Operazioni completate correttamente  & da concordare          & da concordare \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent Definizioni (percentuali calcolate sull'insieme di prova):
+\begin{itemize}
+    \item \textbf{MPD-FON}: documenti di prova elaborati e resi consultabili sul totale dei documenti caricati;
+    \item \textbf{MPD-REC}: domande per cui tra le fonti recuperate compare quella che contiene la risposta;
+    \item \textbf{MPD-RIS}: risposte giudicate corrette dai referenti di Eggon o confrontate con la risposta attesa;
+    \item \textbf{MPD-CIT}: risposte le cui citazioni rimandano a fonti che contengono davvero l'informazione riportata;
+    \item \textbf{MPD-CAP}: richieste per cui l'assistente sceglie la capacità giusta (conoscenza documentale, istruzioni NEXUM, lettura dati o richiesta);
+    \item \textbf{MPD-CTX}: dialoghi di più messaggi in cui le domande successive sono interpretate correttamente rispetto alle precedenti;
+    \item \textbf{MPD-DAT}: dati di ferie e permessi restituiti uguali a quelli dei servizi NEXUM, reali o simulati. La soglia è del 100\% perché un dato errato non è accettabile;
+    \item \textbf{MPD-OPE}: richieste di ferie e permessi registrate correttamente dopo la conferma, sul totale delle richieste confermate.
+\end{itemize}
+
+\subsubsection{Sicurezza}
+Il capitolato pone vincoli sull'accesso ai dati e sulle operazioni: separazione tra aziende, accesso ai soli dati autorizzati, conferma prima dell'invio delle richieste, fonti documentali che non possono modificare istruzioni o autorizzazioni.
+
+\begin{table}[H]
+\centering
+\caption{Metriche di prodotto -- Sicurezza}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPD-AUT  & Test di autorizzazione superati      & $100\%$                & $100\%$ \\
+MPD-CNF  & Richieste inviate senza conferma     & $0$                    & $0$ \\
+MPD-INJ  & Istruzioni contenute nelle fonti eseguite & $0$               & $0$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent Definizioni:
+\begin{itemize}
+    \item \textbf{MPD-AUT}: percentuale di test superati tra quelli che provano ad accedere a dati di un'altra azienda, di un'altra persona o di un \glo{bucket} non autorizzato;
+    \item \textbf{MPD-CNF}: richieste registrate senza che la persona le abbia confermate, negli scenari di prova;
+    \item \textbf{MPD-INJ}: casi di prova in cui un documento contiene istruzioni rivolte all'assistente e l'assistente le esegue invece di trattarle come contenuto.
+\end{itemize}
+
+\subsection{Affidabilità}
+Misura la robustezza e la stabilità delle risposte e delle funzionalità applicative integrate.
+
+\begin{table}[H]
+\centering
+\caption{Metriche di prodotto -- Affidabilità}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPD-ERR  & Scenari di errore gestiti correttamente & $100\%$             & $100\%$ \\
+MPD-DD   & \glo{Defect Density}                 & $\le 3\text{ / }$\glo{KLOC} & $0\text{ / KLOC}$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent Definizioni:
+\begin{itemize}
+    \item \textbf{MPD-ERR}: percentuale di scenari di errore gestiti senza perdita o duplicazione di dati e con un messaggio comprensibile alla persona. Gli scenari comprendono servizio NEXUM non raggiungibile, richiesta rifiutata dalle validazioni e tentativi ripetuti;
+    \item \textbf{MPD-DD}: difetti trovati dopo il \textit{merge} nel ramo principale, per ogni mille righe di codice.
+\end{itemize}
+Le metriche di copertura del codice da parte dei test sono riportate tra le metriche del processo di verifica (MPC-COV e MPC-BC).
+
+\subsection{Usabilità}
+Valuta la linearità dell'esperienza conversazionale e il tempo richiesto al personale per comprendere e completare le richieste guidate.
+
+\begin{table}[H]
+\centering
+\caption{Metriche di prodotto -- Usabilità}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPD-NAV  & Profondità massima di navigazione (\glo{backoffice}) & $\le 4\text{ livelli}$ & $\le 2\text{ livelli}$ \\
+MPD-LRN  & Tempo medio di apprendimento         & $\le 10\text{ min}$    & $\le 5\text{ min}$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent Definizioni:
+\begin{itemize}
+    \item \textbf{MPD-NAV}: numero massimo di passaggi necessari per raggiungere una qualsiasi funzione del \glo{backoffice} dalla sua pagina iniziale;
+    \item \textbf{MPD-LRN}: tempo medio impiegato da persone non coinvolte nello sviluppo per completare, senza aiuto, una richiesta di ferie guidata dall'assistente. Si misura con una sessione di prova sull'\glo{MVP}.
+\end{itemize}
+
+\subsection{Efficienza}
+Misura i tempi di reazione dell'interfaccia utente e la \glo{latenza} delle chiamate verso i modelli linguistici (\glo{LLM}) e i servizi esterni, oltre ai costi dei servizi di intelligenza artificiale.
+
+\begin{table}[H]
+\centering
+\caption{Metriche di prodotto -- Efficienza}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPD-LAT  & Latenza risposta interfaccia         & $\le 1\text{ s}$       & $\le 0{,}5\text{ s}$ \\
+MPD-LLM  & Latenza generazione e risposta LLM   & $\le 8\text{ s}$       & $\le 4\text{ s}$ \\
+MPD-AGG  & Tempo di aggiornamento delle fonti   & da concordare          & da concordare \\
+MPD-COS  & Costo medio dei servizi AI per conversazione & da concordare  & da concordare \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent Definizioni:
+\begin{itemize}
+    \item \textbf{MPD-LAT}: tempo tra un'azione della persona nell'interfaccia e la sua prima risposta visibile;
+    \item \textbf{MPD-LLM}: tempo tra l'invio di un messaggio e il completamento della risposta dell'assistente;
+    \item \textbf{MPD-AGG}: tempo tra il caricamento o la modifica di una fonte e il momento in cui diventa consultabile. Le elaborazioni lunghe avvengono in modo asincrono, con stato consultabile, come richiesto dal capitolato;
+    \item \textbf{MPD-COS}: costo dei servizi di intelligenza artificiale (modelli ed \textit{embedding}) diviso per il numero di conversazioni di prova.
+\end{itemize}
+Le soglie di MPD-AGG e MPD-COS saranno concordate con Eggon insieme a quelle dell'accuratezza.
+
+\subsection{Manutenibilità}
+Garantisce la modularità del codice sorgente, l'assenza di \glo{debito tecnico} e il rispetto delle convenzioni di codifica.
+
+\begin{table}[H]
+\centering
+\caption{Metriche di prodotto -- Manutenibilità}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPD-CC   & \glo{Complessità ciclomatica} per metodo & $\le 15$           & $\le 10$ \\
+MPD-CS   & \glo{Code Smell}                     & nessuno di gravità alta & $0$ \\
+MPD-CBO  & Coupling Between Objects (CBO)       & $\le 8$                & $\le 5$ \\
+MPD-COC  & Coefficient of Coupling (COC)        & $\le 30\%$             & $\le 10\%$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent Definizioni:
+\begin{itemize}
+    \item \textbf{MPD-CC}: numero di cammini indipendenti nel flusso di controllo di un metodo; la soglia vale per ogni metodo;
+    \item \textbf{MPD-CS}: segnalazioni dello strumento di analisi statica del codice, classificate per gravità;
+    \item \textbf{MPD-CBO}: numero di altre classi da cui una classe dipende o che dipendono da essa;
+    \item \textbf{MPD-COC}: dipendenze effettive tra i moduli sul numero massimo di dipendenze possibili.
+\end{itemize}
+
+\subsection{Portabilità}
+Misura la capacità dell'assistente di funzionare negli ambienti in cui è usata la PWA di NEXUM.
+
+\begin{table}[H]
+\centering
+\caption{Metriche di prodotto -- Portabilità}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
+\midrule
+MPD-BRW  & Browser supportati da NEXUM su cui la chat funziona & $100\%$ & $100\%$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent Definizione: percentuale dei browser e dei dispositivi supportati da NEXUM, desktop e mobile, su cui gli scenari di prova principali si completano correttamente. L'elenco dei browser sarà concordato con Eggon.
+
+
+\section{Metodologie di verifica e testing}
+Le attività di verifica e validazione forniscono evidenza empirica della rispondenza della documentazione e del \glo{software} alle specifiche concordate nel \glo{capitolato} d'appalto.
+
+\subsection{Analisi statica}
+Per la documentazione, l'analisi statica è supportata in modo automatico dal workflow di integrazione continua (\texttt{analisi\_testo.py}). A ogni \textit{pull request} lo script controlla ortografia e grammatica (tramite LanguageTool), tipografia e leggibilità (indice di Gulpease); il controllo è affiancato dalla revisione manuale del Verificatore.
+
+Per il codice, l'analisi statica sarà svolta con un analizzatore automatico (\textit{linter}) eseguito nella pipeline di integrazione continua. Lo strumento sarà scelto insieme allo \glo{stack tecnologico} e riportato in questa sezione.
+
+\subsection{Analisi dinamica}
+L'\glo{analisi dinamica} verifica il comportamento del \glo{software} eseguendolo, tramite i test descritti nelle sezioni seguenti. I test automatici sono eseguiti nella pipeline di integrazione continua a ogni \textit{pull request} che modifica il codice.
+
+\subsection{Livelli di test}
+In conformità alle disposizioni del \glo{committente} per la fase \glo{RTB}, la pianificazione si articola in:
+\begin{itemize}
+    \item \textbf{\glo[Test di accettazione]{Test di accettazione} (TA):} accertano il completo soddisfacimento dei casi d'uso e dei bisogni dell'utente descritti nell'\textit{Analisi dei Requisiti}, in collaborazione con i referenti di Eggon;
+    \item \textbf{\glo[Test di sistema]{Test di sistema} (TS):} verificano il corretto funzionamento dell'applicazione nel suo insieme, validando la piena aderenza a ciascun requisito obbligatorio, desiderabile e opzionale;
+    \item \textbf{\glo[Test di integrazione]{Test di integrazione} (TI):} verificano la corretta comunicazione tra i moduli \glo{software} e i servizi dell'ecosistema NEXUM. \textit{Nota metodologica:} la specifica dei TI verrà formalizzata in fase \glo{PB}, a seguito della definizione dell'architettura logica e dei contratti di integrazione;
+    \item \textbf{\glo[Test di unità]{Test di unità} (TU):} verificano il corretto funzionamento delle singole unità minime di codice sorgente in isolamento. \textit{Nota metodologica:} la progettazione sistematica dei TU avverrà a seguito della progettazione di dettaglio in fase PB.
+\end{itemize}
+
+\subsection{Strumenti di testing}
+Per la documentazione il gruppo usa già i seguenti strumenti, descritti nelle \textit{Norme di Progetto}:
+\begin{itemize}
+    \item \textbf{compilazione automatica}: ogni \textit{pull request} compila tutti i documenti toccati e ne pubblica l'anteprima, segnalando gli errori;
+    \item \texttt{analisi\_testo.py}: ortografia e grammatica con LanguageTool, controlli tipografici e indice di Gulpease;
+    \item \textbf{revisione del Verificatore}: approvazione obbligatoria della \textit{pull request} da parte di un membro diverso dall'autore.
+\end{itemize}
+Gli strumenti per i test del codice (esecuzione dei test, misura della copertura, analisi statica) saranno scelti insieme allo \glo{stack tecnologico}, da concordare con Eggon, e riportati in questa sezione prima dell'inizio del \glo{PoC}.
+
+\subsection{Codifica e stati dei test}
+Ciascun test è individuato univocamente dalla sintassi:
+\begin{center}
+\textbf{T[Tipo]-[ID]}
+\end{center}
+dove \textbf{Tipo} assume i valori \texttt{A} (Accettazione) o \texttt{S} (Sistema), seguito da un progressivo numerico a tre cifre.
+
+Lo stato di avanzamento viene monitorato mediante la seguente tassonomia:
+\begin{itemize}
+    \item \textbf{NI (Non Implementato):} il test è stato formalizzato ma la procedura non è ancora stata codificata;
+    \item \textbf{I (Implementato):} la procedura di test è pronta per l'esecuzione ma non ancora validata;
+    \item \textbf{S (Superato):} il test è stato eseguito con esito positivo;
+    \item \textbf{NS (Non Superato):} il test ha riscontrato difetti, richiedendo interventi correttivi.
+\end{itemize}
+
+\subsection{Tracciamento dei test}
+Ogni test di accettazione è collegato al caso d'uso che verifica, e ogni test di sistema al \glo[Requisito]{requisito} che verifica, con il codice usato nell'\textit{Analisi dei Requisiti}. In questo modo ogni requisito obbligatorio ha almeno un test che ne dimostra il soddisfacimento.
+
+L'elenco dei test, con descrizione, requisito o caso d'uso collegato e stato, sarà aggiunto in questa sezione dopo l'approvazione della prima versione dell'\textit{Analisi dei Requisiti}.
+
+
+\section{Cruscotto di valutazione della qualità}
+Il \textit{Cruscotto di valutazione della qualità} accoglie la misurazione e la rendicontazione puntuale di tutti gli indicatori quantitativi definiti nel presente documento. Non va confuso con il cruscotto interno di avanzamento descritto nelle \textit{Norme di Progetto}, da cui ricava parte dei dati.
+
+A partire dalla chiusura del primo periodo di avanzamento (\glo[Sprint]{\textit{sprint}} 1), questa sezione contiene:
+\begin{itemize}
+    \item I dati consuntivi e l'andamento delle metriche di \glo{fornitura} parametrati sul BAC di progetto (11.250,00\,\texteuro);
+    \item L'analisi dell'indice di leggibilità e della correttezza ortografica sui documenti ufficiali rilasciati;
+    \item La discussione critica dello stato di ogni indicatore, evidenziando le motivazioni di eventuali scostamenti dalle soglie prefissate.
+\end{itemize}
+Eventuali azioni correttive e decisioni di automiglioramento conseguenti agli scostamenti rilevati verranno tracciate formalmente all'interno dei verbali delle riunioni di \glo{retrospettiva} del gruppo.
+
+\subsection{Sprint 1: dal 2026-11-02 al 2026-11-15}
+
+\subsubsection{Fornitura}
+I valori sono calcolati dal preventivo e dal consuntivo dello \glo[Sprint]{\textit{sprint}} 1 riportati nel \textit{Piano di Progetto}. Degli 8 obiettivi fissati ne sono stati raggiunti 6: l'Analisi dei Requisiti non è stata completata e lo studio delle tecnologie è stato raggiunto solo in parte, quindi entrambi sono contati come non raggiunti.
+
+\begin{table}[H]
+\centering
+\caption{Sprint 1 -- Metriche di fornitura}
+\begin{tabularx}{\linewidth}{@{}lXrc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Metrica} & \intestazione{Valore} & \intestazione{Esito} \\
+\midrule
+MPC-PV  & Planned Value                 & 1.192,50\,\texteuro  & -- \\
+MPC-AC  & Actual Cost                   & 921,25\,\texteuro    & -- \\
+MPC-EV  & Earned Value ($1.192{,}50 \times 6/8$) & 894,38\,\texteuro & -- \\
+MPC-CV  & Cost Variance                 & $-$26,88\,\texteuro ($-$3,0\,\%) & accettabile \\
+MPC-SV  & Schedule Variance             & $-$298,13\,\texteuro ($-$25,0\,\%) & non conforme \\
+MPC-CPI & Cost Performance Index        & 0,97                 & accettabile \\
+MPC-SPI & Schedule Performance Index    & 0,75                 & non conforme \\
+MPC-EAC & Estimate at Completion        & 11.588,05\,\texteuro ($+$3,0\,\%) & accettabile \\
+MPC-ETC & Estimate to Complete          & 10.666,80\,\texteuro (103\,\% del residuo) & accettabile \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Il ritardo (SPI 0,75) dipende soprattutto dall'Analisi dei Requisiti, che passa allo \glo[Sprint]{\textit{sprint}} 2. Il CPI è vicino a 1, ma va letto con cautela: nello \glo[Sprint]{\textit{sprint}} 1 una parte delle ore, soprattutto di verifica, non è stata registrata (rischio RO6 del \textit{Piano di Progetto}). L'AC reale è quindi probabilmente più alto, e CPI ed EAC più sfavorevoli di quanto riportato.
+
+\subsubsection{Documentazione}
+Valori misurati sui documenti presenti nel \glo{repository} alla chiusura dello \glo[Sprint]{\textit{sprint}}.
+
+\begin{table}[H]
+\centering
+\caption{Sprint 1 -- Indice di Gulpease e correttezza ortografica}
+\begin{tabularx}{\linewidth}{@{}Xrrc@{}}
+\toprule
+\intestazione{Documento} & \intestazione{MPC-GULP} & \intestazione{MPC-ORT} & \intestazione{Esito} \\
+\midrule
+Piano di Progetto         & 48 & 0 & accettabile \\
+Norme di Progetto         & 48 & 2 & non conforme \\
+Glossario                 & 44 & 0 & accettabile \\
+Verbale esterno 2026-11-11 & 53 & 0 & accettabile \\
+Verbale interno 2026-11-03 & 42 & 0 & accettabile \\
+Verbale interno 2026-11-05 & 49 & 1 & non conforme \\
+Verbale interno 2026-11-10 & 50 & 0 & accettabile \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Tutti i documenti superano la soglia accettabile di leggibilità, ma nessuno raggiunge quella ottimale. Gli errori non giustificati sono tre refusi di battitura, due nelle \textit{Norme di Progetto} e uno nel verbale del 2026-11-05. Le altre segnalazioni di LanguageTool sono falsi positivi su termini tecnici e parole composte.
+
+\subsubsection{Gestione dei processi e della qualità}
+\begin{table}[H]
+\centering
+\caption{Sprint 1 -- Metriche di gestione}
+\begin{tabularx}{\linewidth}{@{}lXrc@{}}
+\toprule
+\intestazione{ID} & \intestazione{Metrica} & \intestazione{Valore} & \intestazione{Esito} \\
+\midrule
+MPC-EO  & Efficienza oraria ($1 - 14{,}75/53$) & 72\,\%  & non conforme \\
+MPC-PRI & Percentuale rischi inattesi (2 su 4) & 50\,\%  & non conforme \\
+MPC-QMS & Quality Metrics Satisfied (5 su 10)  & 50\,\%  & non conforme \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+I rischi verificatisi sono RR2 e RT1, attesi, e RO6 e RO7, non previsti. MPC-QMS considera le dieci metriche con una soglia già misurabili: CV, SV, CPI, SPI, EAC, ETC, GULP, ORT, EO e PRI. MPC-RSI, MPC-TV, MPC-SCA e le metriche sul codice non sono ancora applicabili.
+
+Gli scostamenti sono coerenti con un primo \glo[Sprint]{\textit{sprint}} di avvio e sono stati discussi nella \glo{retrospettiva} del 2026-11-18. Le azioni correttive (registrazione delle ore il giorno stesso, date di scadenza nelle \glo[Issue]{\textit{issue}}, \textit{Norme di Progetto} aggiornate con piccole \textit{pull request}) sono riportate nel \textit{Piano di Progetto}.
+
+\end{document}
