@@ -859,11 +859,14 @@ Requisiti & \hyperlink{req:RF-10}{RF-10}, \hyperlink{req:RF-97}{RF-97} \\
     \draw[albero] (f02.north) -- (2.35,-1.70);
     \node[uc] (f03) at (7.05,-3.34) {\textbf{UC19}\\Consultazione dello stato di una richiesta};
     \draw[albero] (f03.north) -- (7.05,-1.70);
-    \node[uc] (f10) at (-2.35,-6.32) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
-    \draw[albero] (f10.north) -- (-2.35,-1.70);
-    \node[uc] (f11) at (2.35,-6.32) {\textbf{UC29}\\Cancellazione di una richiesta};
-    \draw[albero] (f11.north) -- (2.35,-1.70);
     \draw[albero] (-7.05,-1.70) -- (7.05,-1.70);
+    % Seconda riga (risale dal corridoio centrale x = 0 senza attraversare UC14 e UC15)
+    \node[uc] (f10) at (-2.35,-6.32) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \draw[albero] (f10.north) -- (-2.35,-4.83);
+    \node[uc] (f11) at (2.35,-6.32) {\textbf{UC29}\\Cancellazione di una richiesta};
+    \draw[albero] (f11.north) -- (2.35,-4.83);
+    \draw[albero] (-2.35,-4.83) -- (2.35,-4.83);
+    \draw[albero] (0,-4.83) -- (0,-1.70);
     \begin{scope}[on background layer]
       \node[confine, fit=(b) (f00) (f01) (f02) (f03) (f10) (f11)] (sistema) {};
     \end{scope}
