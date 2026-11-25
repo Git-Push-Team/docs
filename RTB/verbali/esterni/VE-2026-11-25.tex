@@ -1,0 +1,127 @@
+\documentclass[verbale=esterno]{gpt}
+
+\titolo{Requisiti aggiornati, proposta API e perimetro del PoC}
+\data{2026-11-25}
+\orario{17:00}{17:40}             
+\luogo{Google Meet}
+\redattore{biasini}
+\verificatore{guglielmo}           
+
+\componenti{biasini,cescobolla,corro,guglielmo,mazzurana,spagnoli}
+\assenti{}                         
+
+\esterno{Gianpaolo Ferrarin}{Founder \& CEO, Eggon}
+\esterno{Luca Iuzzolino}{Referente tecnico, Eggon}
+
+\firma{Gianpaolo Ferrarin}{Eggon}
+
+\destinatari{Prof.~Tullio Vardanega\newline Prof.~Riccardo Cardin\newline Eggon}
+
+\capitolato{C2 -- NEXUM AI Concierge (Eggon)}
+
+% Registro delle modifiche: le righe sono nel file
+%     VE-2026-11-25.registro.tex
+% accanto a questo, e le aggiunge il bot dopo il merge in base
+% all'etichetta della pull request (GUIDA.md, sezione 5).
+% Qui non si scrive nulla.
+
+\begin{document}
+
+\section{Ordine del giorno}
+\begin{enumerate}
+  \item Presentazione dei requisiti aggiornati e del modello di versionamento delle fonti.
+  \item Chiarimenti su accessi, dati di prova e regole operative delle richieste.
+  \item Piano di Qualifica: metriche e soglie.
+  \item Proposta delle API di ferie e permessi in Bruno.
+  \item Perimetro e tempistiche del PoC.
+\end{enumerate}
+
+\section{Svolgimento}
+Il gruppo ha presentato i requisiti aggiornati sulla base delle indicazioni ricevute su Telegram, la proposta di versionamento delle fonti, lo stato del Piano di Qualifica e la proposta delle API in Bruno. Il proponente ha chiarito diversi aspetti operativi, ha indicato come semplificare le API per allinearle agli standard di NEXUM e ha concordato con il gruppo il perimetro e la scadenza indicativa del PoC. Rispetto all'incontro del 18 novembre 2026 cambiano in particolare la gestione della cancellazione delle richieste, ora da definire, e gli stati di una richiesta.
+
+\section{Domande e risposte}
+
+\subsection{Requisiti e dati}
+
+\domanda{Come sono stati aggiornati i requisiti?}{%
+  Il gruppo ha modificato i requisiti secondo le indicazioni ricevute su Telegram, eliminandone alcuni e aggiungendone altri; l'Excel aggiornato verrà condiviso. Analisi dei requisiti e casi d'uso sono collegati tramite riferimenti che permettono di risalire a ogni requisito.}
+
+\domanda{Il modello di versionamento delle fonti proposto dal gruppo è adeguato?}{%
+  Sì. Nel bucket resta un solo documento attivo: ogni nuovo caricamento crea un nuovo record nel database, mentre la versione precedente viene conservata nello storico, marcata come sostituita ed esclusa dal recupero.}
+
+\domanda{Come vengono gestiti accessi e categorie dei contenuti?}{%
+  L'accesso all'applicazione è separato da quello di Eggon. Gli utenti di prova sono associati al ruolo di dipendente o di amministratore e mappati su un utente NEXUM. Le categorie di conoscenza aziendale e di prodotto sono scelte dall'amministratore alla creazione del bucket e sono visibili nel back office e nelle citazioni in chat.}
+
+\domanda{Quali dati di prova saranno disponibili?}{%
+  NEXUM fornirà manuali e dati di prova. Restano da definire gli utenti di prova da mappare e il modo per ottenere i token. È prevista un'azienda di prova collegata alle API, per verificare richieste in attesa, approvate, rifiutate e approvate automaticamente prima dell'integrazione nel PoC.}
+
+\subsection{Regole operative}
+
+\domanda{Quali richieste si potranno cancellare?}{%
+  Da definire. Va chiarito quali richieste potranno essere cancellate tramite le API: future, approvate o passate. Quelle passate potrebbero essere riservate all'amministratore. Tecnicamente il sistema supporta la cancellazione; la gestione finale è da verificare.}
+
+\domanda{Il saldo delle ferie sarà disponibile?}{%
+  Inizialmente no: l'applicazione non gestisce ancora il saldo reale e le API di sviluppo restituiranno dati simulati per saldo e residuo. Il dato reale è previsto nelle settimane successive, senza una data confermata.}
+
+\domanda{Quali sono gli stati di una richiesta?}{%
+  In attesa, approvata e rifiutata. Una nuova richiesta viene registrata come in attesa di approvazione; se l'azienda ha attivo il relativo flag, un processo successivo può approvarla automaticamente in pochi secondi.}
+
+\domanda{Per quanto tempo vanno conservate le tracce delle interazioni?}{%
+  La proposta è di 12 mesi, ma la durata è un elemento secondario per PoC e MVP. Tipi di richiesta e campi obbligatori verranno stabiliti con la definizione delle API.}
+
+\subsection{Qualità e metriche}
+
+\domanda{Quali metriche di qualità vanno concordate?}{%
+  Il Piano di Qualifica contiene già diversi indici con soglie iniziali, ma le metriche specifiche del progetto vanno concordate; il documento sarà condiviso con il proponente per revisione e commenti. Per la percentuale di documenti di prova elaborati e resi consultabili sul totale caricato NEXUM non ha valori di riferimento: il gruppo proporrà valori accettabili e ottimali.}
+
+\domanda{Come va valutato il costo dell'intelligenza artificiale?}{%
+  Servono strumenti per misurare il costo medio per conversazione. La taratura verrà valutata tra la fase di PoC e quella di MVP, osservando le interazioni reali e la soddisfazione dei casi d'uso.}
+
+\domanda{Entro quanto tempo una fonte aggiornata deve essere disponibile?}{%
+  Per il PoC non ci sono vincoli stretti: l'aggiornamento può richiedere ore o rendere il dato disponibile il giorno successivo. Prestazioni e tempi più stringenti riguardano le fasi successive. Resta necessario impedire un uso scorretto della chat.}
+
+\subsection{API e integrazione}
+
+\domanda{La proposta di API in Bruno è adeguata?}{%
+  La proposta comprende dieci servizi, con esempi di risposta per codici e scenari: token ottenuto con una richiesta POST con credenziali e scope di lettura e scrittura, tipologie di richiesta, riepiloghi, saldi, elenco e dettaglio delle richieste, anteprima, inserimento e cancellazione. Il proponente ha giudicato troppo generale il servizio che restituisce dinamicamente le tipologie di richiesta: le tipologie principali sono ferie, permessi, malattia e straordinari, e conviene gestire tipologie e flussi nel codice, verificando i casi espressi in ore o in giorni.}
+
+\domanda{Come si identifica il dipendente nelle chiamate?}{%
+  NEXUM fornirà un'API per cercare il dipendente, che restituisce un identificativo opaco, distinto da quello usato sulla piattaforma. L'applicazione dovrà salvarlo e associarlo all'utente autenticato per usarlo nelle richieste successive.}
+
+\domanda{Come vanno gestiti errori ed esiti incerti di inserimento e cancellazione?}{%
+  Con lo standard già usato da NEXUM: inserimento e cancellazione usano una chiave di idempotenza. Se una chiamata si interrompe, si ripete la stessa richiesta con la stessa chiave, senza introdurre un sistema di verifica separato.}
+
+\subsection{PoC e perimetro}
+
+\domanda{Cosa deve comprendere il PoC?}{%
+  Solo le funzionalità fondamentali: backend in Ruby on Rails con la gemma RubyLLM e chiamate ai modelli su Amazon Bedrock. Il back office è escluso dalla prima fase e l'interfaccia grafica è essenziale, sufficiente a validare i flussi principali. Le fonti possono essere caricate su un bucket S3 e l'elaborazione avviata tramite comando: l'obiettivo è verificare che la soluzione funzioni prima di rifinirne implementazione e prestazioni.}
+
+\domanda{Qual è la scadenza del PoC?}{%
+  Indicativamente tra il 15 e il 20 gennaio 2027, come limite massimo, con possibilità di completarlo prima. Il PoC servirà a validare il funzionamento da un capo all'altro prima dell'MVP. I requisiti fondamentali sono già abbastanza chiari per iniziare a impostarlo.}
+
+\section{Decisioni}
+\begin{decisioni}
+  \decisione{Versionamento delle fonti: un solo documento attivo per bucket, versioni precedenti conservate come sostituite ed escluse dal recupero.}
+  \decisione{Stati di una richiesta: in attesa, approvata, rifiutata, con approvazione automatica se prevista dall'azienda.}
+  \decisione{Saldo delle ferie inizialmente simulato dalle API di sviluppo.}
+  \decisione{API semplificate secondo gli standard di NEXUM: tipologie gestite nel codice, ricerca dell'identificativo del dipendente obbligatoria, chiave di idempotenza per inserimento e cancellazione.}
+  \decisione{PoC limitato alle funzionalità fondamentali, senza back office, con fonti caricate su S3 ed elaborate tramite comando.}
+  \decisione{Scadenza indicativa del PoC tra il 15 e il 20 gennaio 2027.}
+\end{decisioni}
+
+\section{Azioni da intraprendere}
+\begin{azioni}
+  \azione{Condividere il Piano di Qualifica con il proponente.}{cescobolla}{--}
+  \azione{Proporre valori accettabili e ottimali per la metrica sui documenti elaborati.}{cescobolla}{--}
+  \azione{Inviare l'Excel aggiornato dei requisiti e il PDF con analisi dei requisiti e casi d'uso.}{spagnoli}{--}
+  \azione{Aggiornare la collection Bruno: rivedere i servizi troppo generali e aggiungere la ricerca dell'identificativo del dipendente.}{guglielmo}{--}
+  \azione{Inviare la collection aggiornata a Gianpaolo Ferrarin.}{guglielmo}{--}
+  \azione{Fornire un riscontro sulla proposta di API.}{Gianpaolo Ferrarin}{--}
+  \azione{Preparare i documenti con le regole aziendali e i dati di prova.}{Gianpaolo Ferrarin}{--}
+  \azione{Preparare il documento di confronto tra la proposta in Bruno e le API di NEXUM.}{Gianpaolo Ferrarin}{--}
+\end{azioni}
+
+\section{Prossimo incontro}
+Il prossimo incontro con il proponente è previsto per mercoledì 2 dicembre 2026 alle 17:00, secondo la cadenza settimanale concordata.
+
+\end{document}
