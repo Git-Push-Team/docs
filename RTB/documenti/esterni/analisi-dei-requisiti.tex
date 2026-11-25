@@ -1277,7 +1277,7 @@ Attore principale & Dipendente \\ \addlinespace
 Attori secondari & Servizio ferie e permessi NEXUM \\ \addlinespace
 Precondizioni & Le API Eggon sono raggiungibili. \\ \addlinespace
 Postcondizioni & Il dipendente vede i propri dati del periodo richiesto, con periodo, unità di misura e criterio di conteggio. \\ \addlinespace
-Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il dipendente chiede informazioni sulle proprie ferie o sui propri permessi. \item Il sistema riconosce che serve la consultazione dei dati e ricava periodo e tipo dal messaggio o dal contesto. \item Il sistema invoca l'abilità di lettura, che ottiene i dati dalle API Eggon per l'utente NEXUM associato al dipendente. \item Il sistema mostra le richieste del periodo suddivise per stato (\hyperref[uc:dati_riep]{UC15.1}). \item Il sistema indica periodo, unità di misura e criterio di conteggio (\hyperref[uc:dati_criteri]{UC15.2}). \end{enumerate} \\ \addlinespace
+Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il dipendente chiede informazioni sulle proprie ferie o sui propri permessi. \item Il sistema riconosce che serve la consultazione dei dati e ricava periodo e tipo dal messaggio o dal contesto. \item Il sistema invoca l'abilità di lettura, che ottiene i dati dalle API Eggon per l'utente NEXUM associato al dipendente. \item Il sistema mostra le richieste del periodo suddivise per periodo e stato (\hyperref[uc:dati_riep]{UC15.1}). \item Il sistema indica periodo, unità di misura e criterio di conteggio (\hyperref[uc:dati_criteri]{UC15.2}). \end{enumerate} \\ \addlinespace
 Inclusioni & \hyperref[uc:dati_riep]{UC15.1}, \hyperref[uc:dati_criteri]{UC15.2} \\ \addlinespace
 Estensioni & \hyperref[uc:saldo]{UC16} \{il servizio fornisce il saldo residuo\}; \hyperref[uc:nessun_dato]{UC17} \{nessun dato nel periodo richiesto\}; \hyperref[uc:non_aut]{UC18} \{richiesta sui dati di un'altra persona\} \\ \addlinespace
 Generalizzazione & specializza \hyperref[uc:msg]{UC6} \\ \addlinespace
@@ -1747,7 +1747,7 @@ Requisiti & \hyperlink{req:RF-48}{RF-48} \\
 Attore principale & Dipendente \\ \addlinespace
 Precondizioni & Il servizio ha risposto all'invio. \\ \addlinespace
 Postcondizioni & Il dipendente conosce l'esito effettivo. \\ \addlinespace
-Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il sistema mostra l'esito restituito dal servizio: identificativo della richiesta e stato (registrata o in attesa di approvazione). \item Il sistema precisa che la registrazione non equivale all'approvazione, che resta nel processo NEXUM. \end{enumerate} \\ \addlinespace
+Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il sistema mostra l'esito restituito dal servizio: identificativo della richiesta e stato (registrata, in attesa di approvazione, approvata o cancellata). \item Nel caso di registrazione, il sistema precisa che essa non equivale all'approvazione, che resta nel processo NEXUM. \end{enumerate} \\ \addlinespace
 Incluso da & \hyperref[uc:registra]{UC20}, \hyperref[uc:annulla_inv]{UC29} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-49}{RF-49} \\
 \end{scheda}
@@ -1940,7 +1940,7 @@ Scenari alternativi & 2a. La richiesta non è individuata in modo univoco: il si
 Inclusioni & \hyperref[uc:sel_rich]{UC30}, \hyperref[uc:op_riep]{UC22}, \hyperref[uc:op_conf]{UC23}, \hyperref[uc:op_esito]{UC24} \\ \addlinespace
 Estensioni & \hyperref[uc:op_rinuncia]{UC26} \{il dipendente rinuncia prima della conferma\}; \hyperref[uc:op_rifiuto]{UC27} \{cancellazione non consentita dal servizio\}; \hyperref[uc:op_incerto]{UC28} \{invio interrotto con esito sconosciuto\} \\ \addlinespace
 Generalizzazione & specializza \hyperref[uc:msg]{UC6} \\ \addlinespace
-Requisiti & \hyperlink{req:RF-54}{RF-54}, \hyperlink{req:RF-96}{RF-96}, \hyperlink{req:RF-102}{RF-102} \\
+Requisiti & \hyperlink{req:RF-43}{RF-43}, \hyperlink{req:RF-54}{RF-54}, \hyperlink{req:RF-96}{RF-96}, \hyperlink{req:RF-102}{RF-102} \\
 \end{scheda}
 
 \subsubsection{UC30 -- Individuazione della richiesta interessata}\label{uc:sel_rich}
@@ -2559,7 +2559,7 @@ Requisiti & \hyperlink{req:RF-73}{RF-73} \\
 Attore principale & Amministratore \\ \addlinespace
 Precondizioni & È aperto il modulo di caricamento o sostituzione. \\ \addlinespace
 Postcondizioni & I metadati sono inseriti. \\ \addlinespace
-Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item L'amministratore inserisce titolo e versione della fonte. \item L'amministratore indica, se rilevanti, la data di entrata in vigore e le condizioni di applicabilità (per esempio sede o tipo di contratto). \end{enumerate} \\ \addlinespace
+Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item L'amministratore inserisce il titolo e, se desidera integrare il numero di versione progressivo assegnato dal sistema, un'etichetta di versione della fonte. \item L'amministratore indica, se previsti e rilevanti, la data di entrata in vigore e le condizioni di applicabilità (per esempio sede o tipo di contratto). \end{enumerate} \\ \addlinespace
 Scenari alternativi & 1a. L'amministratore non inserisce il titolo: il sistema propone il nome del file. \\ \addlinespace
 Incluso da & \hyperref[uc:fn_carica]{UC39}, \hyperref[uc:fn_sostituisci]{UC45} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-74}{RF-74}, \hyperlink{req:RF-75}{RF-75} \\
@@ -2646,7 +2646,7 @@ Requisiti & \hyperlink{req:RF-77}{RF-77} \\
 
 \begin{scheda}
 Attore principale & Amministratore \\ \addlinespace
-Precondizioni & Il file ha lo stesso contenuto di una fonte attiva del bucket. \\ \addlinespace
+Precondizioni & Il file ha lo stesso titolo o lo stesso contenuto di una fonte attiva del bucket. \\ \addlinespace
 Postcondizioni & L'amministratore sceglie se annullare o sostituire la fonte esistente. \\ \addlinespace
 Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il sistema segnala la fonte già presente. \item Il sistema propone di annullare il caricamento o di sostituire la fonte esistente (\hyperref[uc:fn_sostituisci]{UC45}). \end{enumerate} \\ \addlinespace
 Estende & \hyperref[uc:fn_carica]{UC39} \{file già presente nel bucket\} \\ \addlinespace
@@ -2755,7 +2755,7 @@ Requisiti & \hyperlink{req:RF-80}{RF-80} \\
 Attore principale & Amministratore \\ \addlinespace
 Precondizioni & Il dettaglio della fonte è aperto. \\ \addlinespace
 Postcondizioni & Lo stato è visibile. \\ \addlinespace
-Scenario principale & Il sistema mostra lo stato (in coda, in elaborazione, disponibile, errore, ritirata) e la data dell'ultimo cambiamento. \\ \addlinespace
+Scenario principale & Il sistema mostra lo stato (in coda, in elaborazione, disponibile, errore, sostituita, ritirata) e la data dell'ultimo cambiamento. \\ \addlinespace
 Incluso da & \hyperref[uc:fn_dettaglio]{UC43} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-81}{RF-81} \\
 \end{scheda}
@@ -2784,7 +2784,7 @@ Descrizione & L'errore di elaborazione si verifica al caricamento, quando la fon
 Attore principale & Amministratore \\ \addlinespace
 Precondizioni & L'elaborazione della fonte non è riuscita (per esempio un PDF senza testo estraibile). \\ \addlinespace
 Postcondizioni & L'amministratore conosce il motivo e le azioni possibili. \\ \addlinespace
-Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il sistema mostra il motivo dell'errore in modo comprensibile. \item Il sistema propone di sostituire il file o di ripetere l'elaborazione (\hyperref[uc:fn_riprova]{UC47}). \end{enumerate} \\ \addlinespace
+Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il sistema mostra il motivo dell'errore in modo comprensibile. \item Il sistema propone di caricare un file corretto (\hyperref[uc:fn_carica]{UC39}) o di ripetere l'elaborazione (\hyperref[uc:fn_riprova]{UC47}). \end{enumerate} \\ \addlinespace
 Estende & \hyperref[uc:fn_dettaglio]{UC43} \{elaborazione non riuscita\} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-83}{RF-83} \\
 \end{scheda}
@@ -2843,7 +2843,7 @@ Attori secondari & Fornitore di modelli AI \\ \addlinespace
 Precondizioni & La fonte esiste ed è attiva. \\ \addlinespace
 Postcondizioni & La nuova versione è elaborata e, una volta disponibile, è l'unica usata nelle risposte successive; la precedente resta nello storico, collegata alle interazioni in cui è stata usata. \\ \addlinespace
 Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item L'amministratore sceglie di sostituire una fonte. \item L'amministratore seleziona il nuovo file (\hyperref[uc:fn_file]{UC39.1}). \item L'amministratore aggiorna i metadati e la versione (\hyperref[uc:fn_meta]{UC39.2}). \item L'amministratore conferma. \item Il sistema elabora la nuova versione in modo asincrono. \item Quando la nuova versione è disponibile, il sistema esclude la precedente dal recupero. \end{enumerate} \\ \addlinespace
-Scenari alternativi & 5a. L'elaborazione non riesce: la versione precedente resta in uso e il sistema segnala l'errore (\hyperref[uc:fn_errore]{UC44}). \\ \addlinespace
+Scenari alternativi & 5a. L'elaborazione non riesce: la versione precedente resta in uso e il motivo dell'errore è consultabile nel dettaglio della fonte (\hyperref[uc:fn_errore]{UC44}). \\ \addlinespace
 Inclusioni & \hyperref[uc:fn_file]{UC39.1}, \hyperref[uc:fn_meta]{UC39.2} \\ \addlinespace
 Estensioni & \hyperref[uc:fn_formato]{UC40} \{file non in formato PDF\}; \hyperref[uc:fn_dim]{UC41} \{file oltre la dimensione massima\} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-84}{RF-84}, \hyperlink{req:RF-85}{RF-85} \\
@@ -2990,11 +2990,11 @@ Requisiti & \hyperlink{req:RF-90}{RF-90} \\
   \begin{tikzpicture}
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC49}\\Filtraggio del registro};
     \node[uc] (c0) at (7.15,2.05) {\textbf{UC49.1}\\Filtraggio per persona};
-    \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft include\guillemotright} (c0);
+    \draw[dipendenza] (c0) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (b);
     \node[uc] (c1) at (7.15,0.00) {\textbf{UC49.2}\\Filtraggio per periodo};
-    \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft include\guillemotright} (c1);
+    \draw[dipendenza] (c1) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (b);
     \node[uc] (c2) at (7.15,-2.05) {\textbf{UC49.3}\\Filtraggio per capacità ed esito};
-    \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft include\guillemotright} (c2);
+    \draw[dipendenza] (c2) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (b);
     \begin{scope}[on background layer]
       \node[confine, fit=(b) (c0) (c1) (c2)] (sistema) {};
     \end{scope}
@@ -3012,7 +3012,7 @@ Precondizioni & Il registro è visualizzato. \\ \addlinespace
 Postcondizioni & Il registro mostra solo le voci che rispettano i filtri. \\ \addlinespace
 Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item L'amministratore imposta uno o più filtri: persona (\hyperref[uc:tr_f_persona]{UC49.1}), periodo (\hyperref[uc:tr_f_periodo]{UC49.2}), capacità o esito (\hyperref[uc:tr_f_capacita]{UC49.3}). \item Il sistema mostra le voci corrispondenti. \end{enumerate} \\ \addlinespace
 Scenari alternativi & 2a. Nessuna voce corrisponde: il sistema lo dichiara. \\ \addlinespace
-Inclusioni & \hyperref[uc:tr_f_persona]{UC49.1}, \hyperref[uc:tr_f_periodo]{UC49.2}, \hyperref[uc:tr_f_capacita]{UC49.3} \\ \addlinespace
+Estensioni & \hyperref[uc:tr_f_persona]{UC49.1} \{filtro per persona\}; \hyperref[uc:tr_f_periodo]{UC49.2} \{filtro per periodo\}; \hyperref[uc:tr_f_capacita]{UC49.3} \{filtro per capacità o esito\} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-91}{RF-91} \\
 \end{scheda}
 
@@ -3023,7 +3023,7 @@ Requisiti & \hyperlink{req:RF-91}{RF-91} \\
   \begin{tikzpicture}
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC49.1}\\Filtraggio per persona};
     \node[uc] (c0) at (7.15,0.00) {\textbf{UC49}\\Filtraggio del registro};
-    \draw[dipendenza] (c0) -- node[etich, sloped] {\guillemotleft include\guillemotright} (b);
+    \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (c0);
     \begin{scope}[on background layer]
       \node[confine, fit=(b) (c0)] (sistema) {};
     \end{scope}
@@ -3040,7 +3040,7 @@ Attore principale & Amministratore \\ \addlinespace
 Precondizioni & Il registro è visualizzato. \\ \addlinespace
 Postcondizioni & Sono mostrate le voci della persona scelta. \\ \addlinespace
 Scenario principale & L'amministratore seleziona una persona dell'azienda. \\ \addlinespace
-Incluso da & \hyperref[uc:tr_filtro]{UC49} \\ \addlinespace
+Estende & \hyperref[uc:tr_filtro]{UC49} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-92}{RF-92} \\
 \end{scheda}
 
@@ -3051,7 +3051,7 @@ Requisiti & \hyperlink{req:RF-92}{RF-92} \\
   \begin{tikzpicture}
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC49.2}\\Filtraggio per periodo};
     \node[uc] (c0) at (7.15,0.00) {\textbf{UC49}\\Filtraggio del registro};
-    \draw[dipendenza] (c0) -- node[etich, sloped] {\guillemotleft include\guillemotright} (b);
+    \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (c0);
     \begin{scope}[on background layer]
       \node[confine, fit=(b) (c0)] (sistema) {};
     \end{scope}
@@ -3068,7 +3068,7 @@ Attore principale & Amministratore \\ \addlinespace
 Precondizioni & Il registro è visualizzato. \\ \addlinespace
 Postcondizioni & Sono mostrate le voci del periodo scelto. \\ \addlinespace
 Scenario principale & L'amministratore indica data iniziale e finale. \\ \addlinespace
-Incluso da & \hyperref[uc:tr_filtro]{UC49} \\ \addlinespace
+Estende & \hyperref[uc:tr_filtro]{UC49} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-93}{RF-93} \\
 \end{scheda}
 
@@ -3079,7 +3079,7 @@ Requisiti & \hyperlink{req:RF-93}{RF-93} \\
   \begin{tikzpicture}
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC49.3}\\Filtraggio per capacità ed esito};
     \node[uc] (c0) at (7.15,0.00) {\textbf{UC49}\\Filtraggio del registro};
-    \draw[dipendenza] (c0) -- node[etich, sloped] {\guillemotleft include\guillemotright} (b);
+    \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (c0);
     \begin{scope}[on background layer]
       \node[confine, fit=(b) (c0)] (sistema) {};
     \end{scope}
@@ -3095,8 +3095,8 @@ Requisiti & \hyperlink{req:RF-93}{RF-93} \\
 Attore principale & Amministratore \\ \addlinespace
 Precondizioni & Il registro è visualizzato. \\ \addlinespace
 Postcondizioni & Sono mostrate le voci con la capacità o l'esito scelti. \\ \addlinespace
-Scenario principale & L'amministratore seleziona una capacità e, se vuole, un esito. \\ \addlinespace
-Incluso da & \hyperref[uc:tr_filtro]{UC49} \\ \addlinespace
+Scenario principale & L'amministratore seleziona una capacità, un esito o entrambi. \\ \addlinespace
+Estende & \hyperref[uc:tr_filtro]{UC49} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-94}{RF-94} \\
 \end{scheda}
 
@@ -3121,7 +3121,7 @@ Requisiti & \hyperlink{req:RF-94}{RF-94} \\
 Attore principale & Amministratore \\ \addlinespace
 Precondizioni & Il registro è visualizzato. \\ \addlinespace
 Postcondizioni & L'interazione è ricostruibile. \\ \addlinespace
-Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item L'amministratore seleziona una voce. \item Il sistema mostra il messaggio, le fonti consultate con la versione, la capacità o abilità invocata con i dati inviati e, quando applicabili, la conferma e l'esito restituito dal servizio. \end{enumerate} \\ \addlinespace
+Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item L'amministratore seleziona una voce. \item Il sistema mostra le fonti consultate con la versione, la capacità o abilità invocata con i dati inviati e, quando applicabili, la conferma, l'esito restituito dal servizio, gli eventuali dettagli di errore tecnico (\hyperlink{req:RF-20}{RF-20}) e, se conservato, il contenuto del messaggio. \end{enumerate} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-95}{RF-95}, \hyperlink{req:RF-99}{RF-99} \\
 \end{scheda}
 
@@ -3231,13 +3231,13 @@ funzionale; l'attore coinvolto è quello dei casi d'uso indicati nella colonna
 \leavevmode\hypertarget{req:RF-40}{\textbf{RF-40}} & Il sistema deve permettere al dipendente di preparare e registrare una richiesta di ferie o permesso tramite la chat. & Obbligatorio & T & \hyperref[uc:registra]{UC20}, \mbox{CA-04} \\
 \leavevmode\hypertarget{req:RF-41}{\textbf{RF-41}} & Il sistema deve trattare la richiesta in linguaggio naturale come avvio della preparazione, senza inviarla. & Obbligatorio & T & \hyperref[uc:registra]{UC20}, \mbox{RB-12} \\
 \leavevmode\hypertarget{req:RF-42}{\textbf{RF-42}} & Il sistema deve eseguire le operazioni solo attraverso abilità definite e servizi autorizzati. & Obbligatorio & I & \hyperref[uc:registra]{UC20}, \mbox{RB-11} \\
-\leavevmode\hypertarget{req:RF-43}{\textbf{RF-43}} & Per ogni operazione sulle richieste, oltre ai dati registrati per ogni interazione (RF-15), il sistema deve registrare sempre la conferma del dipendente e l’esito restituito dal servizio. & Obbligatorio & T & \hyperref[uc:registra]{UC20}, \mbox{RB-15}, \mbox{CA-12}, \mbox{Riscontro Eggon} \\
+\leavevmode\hypertarget{req:RF-43}{\textbf{RF-43}} & Per ogni operazione sulle richieste, oltre ai dati registrati per ogni interazione (RF-15), il sistema deve registrare sempre la conferma del dipendente e l’esito restituito dal servizio. & Obbligatorio & T & \hyperref[uc:registra]{UC20}, \hyperref[uc:annulla_inv]{UC29}, \mbox{RB-15}, \mbox{CA-12}, \mbox{Riscontro Eggon} \\
 \leavevmode\hypertarget{req:RF-44}{\textbf{RF-44}} & Il sistema deve determinare il tipo di richiesta tra quelli previsti dal servizio NEXUM. & Obbligatorio & T & \hyperref[uc:reg_tipo]{UC20.1}, \mbox{Capitolato} \\
 \leavevmode\hypertarget{req:RF-45}{\textbf{RF-45}} & Il sistema deve determinare date di inizio e fine e, per i permessi, orari o durata, completi di anno. & Obbligatorio & T & \hyperref[uc:periodo]{UC21}, \mbox{Capitolato}, \mbox{CA-06} \\
 \leavevmode\hypertarget{req:RF-46}{\textbf{RF-46}} & Il sistema deve raccogliere tutte le informazioni obbligatorie previste dal servizio NEXUM prima del riepilogo. & Obbligatorio & T & \hyperref[uc:reg_campi]{UC20.2}, \mbox{Capitolato} \\
 \leavevmode\hypertarget{req:RF-47}{\textbf{RF-47}} & Il sistema deve mostrare prima di ogni invio un riepilogo completo, con date e orari per esteso. & Obbligatorio & T & \hyperref[uc:op_riep]{UC22}, \mbox{RB-12}, \mbox{CA-04} \\
 \leavevmode\hypertarget{req:RF-48}{\textbf{RF-48}} & Il sistema deve inviare un’operazione solo dopo una conferma esplicita del dipendente sul riepilogo corrente. & Obbligatorio & T & \hyperref[uc:op_conf]{UC23}, \mbox{RB-12}, \mbox{CA-04}, \mbox{Vincoli} \\
-\leavevmode\hypertarget{req:RF-49}{\textbf{RF-49}} & Il sistema deve mostrare l’esito effettivo restituito dal servizio, distinguendo richiesta registrata, in attesa di approvazione e approvata. & Obbligatorio & T & \hyperref[uc:op_esito]{UC24}, \mbox{RB-13}, \mbox{CA-10} \\
+\leavevmode\hypertarget{req:RF-49}{\textbf{RF-49}} & Il sistema deve mostrare l’esito effettivo restituito dal servizio, distinguendo richiesta registrata, in attesa di approvazione, approvata e cancellata. & Obbligatorio & T & \hyperref[uc:op_esito]{UC24}, \mbox{RB-13}, \mbox{CA-10} \\
 \leavevmode\hypertarget{req:RF-50}{\textbf{RF-50}} & Il sistema deve richiedere un nuovo riepilogo e una nuova conferma quando cambiano i dati da inviare. & Obbligatorio & T & \hyperref[uc:op_modifica]{UC25}, \mbox{RB-12}, \mbox{CA-10} \\
 \leavevmode\hypertarget{req:RF-51}{\textbf{RF-51}} & Il sistema deve permettere di rinunciare a un’operazione prima della conferma, senza inviare nulla. & Obbligatorio & T & \hyperref[uc:op_rinuncia]{UC26}, \mbox{RB-12} \\
 \leavevmode\hypertarget{req:RF-52}{\textbf{RF-52}} & Il sistema deve comunicare il motivo delle validazioni negative restituite dal servizio NEXUM. & Obbligatorio & T & \hyperref[uc:op_rifiuto]{UC27}, \mbox{RB-14}, \mbox{CA-11}, \mbox{Vincoli} \\
@@ -3547,7 +3547,7 @@ che ne derivano.
 \hyperref[uc:op_rinuncia]{UC26} & Rinuncia all'operazione prima della conferma & \hyperlink{req:RF-51}{RF-51} \\
 \hyperref[uc:op_rifiuto]{UC27} & Operazione respinta dal servizio & \hyperlink{req:RF-52}{RF-52} \\
 \hyperref[uc:op_incerto]{UC28} & Esito dell'operazione incerto & \hyperlink{req:RF-53}{RF-53} \\
-\hyperref[uc:annulla_inv]{UC29} & Cancellazione di una richiesta & \hyperlink{req:RF-54}{RF-54}, \hyperlink{req:RF-96}{RF-96}, \hyperlink{req:RF-102}{RF-102} \\
+\hyperref[uc:annulla_inv]{UC29} & Cancellazione di una richiesta & \hyperlink{req:RF-43}{RF-43}, \hyperlink{req:RF-54}{RF-54}, \hyperlink{req:RF-96}{RF-96}, \hyperlink{req:RF-102}{RF-102} \\
 \hyperref[uc:sel_rich]{UC30} & Individuazione della richiesta interessata & \hyperlink{req:RF-55}{RF-55}, \hyperlink{req:RF-102}{RF-102} \\
 \hyperref[uc:bk_elenco]{UC31} & Visualizzazione dell'elenco dei bucket & \hyperlink{req:RF-57}{RF-57} \\
 \hyperref[uc:bk_elem]{UC31.1} & Visualizzazione di un bucket nell'elenco & \hyperlink{req:RF-58}{RF-58} \\
@@ -3567,7 +3567,7 @@ che ne derivano.
 \hyperref[uc:fn_formato]{UC40} & Formato del file non supportato & \hyperlink{req:RF-76}{RF-76} \\
 \hyperref[uc:fn_dim]{UC41} & Dimensione massima superata & \hyperlink{req:RF-77}{RF-77} \\
 \hyperref[uc:fn_dup]{UC42} & Fonte già presente & \hyperlink{req:RF-78}{RF-78} \\
-\hyperref[uc:fn_dettaglio]{UC43} & Visualizzazione del dettaglio di una fonte &  \\
+\hyperref[uc:fn_dettaglio]{UC43} & Visualizzazione del dettaglio di una fonte & nei sottocasi \hyperref[uc:fn_meta_v]{UC43.1}, \hyperref[uc:fn_stato]{UC43.2} \\
 \hyperref[uc:fn_meta_v]{UC43.1} & Visualizzazione dei metadati & \hyperlink{req:RF-80}{RF-80} \\
 \hyperref[uc:fn_stato]{UC43.2} & Visualizzazione dello stato di elaborazione & \hyperlink{req:RF-81}{RF-81} \\
 \hyperref[uc:fn_errore]{UC44} & Visualizzazione dell'errore di elaborazione & \hyperlink{req:RF-83}{RF-83} \\
