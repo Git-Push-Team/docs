@@ -29,7 +29,7 @@ In particolare, il documento persegue i seguenti obiettivi:
 \subsection{Scopo del prodotto}
 Il progetto, basato sul \glo{capitolato} C2 denominato \textit{NEXUM Concierge}, ha come obiettivo l'introduzione di un assistente conversazionale all'interno della piattaforma aziendale NEXUM. Tale piattaforma, realizzata come \glo[PWA]{\textit{Progressive Web App}} (PWA), è pensata per avvicinare aziende e personale, semplificando le attività quotidiane legate alla comunicazione e alla gestione dei processi \glo{HR}.
 
-L'assistente permetterà agli utenti di cercare informazioni, comprendere le procedure aziendali e accedere ai servizi utilizzando direttamente il linguaggio naturale, collegando la conoscenza aziendale alle funzionalità operative. Per garantire un approccio graduale e verificabile, il dominio dell'\glo[MVP]{\textit{Minimum Viable Product}} (MVP) è focalizzato sull'area ferie e permessi.
+L'assistente permetterà agli utenti di cercare informazioni, comprendere le procedure aziendali e accedere ai servizi utilizzando direttamente il linguaggio naturale, collegando la conoscenza aziendale alle funzionalità operative. Per garantire un approccio graduale e verificabile, il dominio dell'\glo[MVP]{\textit{Minimum Viable Product}} (MVP) è focalizzato sull'area ferie e permessi (richieste di ferie, permessi, malattia e straordinari).
 
 \subsection{Glossario}
 Al fine di prevenire ambiguità semantiche e garantire uniformità lessicale tra i membri del gruppo, il \glo{committente} e i referenti aziendali, è stato redatto un documento interno denominato \textit{Glossario}. Tutti i termini tecnici, gli acronimi e i vocaboli propri del dominio applicativo sono contrassegnati nel testo da una ``G'' in pedice (ad esempio \glo{baseline}). La relativa definizione formale è consultabile all'interno del documento citato. Le metriche, invece, sono definite direttamente in questo documento, accanto alle rispettive soglie.
@@ -53,7 +53,8 @@ Al fine di prevenire ambiguità semantiche e garantire uniformità lessicale tra
     \item \textbf{Standard ISO/IEC 9126:2001:} \textit{Software Engineering -- Product Quality};
     \item \textbf{Glossario -- Git Push Team:} documento interno;
     \item \textbf{Piano di Progetto -- Git Push Team:} documento esterno;
-    \item \textbf{Verbali esterni -- Git Push Team:} verbali degli incontri con Eggon, in particolare quelli del 2026-11-11 e del 2026-11-18.
+    \item \textbf{Analisi dei Requisiti -- Git Push Team:} documento esterno;
+    \item \textbf{Verbali esterni -- Git Push Team:} verbali degli incontri con Eggon del 2026-11-11, del 2026-11-18 e del 2026-11-25.
 \end{itemize}
 
 
@@ -221,7 +222,7 @@ Il cruscotto interno descritto nelle \textit{Norme di Progetto} calcola ogni gio
 La qualità di prodotto stabilisce le caratteristiche funzionali e non funzionali attese per l'applicazione \textbf{NEXUM Concierge}, secondo lo \glo{standard} ISO/IEC 9126. Gli indicatori sono contraddistinti dal prefisso \textbf{MPD} (\textit{Metrica di Prodotto}). Le metriche di prodotto si misurano a partire dal \glo{PoC} e, in modo completo, sull'\glo{MVP}.
 
 \subsection{Funzionalità}
-Rappresenta la capacità del sistema di fornire le quattro capacità operative previste dal \glo{capitolato} (conoscenza aziendale, istruzioni NEXUM, lettura dati e inoltro richieste ferie/permessi).
+Rappresenta la capacità del sistema di fornire le quattro capacità operative previste dal \glo{capitolato} (conoscenza aziendale, istruzioni NEXUM, lettura dati e gestione delle richieste di ferie e permessi).
 
 \begin{table}[H]
 \centering
@@ -232,7 +233,7 @@ Rappresenta la capacità del sistema di fornire le quattro capacità operative p
 \midrule
 MPD-RO   & Requisiti obbligatori soddisfatti    & $100\%$                & $100\%$ \\
 MPD-RD   & Requisiti desiderabili soddisfatti   & $\ge 50\%$             & $100\%$ \\
-MPD-ROP  & Requisiti opzionali soddisfatti      & $\ge 0\%$              & $\ge 50\%$ \\
+MPD-ROP  & Requisiti facoltativi soddisfatti    & $\ge 0\%$              & $\ge 50\%$ \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -240,7 +241,7 @@ MPD-ROP  & Requisiti opzionali soddisfatti      & $\ge 0\%$              & $\ge 
 \noindent Definizione: percentuale dei \glo[Requisito]{requisiti} di ciascuna classe, come classificati nell'\textit{Analisi dei Requisiti}, per cui il relativo \glo[Test di sistema]{test di sistema} è superato.
 
 \subsubsection{Accuratezza delle risposte e delle operazioni}
-Il capitolato chiede di valutare separatamente il recupero delle fonti, la generazione delle risposte e l'esecuzione delle operazioni. Le metriche seguenti, corrispondenti alla sottocaratteristica \textit{accuratezza} della ISO/IEC 9126, si misurano su un insieme di domande e scenari di prova concordato con Eggon. Le soglie saranno fissate con la proponente in base ai volumi di prova, come previsto dal capitolato, e riportate qui non appena disponibili.
+Il capitolato chiede di valutare separatamente il recupero delle fonti, la generazione delle risposte e l'esecuzione delle operazioni. Le metriche seguenti, corrispondenti alla sottocaratteristica \textit{accuratezza} della ISO/IEC 9126, si misurano su un insieme di documenti, domande e scenari di prova concordato con Eggon. Poiché durante l'incontro del 2026-11-25 il proponente ha indicato di non disporre di valori storici di riferimento, la tabella riporta le soglie proposte dal gruppo, da validare e tarare insieme a Eggon sui dati di prova del \glo{PoC} e dell'\glo{MVP}.
 
 \begin{table}[H]
 \centering
@@ -249,14 +250,14 @@ Il capitolato chiede di valutare separatamente il recupero delle fonti, la gener
 \toprule
 \intestazione{ID} & \intestazione{Nome metrica} & \intestazione{Valore accettabile} & \intestazione{Valore ottimale} \\
 \midrule
-MPD-FON  & Completezza dell'elaborazione delle fonti & da concordare & da concordare \\
-MPD-REC  & Pertinenza del recupero              & da concordare          & da concordare \\
-MPD-RIS  & Correttezza delle risposte           & da concordare          & da concordare \\
-MPD-CIT  & Correttezza delle citazioni          & da concordare          & da concordare \\
-MPD-CAP  & Scelta corretta della capacità       & da concordare          & da concordare \\
-MPD-CTX  & Mantenimento del contesto            & da concordare          & da concordare \\
+MPD-FON  & Completezza dell'elaborazione delle fonti & $\ge 90\%$             & $100\%$ \\
+MPD-REC  & Pertinenza del recupero              & $\ge 80\%$             & $\ge 90\%$ \\
+MPD-RIS  & Correttezza delle risposte           & $\ge 80\%$             & $\ge 90\%$ \\
+MPD-CIT  & Correttezza delle citazioni          & $\ge 90\%$             & $100\%$ \\
+MPD-CAP  & Scelta corretta della capacità       & $\ge 85\%$             & $\ge 95\%$ \\
+MPD-CTX  & Mantenimento del contesto            & $\ge 80\%$             & $\ge 90\%$ \\
 MPD-DAT  & Correttezza dei dati restituiti      & $100\%$                & $100\%$ \\
-MPD-OPE  & Operazioni completate correttamente  & da concordare          & da concordare \\
+MPD-OPE  & Operazioni completate correttamente  & $\ge 95\%$             & $100\%$ \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -266,15 +267,15 @@ MPD-OPE  & Operazioni completate correttamente  & da concordare          & da co
     \item \textbf{MPD-FON}: documenti di prova elaborati e resi consultabili sul totale dei documenti caricati;
     \item \textbf{MPD-REC}: domande per cui tra le fonti recuperate compare quella che contiene la risposta;
     \item \textbf{MPD-RIS}: risposte giudicate corrette dai referenti di Eggon o confrontate con la risposta attesa;
-    \item \textbf{MPD-CIT}: risposte le cui citazioni rimandano a fonti che contengono davvero l'informazione riportata;
-    \item \textbf{MPD-CAP}: richieste per cui l'assistente sceglie la capacità giusta (conoscenza documentale, istruzioni NEXUM, lettura dati o richiesta);
+    \item \textbf{MPD-CIT}: risposte le cui citazioni rimandano a fonti e versioni che contengono davvero l'informazione riportata;
+    \item \textbf{MPD-CAP}: richieste per cui l'assistente sceglie la capacità giusta (conoscenza documentale, istruzioni NEXUM, lettura dati o operazione);
     \item \textbf{MPD-CTX}: dialoghi di più messaggi in cui le domande successive sono interpretate correttamente rispetto alle precedenti;
-    \item \textbf{MPD-DAT}: dati di ferie e permessi restituiti uguali a quelli dei servizi NEXUM, reali o simulati. La soglia è del 100\% perché un dato errato non è accettabile;
-    \item \textbf{MPD-OPE}: richieste di ferie e permessi registrate correttamente dopo la conferma, sul totale delle richieste confermate.
+    \item \textbf{MPD-DAT}: dati di ferie e permessi (richieste, stati e saldo residuo) restituiti uguali a quelli dei servizi NEXUM, reali o simulati, senza alterare conteggi o unità di misura (giorni e ore). La soglia è del 100\% perché un dato errato non è accettabile;
+    \item \textbf{MPD-OPE}: richieste (ferie, permessi, malattia e straordinari) registrate o cancellate correttamente dopo la conferma, sul totale delle operazioni confermate.
 \end{itemize}
 
 \subsubsection{Sicurezza}
-Il capitolato pone vincoli sull'accesso ai dati e sulle operazioni: separazione tra aziende, accesso ai soli dati autorizzati, conferma prima dell'invio delle richieste, fonti documentali che non possono modificare istruzioni o autorizzazioni.
+Il capitolato pone vincoli sull'accesso ai dati e sulle operazioni: separazione tra aziende, accesso ai soli dati autorizzati, conferma prima dell'invio delle richieste, fonti documentali e messaggi che non possono modificare istruzioni, autorizzazioni o aggirare i controlli sulle regole aziendali.
 
 \begin{table}[H]
 \centering
@@ -292,8 +293,8 @@ MPD-INJ  & Istruzioni contenute nelle fonti eseguite & $0$               & $0$ \
 
 \noindent Definizioni:
 \begin{itemize}
-    \item \textbf{MPD-AUT}: percentuale di test superati tra quelli che provano ad accedere a dati di un'altra azienda, di un'altra persona o di un \glo{bucket} non autorizzato;
-    \item \textbf{MPD-CNF}: richieste registrate senza che la persona le abbia confermate, negli scenari di prova;
+    \item \textbf{MPD-AUT}: percentuale di test superati tra quelli che provano ad accedere a dati di un'altra azienda, di un'altra persona o, se attiva la segmentazione per gruppi, di un \glo{bucket} non autorizzato;
+    \item \textbf{MPD-CNF}: operazioni (registrazioni o cancellazioni) eseguite senza che la persona le abbia confermate, negli scenari di prova;
     \item \textbf{MPD-INJ}: casi di prova in cui un documento contiene istruzioni rivolte all'assistente e l'assistente le esegue invece di trattarle come contenuto.
 \end{itemize}
 
@@ -315,7 +316,7 @@ MPD-DD   & \glo{Defect Density}                 & $\le 3\text{ / }$\glo{KLOC} & 
 
 \noindent Definizioni:
 \begin{itemize}
-    \item \textbf{MPD-ERR}: percentuale di scenari di errore gestiti senza perdita o duplicazione di dati e con un messaggio comprensibile alla persona. Gli scenari comprendono servizio NEXUM non raggiungibile, richiesta rifiutata dalle validazioni e tentativi ripetuti;
+    \item \textbf{MPD-ERR}: percentuale di scenari di errore gestiti senza perdita o duplicazione di dati e con un messaggio comprensibile alla persona. Gli scenari comprendono servizio NEXUM non raggiungibile, dipendente non trovato, rifiuto da validazioni o regole aziendali, sovrapposizioni e ripetizione automatica con chiave di idempotenza (codici \texttt{409}, \texttt{503} e risposta ripetuta);
     \item \textbf{MPD-DD}: difetti trovati dopo il \textit{merge} nel ramo principale, per ogni mille righe di codice.
 \end{itemize}
 Le metriche di copertura del codice da parte dei test sono riportate tra le metriche del processo di verifica (MPC-COV e MPC-BC).
@@ -354,8 +355,8 @@ Misura i tempi di reazione dell'interfaccia utente e la \glo{latenza} delle chia
 \midrule
 MPD-LAT  & Latenza risposta interfaccia         & $\le 1\text{ s}$       & $\le 0{,}5\text{ s}$ \\
 MPD-LLM  & Latenza generazione e risposta LLM   & $\le 8\text{ s}$       & $\le 4\text{ s}$ \\
-MPD-AGG  & Tempo di aggiornamento delle fonti   & da concordare          & da concordare \\
-MPD-COS  & Costo medio dei servizi AI per conversazione & da concordare  & da concordare \\
+MPD-AGG  & Tempo di aggiornamento delle fonti (PoC) & $\le 24\text{ ore}$ & $\le 1\text{ ora}$ \\
+MPD-COS  & Costo medio dei servizi AI per conversazione & da tarare nel PoC & da tarare nel PoC \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -363,11 +364,10 @@ MPD-COS  & Costo medio dei servizi AI per conversazione & da concordare  & da co
 \noindent Definizioni:
 \begin{itemize}
     \item \textbf{MPD-LAT}: tempo tra un'azione della persona nell'interfaccia e la sua prima risposta visibile;
-    \item \textbf{MPD-LLM}: tempo tra l'invio di un messaggio e il completamento della risposta dell'assistente;
-    \item \textbf{MPD-AGG}: tempo tra il caricamento o la modifica di una fonte e il momento in cui diventa consultabile. Le elaborazioni lunghe avvengono in modo asincrono, con stato consultabile, come richiesto dal capitolato;
-    \item \textbf{MPD-COS}: costo dei servizi di intelligenza artificiale (modelli ed \textit{embedding}) diviso per il numero di conversazioni di prova.
+    \item \textbf{MPD-LLM}: tempo tra l'invio di un messaggio e il completamento della risposta dell'assistente, misurato separatamente per ciascuna delle quattro capacità (conoscenza aziendale, istruzioni NEXUM, lettura dati e operazioni);
+    \item \textbf{MPD-AGG}: tempo tra il caricamento, la sostituzione o il ritiro di una fonte e il momento in cui l'effetto si riflette sulle risposte. Le elaborazioni lunghe avvengono in modo asincrono, con stato consultabile, come richiesto dal capitolato. Nell'incontro del 2026-11-25 è stato concordato che per il \glo{PoC} non sono richiesti tempi stretti (fino al giorno successivo); soglie più stringenti saranno definite per l'\glo{MVP} e la produzione;
+    \item \textbf{MPD-COS}: costo dei servizi di intelligenza artificiale (modelli ed \glo[Embedding]{embedding}) diviso per il numero di conversazioni di prova. Come concordato il 2026-11-25, durante il \glo{PoC} il sistema integrerà la raccolta delle misure di consumo (token e costi) su \glo{AWS} per osservare il costo reale delle interazioni e tarare con Eggon le soglie definitive per l'\glo{MVP}.
 \end{itemize}
-Le soglie di MPD-AGG e MPD-COS saranno concordate con Eggon insieme a quelle dell'accuratezza.
 
 \subsection{Manutenibilità}
 Garantisce la modularità del codice sorgente, l'assenza di \glo{debito tecnico} e il rispetto delle convenzioni di codifica.
@@ -419,7 +419,7 @@ Le attività di verifica e validazione forniscono evidenza empirica della rispon
 \subsection{Analisi statica}
 Per la documentazione, l'analisi statica è supportata in modo automatico dal workflow di integrazione continua (\texttt{analisi\_testo.py}). A ogni \textit{pull request} lo script controlla ortografia e grammatica (tramite LanguageTool), tipografia e leggibilità (indice di Gulpease); il controllo è affiancato dalla revisione manuale del Verificatore.
 
-Per il codice, l'analisi statica sarà svolta con un analizzatore automatico (\textit{linter}) eseguito nella pipeline di integrazione continua. Lo strumento sarà scelto insieme allo \glo{stack tecnologico} e riportato in questa sezione.
+Per il codice, l'analisi statica sarà svolta con un analizzatore automatico (\textit{linter}) eseguito nella pipeline di integrazione continua. Lo strumento sarà definito in coerenza con lo \glo{stack tecnologico} individuato per il \glo{PoC} (\glo{Ruby on Rails} con RubyLLM su \glo{AWS} Bedrock) e riportato in questa sezione.
 
 \subsection{Analisi dinamica}
 L'\glo{analisi dinamica} verifica il comportamento del \glo{software} eseguendolo, tramite i test descritti nelle sezioni seguenti. I test automatici sono eseguiti nella pipeline di integrazione continua a ogni \textit{pull request} che modifica il codice.
@@ -428,7 +428,7 @@ L'\glo{analisi dinamica} verifica il comportamento del \glo{software} eseguendol
 In conformità alle disposizioni del \glo{committente} per la fase \glo{RTB}, la pianificazione si articola in:
 \begin{itemize}
     \item \textbf{\glo[Test di accettazione]{Test di accettazione} (TA):} accertano il completo soddisfacimento dei casi d'uso e dei bisogni dell'utente descritti nell'\textit{Analisi dei Requisiti}, in collaborazione con i referenti di Eggon;
-    \item \textbf{\glo[Test di sistema]{Test di sistema} (TS):} verificano il corretto funzionamento dell'applicazione nel suo insieme, validando la piena aderenza a ciascun requisito obbligatorio, desiderabile e opzionale;
+    \item \textbf{\glo[Test di sistema]{Test di sistema} (TS):} verificano il corretto funzionamento dell'applicazione nel suo insieme, validando la piena aderenza a ciascun requisito obbligatorio, desiderabile e facoltativo;
     \item \textbf{\glo[Test di integrazione]{Test di integrazione} (TI):} verificano la corretta comunicazione tra i moduli \glo{software} e i servizi dell'ecosistema NEXUM. \textit{Nota metodologica:} la specifica dei TI verrà formalizzata in fase \glo{PB}, a seguito della definizione dell'architettura logica e dei contratti di integrazione;
     \item \textbf{\glo[Test di unità]{Test di unità} (TU):} verificano il corretto funzionamento delle singole unità minime di codice sorgente in isolamento. \textit{Nota metodologica:} la progettazione sistematica dei TU avverrà a seguito della progettazione di dettaglio in fase PB.
 \end{itemize}
@@ -440,7 +440,7 @@ Per la documentazione il gruppo usa già i seguenti strumenti, descritti nelle \
     \item \texttt{analisi\_testo.py}: ortografia e grammatica con LanguageTool, controlli tipografici e indice di Gulpease;
     \item \textbf{revisione del Verificatore}: approvazione obbligatoria della \textit{pull request} da parte di un membro diverso dall'autore.
 \end{itemize}
-Gli strumenti per i test del codice (esecuzione dei test, misura della copertura, analisi statica) saranno scelti insieme allo \glo{stack tecnologico}, da concordare con Eggon, e riportati in questa sezione prima dell'inizio del \glo{PoC}.
+Gli strumenti per i test del codice (esecuzione dei test, misura della copertura, analisi statica) saranno scelti in coerenza con lo \glo{stack tecnologico} individuato nell'incontro del 2026-11-25 per il \glo{PoC} (\glo{Ruby on Rails}, RubyLLM e \glo{AWS} Bedrock) e riportati in questa sezione all'avvio dello sviluppo. Per provare i flussi di integrazione prima della disponibilità della sandbox di Eggon, il gruppo utilizza la collection \glo{Bruno} e il relativo simulatore (\glo{stub}), attivando i casi di prova attraverso l'intestazione \texttt{X-Mock-Scenario}.
 
 \subsection{Codifica e stati dei test}
 Ciascun test è individuato univocamente dalla sintassi:
@@ -460,7 +460,13 @@ Lo stato di avanzamento viene monitorato mediante la seguente tassonomia:
 \subsection{Tracciamento dei test}
 Ogni test di accettazione è collegato al caso d'uso che verifica, e ogni test di sistema al \glo[Requisito]{requisito} che verifica, con il codice usato nell'\textit{Analisi dei Requisiti}. In questo modo ogni requisito obbligatorio ha almeno un test che ne dimostra il soddisfacimento.
 
-L'elenco dei test, con descrizione, requisito o caso d'uso collegato e stato, sarà aggiunto in questa sezione dopo l'approvazione della prima versione dell'\textit{Analisi dei Requisiti}.
+L'elenco completo dei test, con descrizione, requisito o caso d'uso collegato e stato, sarà aggiunto in questa sezione al consolidamento dell'\textit{Analisi dei Requisiti}. A seguito dell'incontro del 2026-11-25 sono già stati individuati, oltre ai casi base delle quattro capacità, i seguenti scenari prioritari da verificare mediante i casi \texttt{X-Mock-Scenario} del simulatore \glo{Bruno}:
+\begin{itemize}
+    \item \textbf{ripetizione automatica con chiave di idempotenza (RF-53):} gestione di risposte \texttt{409}, errori temporanei \texttt{503} e risposte ripetute senza duplicare operazioni;
+    \item \textbf{controllo delle regole aziendali (RF-103, RV-07):} blocco prima del riepilogo in caso di violazione (per esempio preavviso minimo, cancellabilità delle richieste passate o saldo disponibile), con citazione della fonte e resistenza a tentativi di aggiramento via messaggio;
+    \item \textbf{controllo delle sovrapposizioni (RF-104):} segnalazione prima del riepilogo quando una nuova richiesta si sovrappone a una richiesta in attesa o approvata;
+    \item \textbf{dipendente non trovato (RF-105):} gestione della ricerca iniziale negativa su NEXUM, con segnalazione all'utente e blocco di consultazioni e operazioni.
+\end{itemize}
 
 
 \section{Cruscotto di valutazione della qualità}
