@@ -135,8 +135,8 @@ principali riguardano l'applicativo autonomo con un proprio accesso, le
 conversazioni senza storico per il dipendente e la \glo[Tracciabilità]{tracciabilità} essenziale,
 ora obbligatoria. Riguardano anche i bucket, consultabili da tutti i dipendenti
 dell'azienda, la cancellazione delle richieste e il versionamento delle fonti.
-Le questioni ancora da concordare sono raccolte nella
-sezione~\ref{sec:aperte}.
+Recepisce inoltre l'incontro del 2026-11-25, che ha precisato tipi di
+richiesta, stati e integrazione con le API Eggon.
 
 \subsection{Riferimenti}
 
@@ -155,6 +155,8 @@ sezione~\ref{sec:aperte}.
         Eggon su perimetro, architettura, dati e organizzazione;
   \item \textbf{Verbale esterno del 2026-11-18} (VE-2026-11-18), incontro con
         Eggon sulla prima lista dei requisiti;
+  \item \textbf{Verbale esterno del 2026-11-25} (VE-2026-11-25), incontro con
+        Eggon sui requisiti aggiornati e sulla proposta di contratto API;
   \item \textbf{Riscontro di Eggon sulla bozza dei requisiti} (novembre 2026),
         osservazioni scritte del proponente;
   \item \textbf{Glossario}, Git Push Team, versione corrente;
@@ -336,6 +338,9 @@ modifica di una richiesta: la cancellazione è obbligatoria e la correzione
 avviene cancellando la richiesta e inserendone una nuova. Ha inoltre chiarito
 che il Concierge è un applicativo autonomo, che le API di Eggon saranno
 autenticate con OAuth e che le loro specifiche saranno proposte dal gruppo.
+Nell'incontro del 2026-11-25 ha precisato che le richieste sono di quattro
+tipi: ferie, permessi e malattia, a giorni o a ore, e straordinari, solo a
+ore; la malattia a ore è da confermare.
 
 \subsection{Utenti e caratteristiche}
 \begin{itemize}
@@ -535,7 +540,7 @@ aree descritte di seguito.
 \hyperref[uc:nessun_dato]{UC17} & Nessun dato corrispondente & Dipendente \\
 \hyperref[uc:non_aut]{UC18} & Rifiuto di una richiesta non autorizzata & Dipendente \\
 \hyperref[uc:stato_rich]{UC19} & Consultazione dello stato di una richiesta & Dipendente \\
-\hyperref[uc:registra]{UC20} & Registrazione di una richiesta di ferie o permesso & Dipendente \\
+\hyperref[uc:registra]{UC20} & Registrazione di una richiesta & Dipendente \\
 \hspace{1em}\hyperref[uc:reg_tipo]{UC20.1} & Determinazione del tipo di richiesta & Dipendente \\
 \hyperref[uc:periodo]{UC21} & Determinazione del periodo & Dipendente \\
 \hspace{1em}\hyperref[uc:reg_campi]{UC20.2} & Raccolta degli altri dati richiesti & Dipendente \\
@@ -650,10 +655,11 @@ Descrizione & L'utente si identifica per accedere alla chat del Concierge o al b
 Attore principale & Utente non autenticato \\ \addlinespace
 Precondizioni & \begin{itemize}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item L'utente non è autenticato. \item È visualizzata la pagina di accesso. \end{itemize} \\ \addlinespace
 Postcondizioni & \begin{itemize}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item L'utente è autenticato con il suo ruolo: il dipendente accede alla chat, l'amministratore al backoffice. \item Il sistema conosce l'azienda dell'utente e l'utente NEXUM associato, da usare nelle chiamate alle API Eggon. \end{itemize} \\ \addlinespace
-Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item L'utente inserisce il proprio identificativo (\hyperref[uc:login_id]{UC1.1}). \item L'utente inserisce la password (\hyperref[uc:login_pw]{UC1.2}). \item L'utente conferma l'accesso. \item Il sistema verifica le credenziali. \item Il sistema riconosce ruolo e azienda dell'utente, ricava l'utente NEXUM associato secondo la mappatura e avvia la sessione. \end{enumerate} \\ \addlinespace
+Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item L'utente inserisce il proprio identificativo (\hyperref[uc:login_id]{UC1.1}). \item L'utente inserisce la password (\hyperref[uc:login_pw]{UC1.2}). \item L'utente conferma l'accesso. \item Il sistema verifica le credenziali. \item Il sistema riconosce ruolo e azienda dell'utente, ricava l'utente NEXUM associato secondo la mappatura, tramite la ricerca del dipendente delle API Eggon, e avvia la sessione. \end{enumerate} \\ \addlinespace
+Scenari alternativi & 5a. La ricerca non trova il dipendente in NEXUM: il sistema lo segnala e non consente consultazioni né operazioni su ferie e permessi. \\ \addlinespace
 Inclusioni & \hyperref[uc:login_id]{UC1.1}, \hyperref[uc:login_pw]{UC1.2} \\ \addlinespace
 Estensioni & \hyperref[uc:cred_err]{UC2} \{credenziali non riconosciute\} \\ \addlinespace
-Requisiti & \hyperlink{req:RF-01}{RF-01}, \hyperlink{req:RF-02}{RF-02}, \hyperlink{req:RF-07}{RF-07} \\
+Requisiti & \hyperlink{req:RF-01}{RF-01}, \hyperlink{req:RF-02}{RF-02}, \hyperlink{req:RF-07}{RF-07}, \hyperlink{req:RF-105}{RF-105} \\
 \end{scheda}
 
 \subsubsubsection{UC1.1 -- Inserimento dell'identificativo}\label{uc:login_id}
@@ -861,7 +867,7 @@ Requisiti & \hyperlink{req:RF-10}{RF-10}, \hyperlink{req:RF-97}{RF-97} \\
     \draw[albero] (f03.north) -- (7.05,-1.70);
     \draw[albero] (-7.05,-1.70) -- (7.05,-1.70);
     % Seconda riga (risale dal corridoio centrale x = 0 senza attraversare UC14 e UC15)
-    \node[uc] (f10) at (-2.35,-6.32) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \node[uc] (f10) at (-2.35,-6.32) {\textbf{UC20}\\Registrazione di una richiesta};
     \draw[albero] (f10.north) -- (-2.35,-4.83);
     \node[uc] (f11) at (2.35,-6.32) {\textbf{UC29}\\Cancellazione di una richiesta};
     \draw[albero] (f11.north) -- (2.35,-4.83);
@@ -933,7 +939,7 @@ Requisiti & \hyperlink{req:RF-11}{RF-11}, \hyperlink{req:RF-12}{RF-12}, \hyperli
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC7}\\Richiesta di chiarimento};
     \node[uc] (c0) at (7.15,1.27) {\textbf{UC6}\\Invio di un messaggio al Concierge};
     \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (c0);
-    \node[uc] (c1) at (7.15,-1.27) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \node[uc] (c1) at (7.15,-1.27) {\textbf{UC20}\\Registrazione di una richiesta};
     \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (c1);
     \begin{scope}[on background layer]
       \node[confine, fit=(b) (c0) (c1)] (sistema) {};
@@ -1307,7 +1313,7 @@ Requisiti & \hyperlink{req:RF-31}{RF-31}, \hyperlink{req:RF-32}{RF-32}, \hyperli
 Attore principale & Dipendente \\ \addlinespace
 Precondizioni & Il servizio ha restituito i dati del periodo. \\ \addlinespace
 Postcondizioni & Le richieste del periodo sono visualizzate per periodo e stato. \\ \addlinespace
-Scenario principale & Il sistema mostra le richieste distinguendo il periodo (passate o future) dallo stato (per esempio approvate, in attesa o rifiutate), secondo il significato dei dati concordato con Eggon, con il totale di ciascun gruppo. \\ \addlinespace
+Scenario principale & Il sistema mostra le richieste distinguendo il periodo (passate, in corso o future) dallo stato (in attesa di approvazione, approvate o rifiutate), secondo il significato dei dati concordato con Eggon, con il totale di ciascun gruppo. \\ \addlinespace
 Incluso da & \hyperref[uc:dati]{UC15} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-33}{RF-33} \\
 \end{scheda}
@@ -1360,11 +1366,11 @@ Requisiti & \hyperlink{req:RF-34}{RF-34} \\
 \end{figure}
 
 \begin{scheda}
-Descrizione & Il saldo è mostrato solo se il servizio lo fornisce. La disponibilità del dato va verificata nel contratto delle API. \\ \addlinespace
+Descrizione & Il saldo è mostrato solo se il servizio lo fornisce: Eggon lo fornisce, all'inizio con dati simulati. \\ \addlinespace
 Attore principale & Dipendente \\ \addlinespace
 Precondizioni & \begin{itemize}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il dipendente ha chiesto quante ferie o permessi gli restano. \item Il servizio NEXUM fornisce il saldo residuo. \end{itemize} \\ \addlinespace
-Postcondizioni & Il dipendente vede il saldo e il riferimento al suo aggiornamento. \\ \addlinespace
-Scenario principale & Il sistema mostra il saldo residuo restituito dal servizio, con unità di misura e riferimento all'aggiornamento. \\ \addlinespace
+Postcondizioni & Il dipendente vede il saldo, la data a cui si riferisce e quella del suo aggiornamento. \\ \addlinespace
+Scenario principale & Il sistema mostra il saldo residuo restituito dal servizio, con unità di misura, data a cui si riferisce e data dell'aggiornamento. \\ \addlinespace
 Scenari alternativi & 1a. Il servizio non fornisce il saldo: il sistema dichiara che il dato non è disponibile e non lo ricostruisce dalle richieste. \\ \addlinespace
 Estende & \hyperref[uc:dati]{UC15} \{il servizio fornisce il saldo residuo\} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-35}{RF-35}, \hyperlink{req:RF-36}{RF-36} \\
@@ -1408,7 +1414,7 @@ Requisiti & \hyperlink{req:RF-37}{RF-37} \\
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC18}\\Rifiuto di una richiesta non autorizzata};
     \node[uc] (c0) at (7.15,1.27) {\textbf{UC15}\\Consultazione dei propri dati di ferie e permessi};
     \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (c0);
-    \node[uc] (c1) at (7.15,-1.27) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \node[uc] (c1) at (7.15,-1.27) {\textbf{UC20}\\Registrazione di una richiesta};
     \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (c1);
     \begin{scope}[on background layer]
       \node[confine, fit=(b) (c0) (c1)] (sistema) {};
@@ -1475,24 +1481,24 @@ Requisiti & \hyperlink{req:RF-38}{RF-38} \\
 \end{figure}
 
 \begin{scheda}
-Descrizione & Il dipendente chiede a che punto è una propria richiesta («Le ferie di agosto sono state approvate?»). Lo stato è quello effettivo in NEXUM, anche a distanza di tempo dall'inserimento: con l'approvazione automatica la richiesta può risultare subito approvata, con quella manuale resta in attesa finché un operatore non decide. \\ \addlinespace
+Descrizione & Il dipendente chiede a che punto è una propria richiesta («Le ferie di agosto sono state approvate?»). Lo stato è quello effettivo in NEXUM, anche a distanza di tempo dall'inserimento: con l'approvazione automatica la richiesta risulta approvata pochi secondi dopo l'inserimento, con quella manuale resta in attesa finché un operatore non decide. \\ \addlinespace
 Attore principale & Dipendente \\ \addlinespace
 Attori secondari & Servizio ferie e permessi NEXUM \\ \addlinespace
 Precondizioni & Le API Eggon sono raggiungibili. \\ \addlinespace
 Postcondizioni & Il dipendente conosce lo stato aggiornato della richiesta. \\ \addlinespace
-Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il dipendente chiede lo stato di una propria richiesta. \item Il sistema individua la richiesta interessata (\hyperref[uc:sel_rich]{UC30}). \item Il sistema ottiene lo stato dalle API Eggon. \item Il sistema mostra lo stato (registrata, in attesa di approvazione, approvata o rifiutata) con la data dell'ultimo cambiamento. \end{enumerate} \\ \addlinespace
+Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il dipendente chiede lo stato di una propria richiesta. \item Il sistema individua la richiesta interessata (\hyperref[uc:sel_rich]{UC30}). \item Il sistema ottiene lo stato dalle API Eggon. \item Il sistema mostra lo stato (in attesa di approvazione, approvata o rifiutata) con la data dell'ultimo cambiamento. \end{enumerate} \\ \addlinespace
 Inclusioni & \hyperref[uc:sel_rich]{UC30} \\ \addlinespace
 Estensioni & \hyperref[uc:nessun_dato]{UC17} \{nessuna richiesta corrispondente\} \\ \addlinespace
 Generalizzazione & specializza \hyperref[uc:msg]{UC6} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-39}{RF-39}, \hyperlink{req:RF-96}{RF-96} \\
 \end{scheda}
 
-\subsubsection{UC20 -- Registrazione di una richiesta di ferie o permesso}\label{uc:registra}
+\subsubsection{UC20 -- Registrazione di una richiesta}\label{uc:registra}
 \begin{figure}[H]
   \centering
   \begin{adjustbox}{max width=\linewidth, max totalheight=0.62\textheight}
   \begin{tikzpicture}
-    \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC20}\\Registrazione di una richiesta};
     \node[uc] (c0) at (7.15,5.72) {\textbf{UC20.1}\\Determinazione del tipo di richiesta};
     \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft include\guillemotright} (c0);
     \node[uc] (c1) at (7.15,3.68) {\textbf{UC21}\\Determinazione del periodo};
@@ -1517,14 +1523,14 @@ Requisiti & \hyperlink{req:RF-39}{RF-39}, \hyperlink{req:RF-96}{RF-96} \\
     \draw[associazione] (b) -- (as0);
   \end{tikzpicture}
   \end{adjustbox}
-  \caption{Diagramma di UC20 -- Registrazione di una richiesta di ferie o permesso}\label{fig:uc:registra}
+  \caption{Diagramma di UC20 -- Registrazione di una richiesta}\label{fig:uc:registra}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \begin{adjustbox}{max width=\linewidth, max totalheight=0.62\textheight}
   \begin{tikzpicture}
-    \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC20}\\Registrazione di una richiesta};
     \node[uc] (e0) at (-5.00,4.00) {\textbf{UC7}\\Richiesta di chiarimento};
     \draw[dipendenza] (e0) -- (b) node[etich, pos=0.3, sloped] {\guillemotleft extend\guillemotright} coordinate[pos=0.5] (m0);
     \node[nota] (n0) at (-6.45,1.75) {\textbf{Condizione:}\\\{dati ambigui o mancanti\}};
@@ -1557,20 +1563,21 @@ Requisiti & \hyperlink{req:RF-39}{RF-39}, \hyperlink{req:RF-96}{RF-96} \\
     \draw[associazione] (ap0) -- (b);
   \end{tikzpicture}
   \end{adjustbox}
-  \caption{Estensioni di UC20 -- Registrazione di una richiesta di ferie o permesso}\label{fig:uc:registra:ext}
+  \caption{Estensioni di UC20 -- Registrazione di una richiesta}\label{fig:uc:registra:ext}
 \end{figure}
 
 \begin{scheda}
-Descrizione & Il dipendente chiede di registrare ferie o un permesso («Registra che sarò in ferie dal 10 al 15 ottobre»). Il messaggio avvia la preparazione della richiesta: l'invio avviene solo dopo un riepilogo e una conferma esplicita, e la registrazione non equivale all'approvazione. \\ \addlinespace
+Descrizione & Il dipendente chiede di registrare una richiesta di ferie, permesso, malattia o straordinario («Registra che sarò in ferie dal 10 al 15 ottobre»). Il messaggio avvia la preparazione della richiesta: l'invio avviene solo dopo un riepilogo e una conferma esplicita, e la registrazione non equivale all'approvazione. \\ \addlinespace
 Attore principale & Dipendente \\ \addlinespace
 Attori secondari & Servizio ferie e permessi NEXUM \\ \addlinespace
 Precondizioni & Le API Eggon sono raggiungibili. \\ \addlinespace
 Postcondizioni & \begin{itemize}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item La richiesta è registrata in NEXUM e il dipendente ne conosce l'esito effettivo. \item La traccia riporta persona, azienda, data e ora, abilità invocata, conferma ed esito. \end{itemize} \\ \addlinespace
-Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il dipendente chiede di registrare ferie o un permesso. \item Il sistema riconosce l'operazione e avvia la preparazione della richiesta, senza inviarla. \item Il sistema determina il tipo di richiesta (\hyperref[uc:reg_tipo]{UC20.1}). \item Il sistema determina il periodo (\hyperref[uc:periodo]{UC21}). \item Il sistema raccoglie gli altri dati richiesti dal servizio (\hyperref[uc:reg_campi]{UC20.2}). \item Il sistema mostra il riepilogo (\hyperref[uc:op_riep]{UC22}). \item Il dipendente conferma esplicitamente l'invio (\hyperref[uc:op_conf]{UC23}). \item Il sistema invia la richiesta tramite l'abilità di registrazione, con una chiamata autenticata alle API Eggon. \item Il sistema mostra l'esito restituito dal servizio (\hyperref[uc:op_esito]{UC24}). \end{enumerate} \\ \addlinespace
+Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il dipendente chiede di registrare una richiesta di ferie, permesso, malattia o straordinario. \item Il sistema riconosce l'operazione e avvia la preparazione della richiesta, senza inviarla. \item Il sistema determina il tipo di richiesta (\hyperref[uc:reg_tipo]{UC20.1}). \item Il sistema determina il periodo (\hyperref[uc:periodo]{UC21}). \item Il sistema raccoglie gli altri dati richiesti dal servizio (\hyperref[uc:reg_campi]{UC20.2}). \item Il sistema verifica le regole aziendali applicabili e che la richiesta non si sovrapponga ad altre richieste del dipendente. \item Il sistema mostra il riepilogo (\hyperref[uc:op_riep]{UC22}). \item Il dipendente conferma esplicitamente l'invio (\hyperref[uc:op_conf]{UC23}). \item Il sistema invia la richiesta tramite l'abilità di registrazione, con una chiamata autenticata alle API Eggon. \item Il sistema mostra l'esito restituito dal servizio (\hyperref[uc:op_esito]{UC24}). \end{enumerate} \\ \addlinespace
+Scenari alternativi & 6a. Una regola aziendale impedisce la richiesta, o la richiesta si sovrappone a un'altra: il sistema non la invia e lo comunica al dipendente, citando la regola e la sua fonte. \\ \addlinespace
 Inclusioni & \hyperref[uc:reg_tipo]{UC20.1}, \hyperref[uc:periodo]{UC21}, \hyperref[uc:reg_campi]{UC20.2}, \hyperref[uc:op_riep]{UC22}, \hyperref[uc:op_conf]{UC23}, \hyperref[uc:op_esito]{UC24} \\ \addlinespace
 Estensioni & \hyperref[uc:chiarimento]{UC7} \{dati ambigui o mancanti\}; \hyperref[uc:op_modifica]{UC25} \{il dipendente cambia i dati dopo il riepilogo\}; \hyperref[uc:op_rinuncia]{UC26} \{il dipendente rinuncia prima della conferma\}; \hyperref[uc:op_rifiuto]{UC27} \{il servizio respinge la validazione\}; \hyperref[uc:op_incerto]{UC28} \{invio interrotto con esito sconosciuto\}; \hyperref[uc:non_aut]{UC18} \{richiesta per conto di un'altra persona\} \\ \addlinespace
 Generalizzazione & specializza \hyperref[uc:msg]{UC6} \\ \addlinespace
-Requisiti & \hyperlink{req:RF-40}{RF-40}, \hyperlink{req:RF-41}{RF-41}, \hyperlink{req:RF-42}{RF-42}, \hyperlink{req:RF-43}{RF-43}, \hyperlink{req:RF-96}{RF-96} \\
+Requisiti & \hyperlink{req:RF-40}{RF-40}, \hyperlink{req:RF-41}{RF-41}, \hyperlink{req:RF-42}{RF-42}, \hyperlink{req:RF-43}{RF-43}, \hyperlink{req:RF-96}{RF-96}, \hyperlink{req:RF-103}{RF-103}, \hyperlink{req:RF-104}{RF-104} \\
 \end{scheda}
 
 \subsubsubsection{UC20.1 -- Determinazione del tipo di richiesta}\label{uc:reg_tipo}
@@ -1579,7 +1586,7 @@ Requisiti & \hyperlink{req:RF-40}{RF-40}, \hyperlink{req:RF-41}{RF-41}, \hyperli
   \begin{adjustbox}{max width=\linewidth, max totalheight=0.62\textheight}
   \begin{tikzpicture}
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC20.1}\\Determinazione del tipo di richiesta};
-    \node[uc] (c0) at (7.15,0.00) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \node[uc] (c0) at (7.15,0.00) {\textbf{UC20}\\Registrazione di una richiesta};
     \draw[dipendenza] (c0) -- node[etich, sloped] {\guillemotleft include\guillemotright} (b);
     \begin{scope}[on background layer]
       \node[confine, fit=(b) (c0)] (sistema) {};
@@ -1596,7 +1603,7 @@ Requisiti & \hyperlink{req:RF-40}{RF-40}, \hyperlink{req:RF-41}{RF-41}, \hyperli
 Attore principale & Dipendente \\ \addlinespace
 Precondizioni & È in preparazione una richiesta di registrazione. \\ \addlinespace
 Postcondizioni & Il tipo di richiesta è determinato. \\ \addlinespace
-Scenario principale & Il sistema ricava il tipo di richiesta (ferie o uno dei tipi di permesso previsti dal servizio) dal messaggio o dal contesto. \\ \addlinespace
+Scenario principale & Il sistema ricava il tipo di richiesta (ferie, permesso, malattia o straordinario) dal messaggio o dal contesto. \\ \addlinespace
 Scenari alternativi & 1a. Il tipo non è ricavabile: il sistema propone i tipi disponibili (\hyperref[uc:chiarimento]{UC7}). \\ \addlinespace
 Incluso da & \hyperref[uc:registra]{UC20} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-44}{RF-44} \\
@@ -1608,7 +1615,7 @@ Requisiti & \hyperlink{req:RF-44}{RF-44} \\
   \begin{adjustbox}{max width=\linewidth, max totalheight=0.62\textheight}
   \begin{tikzpicture}
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC20.2}\\Raccolta degli altri dati richiesti};
-    \node[uc] (c0) at (7.15,0.00) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \node[uc] (c0) at (7.15,0.00) {\textbf{UC20}\\Registrazione di una richiesta};
     \draw[dipendenza] (c0) -- node[etich, sloped] {\guillemotleft include\guillemotright} (b);
     \begin{scope}[on background layer]
       \node[confine, fit=(b) (c0)] (sistema) {};
@@ -1625,7 +1632,7 @@ Requisiti & \hyperlink{req:RF-44}{RF-44} \\
 Attore principale & Dipendente \\ \addlinespace
 Precondizioni & Tipo e periodo della richiesta sono determinati. \\ \addlinespace
 Postcondizioni & Tutti i campi obbligatori previsti dal servizio sono valorizzati. \\ \addlinespace
-Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il sistema chiede i campi obbligatori previsti dal servizio per quel tipo di richiesta (per esempio una nota) che non sono già noti. \item Il dipendente li fornisce. \end{enumerate} \\ \addlinespace
+Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il sistema chiede i campi obbligatori previsti dal servizio per quel tipo di richiesta che non sono già noti. \item Il dipendente li fornisce. \end{enumerate} \\ \addlinespace
 Incluso da & \hyperref[uc:registra]{UC20} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-46}{RF-46} \\
 \end{scheda}
@@ -1636,7 +1643,7 @@ Requisiti & \hyperlink{req:RF-46}{RF-46} \\
   \begin{adjustbox}{max width=\linewidth, max totalheight=0.62\textheight}
   \begin{tikzpicture}
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC21}\\Determinazione del periodo};
-    \node[uc] (c0) at (7.15,0.00) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \node[uc] (c0) at (7.15,0.00) {\textbf{UC20}\\Registrazione di una richiesta};
     \draw[dipendenza] (c0) -- node[etich, sloped] {\guillemotleft include\guillemotright} (b);
     \begin{scope}[on background layer]
       \node[confine, fit=(b) (c0)] (sistema) {};
@@ -1654,7 +1661,7 @@ Descrizione & Caso d'uso incluso dalle operazioni che richiedono un periodo. \\ 
 Attore principale & Dipendente \\ \addlinespace
 Precondizioni & È in preparazione una richiesta che richiede un periodo. \\ \addlinespace
 Postcondizioni & Date di inizio e fine, ed eventuali orari, sono determinati e completi di anno. \\ \addlinespace
-Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il sistema ricava dal messaggio o dal contesto le date di inizio e fine e, per i permessi, gli orari o la durata. \item Il sistema completa le date prive di anno con l'anno già esplicitato nella conversazione. \end{enumerate} \\ \addlinespace
+Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il sistema ricava dal messaggio o dal contesto se la richiesta è a giornate o a ore, le date di inizio e fine e, per le richieste a ore, gli orari. \item Il sistema completa le date prive di anno con l'anno già esplicitato nella conversazione. \end{enumerate} \\ \addlinespace
 Scenari alternativi & \begin{itemize}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item 2a. L'anno non è ricavabile dal contesto: il sistema lo chiede (\hyperref[uc:chiarimento]{UC7}). \item 1a. Il periodo è incoerente (fine precedente all'inizio): il sistema lo segnala e chiede di correggerlo. \end{itemize} \\ \addlinespace
 Incluso da & \hyperref[uc:registra]{UC20} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-45}{RF-45} \\
@@ -1666,7 +1673,7 @@ Requisiti & \hyperlink{req:RF-45}{RF-45} \\
   \begin{adjustbox}{max width=\linewidth, max totalheight=0.62\textheight}
   \begin{tikzpicture}
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC22}\\Visualizzazione del riepilogo dell'operazione};
-    \node[uc] (c0) at (7.15,1.14) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \node[uc] (c0) at (7.15,1.14) {\textbf{UC20}\\Registrazione di una richiesta};
     \draw[dipendenza] (c0) -- node[etich, sloped] {\guillemotleft include\guillemotright} (b);
     \node[uc] (c1) at (7.15,-1.14) {\textbf{UC29}\\Cancellazione di una richiesta};
     \draw[dipendenza] (c1) -- node[etich, sloped] {\guillemotleft include\guillemotright} (b);
@@ -1697,7 +1704,7 @@ Requisiti & \hyperlink{req:RF-47}{RF-47} \\
   \begin{adjustbox}{max width=\linewidth, max totalheight=0.62\textheight}
   \begin{tikzpicture}
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC23}\\Conferma esplicita dell'operazione};
-    \node[uc] (c0) at (7.15,1.14) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \node[uc] (c0) at (7.15,1.14) {\textbf{UC20}\\Registrazione di una richiesta};
     \draw[dipendenza] (c0) -- node[etich, sloped] {\guillemotleft include\guillemotright} (b);
     \node[uc] (c1) at (7.15,-1.14) {\textbf{UC29}\\Cancellazione di una richiesta};
     \draw[dipendenza] (c1) -- node[etich, sloped] {\guillemotleft include\guillemotright} (b);
@@ -1728,7 +1735,7 @@ Requisiti & \hyperlink{req:RF-48}{RF-48} \\
   \begin{adjustbox}{max width=\linewidth, max totalheight=0.62\textheight}
   \begin{tikzpicture}
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC24}\\Visualizzazione dell'esito dell'operazione};
-    \node[uc] (c0) at (7.15,1.14) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \node[uc] (c0) at (7.15,1.14) {\textbf{UC20}\\Registrazione di una richiesta};
     \draw[dipendenza] (c0) -- node[etich, sloped] {\guillemotleft include\guillemotright} (b);
     \node[uc] (c1) at (7.15,-1.14) {\textbf{UC29}\\Cancellazione di una richiesta};
     \draw[dipendenza] (c1) -- node[etich, sloped] {\guillemotleft include\guillemotright} (b);
@@ -1747,7 +1754,7 @@ Requisiti & \hyperlink{req:RF-48}{RF-48} \\
 Attore principale & Dipendente \\ \addlinespace
 Precondizioni & Il servizio ha risposto all'invio. \\ \addlinespace
 Postcondizioni & Il dipendente conosce l'esito effettivo. \\ \addlinespace
-Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il sistema mostra l'esito restituito dal servizio: identificativo della richiesta e stato (registrata, in attesa di approvazione, approvata o cancellata). \item Nel caso di registrazione, il sistema precisa che essa non equivale all'approvazione, che resta nel processo NEXUM. \end{enumerate} \\ \addlinespace
+Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il sistema mostra l'esito restituito dal servizio: per un inserimento, identificativo della richiesta e stato, che è sempre in attesa di approvazione; per una cancellazione, la conferma che la richiesta è stata cancellata. \item Nel caso di inserimento, il sistema precisa che la registrazione non equivale all'approvazione, che resta nel processo NEXUM; se l'azienda approva in automatico, avvisa che l'approvazione arriverà a breve e che si può verificare (\hyperref[uc:stato_rich]{UC19}). \end{enumerate} \\ \addlinespace
 Incluso da & \hyperref[uc:registra]{UC20}, \hyperref[uc:annulla_inv]{UC29} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-49}{RF-49} \\
 \end{scheda}
@@ -1758,7 +1765,7 @@ Requisiti & \hyperlink{req:RF-49}{RF-49} \\
   \begin{adjustbox}{max width=\linewidth, max totalheight=0.62\textheight}
   \begin{tikzpicture}
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC25}\\Modifica dei dati prima della conferma};
-    \node[uc] (c0) at (7.15,0.00) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \node[uc] (c0) at (7.15,0.00) {\textbf{UC20}\\Registrazione di una richiesta};
     \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (c0);
     \begin{scope}[on background layer]
       \node[confine, fit=(b) (c0)] (sistema) {};
@@ -1786,7 +1793,7 @@ Requisiti & \hyperlink{req:RF-50}{RF-50} \\
   \begin{adjustbox}{max width=\linewidth, max totalheight=0.62\textheight}
   \begin{tikzpicture}
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC26}\\Rinuncia all'operazione prima della conferma};
-    \node[uc] (c0) at (7.15,1.14) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \node[uc] (c0) at (7.15,1.14) {\textbf{UC20}\\Registrazione di una richiesta};
     \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (c0);
     \node[uc] (c1) at (7.15,-1.14) {\textbf{UC29}\\Cancellazione di una richiesta};
     \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (c1);
@@ -1816,7 +1823,7 @@ Requisiti & \hyperlink{req:RF-51}{RF-51} \\
   \begin{adjustbox}{max width=\linewidth, max totalheight=0.62\textheight}
   \begin{tikzpicture}
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC27}\\Operazione respinta dal servizio};
-    \node[uc] (c0) at (7.15,1.14) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \node[uc] (c0) at (7.15,1.14) {\textbf{UC20}\\Registrazione di una richiesta};
     \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (c0);
     \node[uc] (c1) at (7.15,-1.14) {\textbf{UC29}\\Cancellazione di una richiesta};
     \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (c1);
@@ -1846,7 +1853,7 @@ Requisiti & \hyperlink{req:RF-52}{RF-52} \\
   \begin{adjustbox}{max width=\linewidth, max totalheight=0.62\textheight}
   \begin{tikzpicture}
     \node[ucfocus] (b) at (0.00,0.00) {\textbf{UC28}\\Esito dell'operazione incerto};
-    \node[uc] (c0) at (7.15,1.14) {\textbf{UC20}\\Registrazione di una richiesta di ferie o permesso};
+    \node[uc] (c0) at (7.15,1.14) {\textbf{UC20}\\Registrazione di una richiesta};
     \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (c0);
     \node[uc] (c1) at (7.15,-1.14) {\textbf{UC29}\\Cancellazione di una richiesta};
     \draw[dipendenza] (b) -- node[etich, sloped] {\guillemotleft extend\guillemotright} (c1);
@@ -1862,12 +1869,12 @@ Requisiti & \hyperlink{req:RF-52}{RF-52} \\
 \end{figure}
 
 \begin{scheda}
-Descrizione & Un invio interrotto non viene ripetuto alla cieca. \\ \addlinespace
+Descrizione & Un invio interrotto viene ripetuto in modo sicuro, con la stessa chiave di idempotenza, senza chiedere una nuova conferma al dipendente. \\ \addlinespace
 Attore principale & Dipendente \\ \addlinespace
 Precondizioni & L'invio si è interrotto e non è noto se il servizio abbia registrato l'operazione. \\ \addlinespace
 Postcondizioni & L'esito è verificato; l'operazione non è duplicata. \\ \addlinespace
-Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il sistema verifica presso il servizio lo stato dell'operazione. \item Se l'operazione risulta registrata, il sistema ne mostra l'esito. \item Se non risulta, il sistema chiede al dipendente se ripetere l'invio. \end{enumerate} \\ \addlinespace
-Scenari alternativi & 1a. La verifica non è possibile: il sistema dichiara che l'esito è incerto e invita a controllare più tardi, senza ripetere l'invio. \\ \addlinespace
+Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il sistema ripete in automatico lo stesso invio con la stessa chiave di idempotenza, rispettando i tempi indicati dal servizio. \item Se l'operazione era già stata eseguita, il servizio ne restituisce l'esito senza ripeterla; altrimenti la esegue. \item Il sistema mostra l'esito (\hyperref[uc:op_esito]{UC24}). \end{enumerate} \\ \addlinespace
+Scenari alternativi & 1a. Dopo i tentativi l'esito resta incerto: il sistema smette di ripetere l'invio, verifica l'esito sui dati della richiesta e, se non è possibile, dichiara che l'esito è incerto e invita a controllare più tardi. \\ \addlinespace
 Estende & \hyperref[uc:registra]{UC20} \{invio interrotto con esito sconosciuto\}; \hyperref[uc:annulla_inv]{UC29} \{invio interrotto con esito sconosciuto\} \\ \addlinespace
 Requisiti & \hyperlink{req:RF-53}{RF-53} \\
 \end{scheda}
@@ -1930,17 +1937,17 @@ Requisiti & \hyperlink{req:RF-53}{RF-53} \\
 \end{figure}
 
 \begin{scheda}
-Descrizione & Il dipendente chiede di cancellare una propria richiesta. Non esistono ritiro o modifica: per correggere una richiesta il dipendente la cancella e ne inserisce una nuova. Le condizioni per le richieste passate dipendono dalle API Eggon. \\ \addlinespace
+Descrizione & Il dipendente chiede di cancellare una propria richiesta. Non esistono ritiro o modifica: per correggere una richiesta il dipendente la cancella e ne inserisce una nuova. Il servizio consente di cancellare anche le richieste passate: quali si possono cancellare lo stabiliscono le regole aziendali, verificate dal sistema prima del riepilogo. \\ \addlinespace
 Attore principale & Dipendente \\ \addlinespace
 Attori secondari & Servizio ferie e permessi NEXUM \\ \addlinespace
 Precondizioni & Le API Eggon espongono la cancellazione delle richieste. \\ \addlinespace
 Postcondizioni & La richiesta è cancellata in NEXUM e il dipendente ne conosce l'esito. \\ \addlinespace
-Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il dipendente chiede di cancellare una richiesta. \item Il sistema individua la richiesta in modo univoco (\hyperref[uc:sel_rich]{UC30}). \item Il sistema mostra il riepilogo della cancellazione (\hyperref[uc:op_riep]{UC22}). \item Il dipendente conferma (\hyperref[uc:op_conf]{UC23}). \item Il sistema invia la cancellazione e mostra l'esito (\hyperref[uc:op_esito]{UC24}). \end{enumerate} \\ \addlinespace
-Scenari alternativi & 2a. La richiesta non è individuata in modo univoco: il sistema non procede finché il dipendente non la identifica (\hyperref[uc:chiarimento]{UC7}). \\ \addlinespace
+Scenario principale & \begin{enumerate}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item Il dipendente chiede di cancellare una richiesta. \item Il sistema individua la richiesta in modo univoco (\hyperref[uc:sel_rich]{UC30}). \item Il sistema verifica che le regole aziendali consentano la cancellazione. \item Il sistema mostra il riepilogo della cancellazione (\hyperref[uc:op_riep]{UC22}). \item Il dipendente conferma (\hyperref[uc:op_conf]{UC23}). \item Il sistema invia la cancellazione e mostra l'esito (\hyperref[uc:op_esito]{UC24}). \end{enumerate} \\ \addlinespace
+Scenari alternativi & \begin{itemize}[nosep, leftmargin=*, before=\vspace{-\baselineskip}\vspace{2pt}, after=\vspace{-\baselineskip}]\item 2a. La richiesta non è individuata in modo univoco: il sistema non procede finché il dipendente non la identifica (\hyperref[uc:chiarimento]{UC7}). \item 3a. Le regole aziendali non consentono la cancellazione: il sistema non procede e lo comunica al dipendente, citando la regola e la sua fonte. \end{itemize} \\ \addlinespace
 Inclusioni & \hyperref[uc:sel_rich]{UC30}, \hyperref[uc:op_riep]{UC22}, \hyperref[uc:op_conf]{UC23}, \hyperref[uc:op_esito]{UC24} \\ \addlinespace
 Estensioni & \hyperref[uc:op_rinuncia]{UC26} \{il dipendente rinuncia prima della conferma\}; \hyperref[uc:op_rifiuto]{UC27} \{cancellazione non consentita dal servizio\}; \hyperref[uc:op_incerto]{UC28} \{invio interrotto con esito sconosciuto\} \\ \addlinespace
 Generalizzazione & specializza \hyperref[uc:msg]{UC6} \\ \addlinespace
-Requisiti & \hyperlink{req:RF-43}{RF-43}, \hyperlink{req:RF-54}{RF-54}, \hyperlink{req:RF-96}{RF-96}, \hyperlink{req:RF-102}{RF-102} \\
+Requisiti & \hyperlink{req:RF-43}{RF-43}, \hyperlink{req:RF-54}{RF-54}, \hyperlink{req:RF-96}{RF-96}, \hyperlink{req:RF-102}{RF-102}, \hyperlink{req:RF-103}{RF-103} \\
 \end{scheda}
 
 \subsubsection{UC30 -- Individuazione della richiesta interessata}\label{uc:sel_rich}
@@ -3220,29 +3227,29 @@ funzionale; l'attore coinvolto è quello dei casi d'uso indicati nella colonna
 \addlinespace[3pt]\multicolumn{5}{@{}l}{\textbf{\sffamily Lettura dei dati}} \\ \addlinespace[2pt]
 \leavevmode\hypertarget{req:RF-31}{\textbf{RF-31}} & Il sistema deve recuperare i dati personali di ferie e permessi solo tramite l’abilità di lettura. & Obbligatorio & T & \hyperref[uc:dati]{UC15}, \mbox{RB-09}, \mbox{CA-03} \\
 \leavevmode\hypertarget{req:RF-32}{\textbf{RF-32}} & Il sistema deve presentare conteggi e valori così come restituiti dal servizio, senza che il modello li calcoli o li deduca. & Obbligatorio & T & \hyperref[uc:dati]{UC15}, \mbox{Capitolato}, \mbox{CA-03} \\
-\leavevmode\hypertarget{req:RF-33}{\textbf{RF-33}} & Il sistema deve distinguere nei risultati il periodo delle richieste (passate o future) dal loro stato (per esempio approvata, in attesa o rifiutata), usando il significato dei dati concordato con Eggon. & Obbligatorio & T & \hyperref[uc:dati_riep]{UC15.1}, \mbox{RB-10}, \mbox{CA-03}, \mbox{Riscontro Eggon} \\
-\leavevmode\hypertarget{req:RF-34}{\textbf{RF-34}} & Il sistema deve specificare nei risultati sui dati il periodo, l’unità di misura e il significato degli stati considerati. & Obbligatorio & T & \hyperref[uc:dati_criteri]{UC15.2}, \mbox{RB-10} \\
-\leavevmode\hypertarget{req:RF-35}{\textbf{RF-35}} & Il sistema deve mostrare il saldo residuo delle ferie quando il servizio lo fornisce, con il riferimento al suo aggiornamento. & Obbligatorio & T & \hyperref[uc:saldo]{UC16}, \mbox{VE-2026-10-26}, \mbox{Riscontro Eggon} \\
+\leavevmode\hypertarget{req:RF-33}{\textbf{RF-33}} & Il sistema deve distinguere nei risultati il periodo delle richieste (passate, in corso o future) dal loro stato (in attesa di approvazione, approvata o rifiutata), usando il significato dei dati concordato con Eggon. & Obbligatorio & T & \hyperref[uc:dati_riep]{UC15.1}, \mbox{RB-10}, \mbox{CA-03}, \mbox{Riscontro Eggon}, \mbox{VE-2026-11-25} \\
+\leavevmode\hypertarget{req:RF-34}{\textbf{RF-34}} & Il sistema deve specificare nei risultati sui dati il periodo, l’unità di misura e il significato degli stati considerati. Le richieste a giornate si contano in giorni e quelle a ore in ore, senza conversioni né somme; date e orari sono nel fuso orario del dipendente indicato dal servizio. & Obbligatorio & T & \hyperref[uc:dati_criteri]{UC15.2}, \mbox{RB-10}, \mbox{VE-2026-11-25} \\
+\leavevmode\hypertarget{req:RF-35}{\textbf{RF-35}} & Il sistema deve mostrare il saldo residuo fornito dal servizio, con la data a cui si riferisce e quella del suo aggiornamento. & Obbligatorio & T & \hyperref[uc:saldo]{UC16}, \mbox{VE-2026-10-26}, \mbox{Riscontro Eggon}, \mbox{VE-2026-11-25} \\
 \leavevmode\hypertarget{req:RF-36}{\textbf{RF-36}} & Il sistema non deve ricostruire autonomamente il saldo residuo quando il servizio non lo fornisce. & Obbligatorio & T & \hyperref[uc:saldo]{UC16}, \mbox{Capitolato}, \mbox{Riscontro Eggon} \\
 \leavevmode\hypertarget{req:RF-37}{\textbf{RF-37}} & Il sistema deve dichiarare l’assenza di dati per il periodo richiesto, distinguendola da un errore tecnico. & Obbligatorio & T & \hyperref[uc:nessun_dato]{UC17}, \mbox{RB-14} \\
 \leavevmode\hypertarget{req:RF-38}{\textbf{RF-38}} & Il sistema deve rispondere con un messaggio di rifiuto alle richieste su dati o operazioni di altre persone o aziende, senza mostrare alcun dato di altri. & Obbligatorio & T & \hyperref[uc:non_aut]{UC18}, \mbox{RB-01}, \mbox{CA-09} \\
-\leavevmode\hypertarget{req:RF-39}{\textbf{RF-39}} & Il sistema deve consultare e mostrare lo stato effettivo in NEXUM di una richiesta del dipendente, anche dopo l’inserimento, distinguendo per esempio registrata, in attesa di approvazione e approvata. & Obbligatorio & T & \hyperref[uc:stato_rich]{UC19}, \mbox{RB-13}, \mbox{CA-10}, \mbox{VE-2026-11-18}, \mbox{Riscontro Eggon} \\
+\leavevmode\hypertarget{req:RF-39}{\textbf{RF-39}} & Il sistema deve consultare e mostrare lo stato effettivo in NEXUM di una richiesta del dipendente, anche dopo l’inserimento, distinguendo in attesa di approvazione, approvata e rifiutata. & Obbligatorio & T & \hyperref[uc:stato_rich]{UC19}, \mbox{RB-13}, \mbox{CA-10}, \mbox{VE-2026-11-18}, \mbox{Riscontro Eggon}, \mbox{VE-2026-11-25} \\
 \addlinespace[3pt]\multicolumn{5}{@{}l}{\textbf{\sffamily Richieste di ferie e permessi}} \\ \addlinespace[2pt]
-\leavevmode\hypertarget{req:RF-40}{\textbf{RF-40}} & Il sistema deve permettere al dipendente di preparare e registrare una richiesta di ferie o permesso tramite la chat. & Obbligatorio & T & \hyperref[uc:registra]{UC20}, \mbox{CA-04} \\
+\leavevmode\hypertarget{req:RF-40}{\textbf{RF-40}} & Il sistema deve permettere al dipendente di preparare e registrare una richiesta di ferie, permesso, malattia o straordinario tramite la chat. & Obbligatorio & T & \hyperref[uc:registra]{UC20}, \mbox{CA-04}, \mbox{VE-2026-11-25} \\
 \leavevmode\hypertarget{req:RF-41}{\textbf{RF-41}} & Il sistema deve trattare la richiesta in linguaggio naturale come avvio della preparazione, senza inviarla. & Obbligatorio & T & \hyperref[uc:registra]{UC20}, \mbox{RB-12} \\
 \leavevmode\hypertarget{req:RF-42}{\textbf{RF-42}} & Il sistema deve eseguire le operazioni solo attraverso abilità definite e servizi autorizzati. & Obbligatorio & I & \hyperref[uc:registra]{UC20}, \mbox{RB-11} \\
 \leavevmode\hypertarget{req:RF-43}{\textbf{RF-43}} & Per ogni operazione sulle richieste, oltre ai dati registrati per ogni interazione (RF-15), il sistema deve registrare sempre la conferma del dipendente e l’esito restituito dal servizio. & Obbligatorio & T & \hyperref[uc:registra]{UC20}, \hyperref[uc:annulla_inv]{UC29}, \mbox{RB-15}, \mbox{CA-12}, \mbox{Riscontro Eggon} \\
-\leavevmode\hypertarget{req:RF-44}{\textbf{RF-44}} & Il sistema deve determinare il tipo di richiesta tra quelli previsti dal servizio NEXUM. & Obbligatorio & T & \hyperref[uc:reg_tipo]{UC20.1}, \mbox{Capitolato} \\
-\leavevmode\hypertarget{req:RF-45}{\textbf{RF-45}} & Il sistema deve determinare date di inizio e fine e, per i permessi, orari o durata, completi di anno. & Obbligatorio & T & \hyperref[uc:periodo]{UC21}, \mbox{Capitolato}, \mbox{CA-06} \\
+\leavevmode\hypertarget{req:RF-44}{\textbf{RF-44}} & Il sistema deve determinare il tipo di richiesta tra ferie, permesso, malattia e straordinario, i tipi concordati con Eggon e gestiti nel codice del sistema. & Obbligatorio & T & \hyperref[uc:reg_tipo]{UC20.1}, \mbox{Capitolato}, \mbox{VE-2026-11-25} \\
+\leavevmode\hypertarget{req:RF-45}{\textbf{RF-45}} & Il sistema deve determinare se la richiesta è a giornate, con date di inizio e fine, o a ore, con orario di inizio e fine in un solo giorno, complete di anno; gli straordinari sono sempre a ore. & Obbligatorio & T & \hyperref[uc:periodo]{UC21}, \mbox{Capitolato}, \mbox{CA-06}, \mbox{VE-2026-11-25} \\
 \leavevmode\hypertarget{req:RF-46}{\textbf{RF-46}} & Il sistema deve raccogliere tutte le informazioni obbligatorie previste dal servizio NEXUM prima del riepilogo. & Obbligatorio & T & \hyperref[uc:reg_campi]{UC20.2}, \mbox{Capitolato} \\
 \leavevmode\hypertarget{req:RF-47}{\textbf{RF-47}} & Il sistema deve mostrare prima di ogni invio un riepilogo completo, con date e orari per esteso. & Obbligatorio & T & \hyperref[uc:op_riep]{UC22}, \mbox{RB-12}, \mbox{CA-04} \\
 \leavevmode\hypertarget{req:RF-48}{\textbf{RF-48}} & Il sistema deve inviare un’operazione solo dopo una conferma esplicita del dipendente sul riepilogo corrente. & Obbligatorio & T & \hyperref[uc:op_conf]{UC23}, \mbox{RB-12}, \mbox{CA-04}, \mbox{Vincoli} \\
-\leavevmode\hypertarget{req:RF-49}{\textbf{RF-49}} & Il sistema deve mostrare l’esito effettivo restituito dal servizio, distinguendo richiesta registrata, in attesa di approvazione, approvata e cancellata. & Obbligatorio & T & \hyperref[uc:op_esito]{UC24}, \mbox{RB-13}, \mbox{CA-10} \\
+\leavevmode\hypertarget{req:RF-49}{\textbf{RF-49}} & Il sistema deve mostrare l’esito effettivo restituito dal servizio: una richiesta inserita risulta sempre in attesa di approvazione; per una cancellazione, il sistema conferma che la richiesta è stata cancellata. Se l’azienda approva in automatico, il sistema avvisa che l’approvazione arriverà a breve e permette di verificarla (UC19). & Obbligatorio & T & \hyperref[uc:op_esito]{UC24}, \mbox{RB-13}, \mbox{CA-10}, \mbox{VE-2026-11-25} \\
 \leavevmode\hypertarget{req:RF-50}{\textbf{RF-50}} & Il sistema deve richiedere un nuovo riepilogo e una nuova conferma quando cambiano i dati da inviare. & Obbligatorio & T & \hyperref[uc:op_modifica]{UC25}, \mbox{RB-12}, \mbox{CA-10} \\
 \leavevmode\hypertarget{req:RF-51}{\textbf{RF-51}} & Il sistema deve permettere di rinunciare a un’operazione prima della conferma, senza inviare nulla. & Obbligatorio & T & \hyperref[uc:op_rinuncia]{UC26}, \mbox{RB-12} \\
 \leavevmode\hypertarget{req:RF-52}{\textbf{RF-52}} & Il sistema deve comunicare il motivo delle validazioni negative restituite dal servizio NEXUM. & Obbligatorio & T & \hyperref[uc:op_rifiuto]{UC27}, \mbox{RB-14}, \mbox{CA-11}, \mbox{Vincoli} \\
-\leavevmode\hypertarget{req:RF-53}{\textbf{RF-53}} & Il sistema deve verificare l’esito di un invio interrotto prima di ripeterlo, evitando operazioni duplicate. & Obbligatorio & T & \hyperref[uc:op_incerto]{UC28}, \mbox{Capitolato}, \mbox{CA-11} \\
-\leavevmode\hypertarget{req:RF-54}{\textbf{RF-54}} & Il sistema deve permettere al dipendente di cancellare una propria richiesta, con riepilogo e conferma. La correzione di una richiesta avviene tramite cancellazione e nuovo inserimento. & Obbligatorio & T & \hyperref[uc:annulla_inv]{UC29}, \mbox{VE-2026-10-26}, \mbox{VE-2026-11-18}, \mbox{Riscontro Eggon} \\
+\leavevmode\hypertarget{req:RF-53}{\textbf{RF-53}} & Dopo un invio interrotto da un errore del servizio o di rete, il sistema deve ripetere in automatico la stessa operazione con la stessa chiave di idempotenza, senza chiedere una nuova conferma e rispettando i tempi indicati dal servizio. Se l’esito resta incerto, lo verifica sui dati e lo comunica al dipendente; l’operazione non viene mai duplicata. & Obbligatorio & T & \hyperref[uc:op_incerto]{UC28}, \mbox{Capitolato}, \mbox{CA-11}, \mbox{VE-2026-11-25} \\
+\leavevmode\hypertarget{req:RF-54}{\textbf{RF-54}} & Il sistema deve permettere al dipendente di cancellare una propria richiesta, con riepilogo e conferma. La correzione di una richiesta avviene tramite cancellazione e nuovo inserimento. Quali richieste si possono cancellare lo stabiliscono le regole aziendali (RF-103). & Obbligatorio & T & \hyperref[uc:annulla_inv]{UC29}, \mbox{VE-2026-10-26}, \mbox{VE-2026-11-18}, \mbox{Riscontro Eggon}, \mbox{VE-2026-11-25} \\
 \leavevmode\hypertarget{req:RF-55}{\textbf{RF-55}} & Il sistema deve individuare in modo conversazionale la richiesta a cui si riferisce il messaggio, per esempio da date o tipo, chiedendo quale quando ve ne sono più. & Desiderabile & T & \hyperref[uc:sel_rich]{UC30}, \mbox{VE-2026-10-26}, \mbox{Riscontro Eggon} \\
 \addlinespace[3pt]\multicolumn{5}{@{}l}{\textbf{\sffamily Gestione dei bucket}} \\ \addlinespace[2pt]
 \leavevmode\hypertarget{req:RF-57}{\textbf{RF-57}} & Il sistema deve mostrare agli amministratori tutti i bucket dell’azienda. & Obbligatorio & T & \hyperref[uc:bk_elenco]{UC31}, \mbox{RB-05}, \mbox{VE-2026-11-18}, \mbox{Riscontro Eggon} \\
@@ -3294,6 +3301,10 @@ funzionale; l'attore coinvolto è quello dei casi d'uso indicati nella colonna
 \leavevmode\hypertarget{req:RF-101}{\textbf{RF-101}} & Il sistema deve permettere di limitare la consultazione di un bucket a gruppi di dipendenti e di modificarli, applicando i nuovi destinatari al recupero successivo. & Desiderabile & T & \hyperref[uc:bk_dest]{UC33}, \hyperref[uc:bk_modifica]{UC36}, \mbox{Capitolato}, \mbox{CA-09}, \mbox{VE-2026-11-18}, \mbox{Riscontro Eggon} \\
 \addlinespace[3pt]\multicolumn{5}{@{}l}{\textbf{\sffamily Richieste di ferie e permessi}} \\ \addlinespace[2pt]
 \leavevmode\hypertarget{req:RF-102}{\textbf{RF-102}} & Il sistema non deve eseguire un’operazione su una richiesta non identificata in modo univoco: prima di cancellarla deve identificarla e ottenere la conferma del dipendente. & Obbligatorio & T & \hyperref[uc:annulla_inv]{UC29}, \hyperref[uc:sel_rich]{UC30}, \mbox{Riscontro Eggon} \\
+\leavevmode\hypertarget{req:RF-103}{\textbf{RF-103}} & Il sistema deve verificare, prima del riepilogo, le regole aziendali applicabili, come preavviso minimo, cancellabilità e saldo disponibile, sui documenti di regole dell’azienda; se una regola impedisce l’operazione, non deve inviarla e deve comunicarla al dipendente citandone la fonte. & Obbligatorio & T & \hyperref[uc:registra]{UC20}, \hyperref[uc:annulla_inv]{UC29}, \mbox{VE-2026-11-25} \\
+\leavevmode\hypertarget{req:RF-104}{\textbf{RF-104}} & Il sistema deve controllare, prima del riepilogo e con l’elenco delle richieste del dipendente, che una nuova richiesta non si sovrapponga a una richiesta in attesa o approvata, e in quel caso segnalarlo. & Obbligatorio & T & \hyperref[uc:registra]{UC20}, \mbox{VE-2026-11-25} \\
+\addlinespace[3pt]\multicolumn{5}{@{}l}{\textbf{\sffamily Accesso e profilo}} \\ \addlinespace[2pt]
+\leavevmode\hypertarget{req:RF-105}{\textbf{RF-105}} & Il sistema deve segnalare quando la ricerca del dipendente in NEXUM non lo trova e, in quel caso, non deve consentire consultazioni né operazioni su ferie e permessi. & Obbligatorio & T & \hyperref[uc:login]{UC1}, \mbox{VE-2026-11-25} \\
 \end{longtable}}
 
 \subsection{Requisiti di qualità}\label{sec:rq}
@@ -3325,7 +3336,7 @@ concordate con il proponente (Tabella~\ref{tab:rq}).
 \leavevmode\hypertarget{req:RQ-10}{\textbf{RQ-10}} & L’architettura deve permettere di aggiungere fonti e abilità senza riprogettare il Concierge, con interfacce delle abilità documentate. & Obbligatorio & I & \mbox{RB-16}, \mbox{Riscontro Eggon} \\
 \leavevmode\hypertarget{req:RQ-11}{\textbf{RQ-11}} & La documentazione e la dimostrazione devono identificare chiaramente le componenti reali e quelle simulate. & Obbligatorio & I & \mbox{Vincoli} \\
 \leavevmode\hypertarget{req:RQ-12}{\textbf{RQ-12}} & Devono essere consegnati codice sorgente versionato, istruzioni di installazione, Manuale Utente e documentazione tecnica. & Obbligatorio & I & \mbox{Deliverables} \\
-\leavevmode\hypertarget{req:RQ-13}{\textbf{RQ-13}} & Devono essere documentati i limiti noti e le indicazioni per le estensioni. & Obbligatorio & I & \mbox{Deliverables} \\
+\leavevmode\hypertarget{req:RQ-13}{\textbf{RQ-13}} & Devono essere documentati i limiti noti e le indicazioni per le estensioni, tra cui la verifica delle regole aziendali svolta dal Concierge e non dal servizio: con l’approvazione automatica, un errore di questo controllo non viene intercettato da nessun responsabile. & Obbligatorio & I & \mbox{Deliverables}, \mbox{VE-2026-11-25} \\
 \leavevmode\hypertarget{req:RQ-15}{\textbf{RQ-15}} & Il codice deve essere sottoposto a revisione di sicurezza con riferimento alle linee guida OWASP. & Desiderabile & I & \mbox{VE-2026-10-26} \\
 \leavevmode\hypertarget{req:RQ-16}{\textbf{RQ-16}} & Le attività di sviluppo e documentazione devono rispettare le Norme di Progetto. & Obbligatorio & I & \mbox{Interno} \\
 \end{longtable}}
@@ -3369,72 +3380,24 @@ modelli è l'unico vincolo tecnologico tassativo emerso dall'incontro.
 \intestazione{Codice} & \intestazione{Descrizione} & \intestazione{Priorità} & \intestazione{Ver.} & \intestazione{Fonti} \\
 \midrule\endhead
 \midrule\multicolumn{5}{r@{}}{\footnotesize\itshape continua nella pagina successiva}\\ \endfoot \bottomrule\endlastfoot
-\leavevmode\hypertarget{req:RV-01}{\textbf{RV-01}} & Il dominio operativo dell’MVP deve essere limitato a ferie e permessi. & Obbligatorio & I & \mbox{Vincoli}, \mbox{VE-2026-10-26} \\
+\leavevmode\hypertarget{req:RV-01}{\textbf{RV-01}} & Il dominio operativo dell’MVP deve essere limitato a ferie e permessi: richieste di ferie, permessi, malattia e straordinari. & Obbligatorio & I & \mbox{Vincoli}, \mbox{VE-2026-10-26}, \mbox{VE-2026-11-25} \\
 \leavevmode\hypertarget{req:RV-02}{\textbf{RV-02}} & L’interfaccia conversazionale deve essere una chat testuale, senza voce né allegati. & Obbligatorio & I & \hyperref[uc:msg]{UC6}, \mbox{Vincoli} \\
 \leavevmode\hypertarget{req:RV-03}{\textbf{RV-03}} & La memoria personale tra conversazioni diverse e uno storico di chat che il dipendente possa riaprire e proseguire non sono richiesti nell’MVP: il contesto vale solo nella conversazione corrente. & Obbligatorio & I & \hyperref[uc:nuova_conv]{UC4}, \mbox{Vincoli}, \mbox{VE-2026-11-18}, \mbox{Riscontro Eggon} \\
 \leavevmode\hypertarget{req:RV-04}{\textbf{RV-04}} & Il sistema non deve implementare un sistema generale di workflow o plugin, un marketplace o un editor di abilità. & Obbligatorio & I & \mbox{Vincoli} \\
 \leavevmode\hypertarget{req:RV-05}{\textbf{RV-05}} & Il sistema deve rispettare i processi e le validazioni di NEXUM; la gestione dell’approvazione resta in NEXUM. & Obbligatorio & I & \hyperref[uc:stato_rich]{UC19}, \hyperref[uc:op_esito]{UC24}, \mbox{Vincoli}, \mbox{RB-13} \\
 \leavevmode\hypertarget{req:RV-06}{\textbf{RV-06}} & I controlli su dati e operazioni devono essere svolti dai servizi applicativi e dalle API Eggon in base all’utente autenticato e alla sua azienda; il testo di un messaggio non deve poter cambiare identità o autorizzazioni. & Obbligatorio & T & \hyperref[uc:non_aut]{UC18}, \mbox{Vincoli}, \mbox{RB-01}, \mbox{CA-09}, \mbox{Riscontro Eggon} \\
-\leavevmode\hypertarget{req:RV-07}{\textbf{RV-07}} & Il contenuto delle fonti e dei messaggi non deve poter modificare istruzioni operative o autorizzazioni. & Obbligatorio & T & \hyperref[uc:regole]{UC11}, \hyperref[uc:non_aut]{UC18}, \mbox{Vincoli} \\
+\leavevmode\hypertarget{req:RV-07}{\textbf{RV-07}} & Il contenuto delle fonti e dei messaggi non deve poter modificare istruzioni operative o autorizzazioni, né far saltare i controlli sulle regole aziendali. & Obbligatorio & T & \hyperref[uc:regole]{UC11}, \hyperref[uc:non_aut]{UC18}, \mbox{Vincoli}, \mbox{VE-2026-11-25} \\
 \leavevmode\hypertarget{req:RV-08}{\textbf{RV-08}} & Gli ambienti di sviluppo e prova devono usare solo dati fittizi o autorizzati. & Obbligatorio & I & \mbox{Vincoli}, \mbox{VE-2026-10-26} \\
-\leavevmode\hypertarget{req:RV-09}{\textbf{RV-09}} & La traccia e le conversazioni conservate devono essere mantenute secondo le regole concordate con il proponente. & Obbligatorio & I & \hyperref[uc:tr_elenco]{UC48}, \mbox{Vincoli}, \mbox{RB-15}, \mbox{Riscontro Eggon} \\
+\leavevmode\hypertarget{req:RV-09}{\textbf{RV-09}} & La traccia e le conversazioni conservate devono essere mantenute per 12 mesi, come concordato con il proponente. & Obbligatorio & I & \hyperref[uc:tr_elenco]{UC48}, \mbox{Vincoli}, \mbox{RB-15}, \mbox{Riscontro Eggon}, \mbox{VE-2026-11-25} \\
 \leavevmode\hypertarget{req:RV-10}{\textbf{RV-10}} & Le fonti accettate nell’MVP devono essere documenti PDF testuali. & Obbligatorio & T & \hyperref[uc:fn_carica]{UC39}, \hyperref[uc:fn_formato]{UC40}, \mbox{Capitolato}, \mbox{VE-2026-10-26} \\
 \leavevmode\hypertarget{req:RV-11}{\textbf{RV-11}} & Il Concierge deve operare in lingua italiana. & Obbligatorio & T & \mbox{VE-2026-10-26} \\
 \leavevmode\hypertarget{req:RV-12}{\textbf{RV-12}} & La soluzione deve essere indipendente dal fornitore dei modelli, che deve poter essere sostituito senza modificare il resto del sistema. & Obbligatorio & I & \mbox{VE-2026-10-26} \\
-\leavevmode\hypertarget{req:RV-13}{\textbf{RV-13}} & L’integrazione con NEXUM deve seguire il contratto API concordato con Eggon per lettura dei dati, consultazione dello stato, inserimento e cancellazione delle richieste e verifica dell’esito dopo un’interruzione, con chiamate autenticate tramite OAuth. L’applicativo è autonomo e non riproduce il sistema di accesso di NEXUM. & Obbligatorio & I & \hyperref[uc:dati]{UC15}, \hyperref[uc:stato_rich]{UC19}, \hyperref[uc:registra]{UC20}, \hyperref[uc:op_incerto]{UC28}, \hyperref[uc:annulla_inv]{UC29}, \mbox{Vincoli}, \mbox{VE-2026-11-18}, \mbox{Riscontro Eggon} \\
+\leavevmode\hypertarget{req:RV-13}{\textbf{RV-13}} & L’integrazione con NEXUM deve seguire il contratto API concordato con Eggon per identificazione del dipendente, lettura dei dati, consultazione dello stato, anteprima, inserimento e cancellazione delle richieste, con operazioni di scrittura idempotenti e chiamate autenticate tramite OAuth. L’applicativo è autonomo e non riproduce il sistema di accesso di NEXUM. & Obbligatorio & I & \hyperref[uc:dati]{UC15}, \hyperref[uc:stato_rich]{UC19}, \hyperref[uc:registra]{UC20}, \hyperref[uc:op_incerto]{UC28}, \hyperref[uc:annulla_inv]{UC29}, \mbox{Vincoli}, \mbox{VE-2026-11-18}, \mbox{Riscontro Eggon}, \mbox{VE-2026-11-25} \\
 \leavevmode\hypertarget{req:RV-14}{\textbf{RV-14}} & Con servizi simulati il percorso deve restare eseguibile end to end, con registrazione persistente delle richieste e verifica dello stato. & Obbligatorio & D & \hyperref[uc:registra]{UC20}, \hyperref[uc:stato_rich]{UC19}, \mbox{Vincoli}, \mbox{CA-13} \\
 \leavevmode\hypertarget{req:RV-15}{\textbf{RV-15}} & Le abilità di lettura e di operazione devono essere esposte tramite il protocollo \glo{MCP}, con parametri d’ingresso e d’uscita definiti nel registro delle abilità. & Desiderabile & I & \mbox{VE-2026-10-26} \\
 \leavevmode\hypertarget{req:RV-16}{\textbf{RV-16}} & Il sistema dovrebbe adottare lo stack di Eggon: Ruby on Rails per il back-end, Angular per il front-end e RubyLLM come interfaccia ai modelli. & Desiderabile & I & \mbox{VE-2026-10-26} \\
 \leavevmode\hypertarget{req:RV-17}{\textbf{RV-17}} & I modelli dovrebbero essere usati tramite l’infrastruttura AWS fornita da Eggon, entro i limiti di budget impostati. & Desiderabile & I & \mbox{VE-2026-10-26} \\
 \leavevmode\hypertarget{req:RV-18}{\textbf{RV-18}} & I dati restituiti dai modelli dovrebbero essere salvati cifrati. & Desiderabile & I & \mbox{VE-2026-10-26} \\
-\end{longtable}}
-
-\subsection{Questioni aperte e proposte}\label{sec:aperte}
-
-Alcuni aspetti richiedono una decisione condivisa con il proponente o dati che
-il proponente deve ancora fornire. La Tabella~\ref{tab:aperte} li raccoglie,
-con i requisiti interessati; la Tabella~\ref{tab:proposte} riporta le soluzioni
-che il gruppo propone per i punti che il proponente ha lasciato alla sua
-scelta. Le decisioni prese saranno riportate nei requisiti nella versione
-successiva del documento.
-
-{\small
-\begin{longtable}{@{}p{1.25cm}>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{2.1cm}>{\raggedright\arraybackslash}p{6.3cm}>{\raggedright\arraybackslash}p{2.4cm}@{}}
-\caption{Questioni aperte da concordare con il proponente}\label{tab:aperte}\\
-\toprule
-\intestazione{Codice} & \intestazione{Tema} & \intestazione{Requisiti} & \intestazione{Questione} & \intestazione{Chi decide} \\
-\midrule\endfirsthead
-\toprule
-\intestazione{Codice} & \intestazione{Tema} & \intestazione{Requisiti} & \intestazione{Questione} & \intestazione{Chi decide} \\
-\midrule\endhead
-\midrule\multicolumn{5}{r@{}}{\footnotesize\itshape continua nella pagina successiva}\\ \endfoot \bottomrule\endlastfoot
-\textbf{Q1} & Accesso e integrazione & \hyperlink{req:RF-01}{RF-01}, \hyperlink{req:RF-02}{RF-02}, \hyperlink{req:RF-96}{RF-96} & Quali utenti di prova verranno mappati (quanti dipendenti e amministratori, di quali aziende) e come otteniamo i token OAuth (flusso, durata, rinnovo)? & Eggon \\
-\textbf{Q2} & Cancellazione & \hyperlink{req:RF-54}{RF-54} & Quali richieste si possono cancellare via API: solo future, anche approvate, anche passate? Le passate restano riservate all’amministratore? & Eggon \\
-\textbf{Q3} & Lettura dati & \hyperlink{req:RF-35}{RF-35} & Il servizio fornisce il saldo residuo delle ferie? Con quale data o riferimento di aggiornamento? & Eggon \\
-\textbf{Q4} & Lettura dati & \hyperlink{req:RF-33}{RF-33}, \hyperlink{req:RF-34}{RF-34} & Quali stati può avere una richiesta e che cosa significano? Le unità di misura sono giorni, ore o entrambe? & Eggon \\
-\textbf{Q5} & Stato delle richieste & \hyperlink{req:RF-39}{RF-39}, \hyperlink{req:RF-49}{RF-49} & Nei dati di prova l’approvazione è automatica o manuale? Lo stato si interroga a richiesta o è previsto un avviso? & Eggon \\
-\textbf{Q6} & Tracciabilità & \hyperlink{req:RF-99}{RF-99}, \hyperlink{req:RV-09}{RV-09} & Per quanto tempo e con quale dettaglio vanno conservate traccia e conversazioni, e chi può consultarle? La conservazione delle conversazioni è obbligatoria nell’MVP? & Eggon \\
-\textbf{Q7} & Soglie & \hyperlink{req:RQ-01}{RQ-01}, \hyperlink{req:RQ-07}{RQ-07}, \hyperlink{req:RP-02}{RP-02}, \hyperlink{req:RP-03}{RP-03}, \hyperlink{req:RP-04}{RP-04} & Soglie di correttezza, tempi di risposta, tempo di effetto della sostituzione o del ritiro di una fonte, budget per i servizi AI. & Eggon e gruppo \\
-\textbf{Q8} & Materiali & \hyperlink{req:RF-28}{RF-28}, \hyperlink{req:RQ-07}{RQ-07}, \hyperlink{req:RV-08}{RV-08} & Documenti aziendali di esempio, manuali NEXUM e dati di prova da usare: quando sono disponibili? & Eggon \\
-\textbf{Q9} & Richieste & \hyperlink{req:RF-44}{RF-44}, \hyperlink{req:RF-46}{RF-46} & Tipi di richiesta e campi obbligatori del servizio di ferie e permessi. & Eggon, nella proposta API \\
-\textbf{Q10} & Perimetro PoC & — & Quali capacità e requisiti includere nel \glo{PoC} per restare nel monte ore del gruppo. & Gruppo (proposta) e Eggon \\
-\textbf{Q11} & Limiti tecnici & \hyperlink{req:RF-19}{RF-19}, \hyperlink{req:RF-77}{RF-77} & Lunghezza massima dei messaggi e dimensione massima dei file: il gruppo propone i valori, Eggon conferma. & Gruppo \\
-\end{longtable}}
-
-{\small
-\begin{longtable}{@{}p{1.25cm}>{\raggedright\arraybackslash}p{2.4cm}>{\raggedright\arraybackslash}p{2.1cm}>{\raggedright\arraybackslash}p{8.5cm}@{}}
-\caption{Proposte del gruppo}\label{tab:proposte}\\
-\toprule
-\intestazione{Codice} & \intestazione{Tema} & \intestazione{Requisiti} & \intestazione{Proposta} \\
-\midrule\endfirsthead
-\toprule
-\intestazione{Codice} & \intestazione{Tema} & \intestazione{Requisiti} & \intestazione{Proposta} \\
-\midrule\endhead
-\midrule\multicolumn{4}{r@{}}{\footnotesize\itshape continua nella pagina successiva}\\ \endfoot \bottomrule\endlastfoot
-\textbf{P1} & Versionamento delle fonti & \hyperlink{req:RF-84}{RF-84}, \hyperlink{req:RF-85}{RF-85}, \hyperlink{req:RF-15}{RF-15} & Ogni caricamento di una nuova versione crea un nuovo record della fonte con numero di versione progressivo; la versione precedente viene marcata «sostituita», resta nello storico ed è esclusa dal recupero. Ogni porzione ricercabile porta l’identificativo di fonte e versione, e la traccia di ogni interazione registra quelli usati: così si ricostruisce quale versione ha supportato una risposta passata. \\
-\textbf{P2} & Riconoscimento degli utenti & \hyperlink{req:RF-01}{RF-01}–\hyperlink{req:RF-05}{RF-05} & Accesso proprio dell’applicativo con identificativo e password per gli utenti di prova, ciascuno con ruolo (dipendente o amministratore) e associato all’utente NEXUM della mappatura. Le chiamate alle API Eggon usano OAuth (RF-96). \\
-\textbf{P3} & Categoria dei bucket & \hyperlink{req:RF-60}{RF-60} & La categoria (conoscenza aziendale o conoscenza del prodotto) è scelta dall’amministratore alla creazione del bucket ed è mostrata in elenco e nelle citazioni. \\
-\textbf{P4} & Proposta API & \hyperlink{req:RV-13}{RV-13}, \hyperlink{req:RF-53}{RF-53} & Proposta in \glo{Bruno} con lettura dei dati, consultazione dello stato, inserimento, cancellazione e verifica dell’esito dopo un’interruzione: per ogni operazione dati in ingresso, risposta, errori ed esempio. Documento separato, da presentare a Eggon. \\
 \end{longtable}}
 
 \clearpage
@@ -3498,6 +3461,7 @@ riga è vuota: ogni fonte è coperta.
 \mbox{VE-2026-10-26} & Verbale esterno dell'incontro con Eggon del 2026-10-26. & \hyperlink{req:RF-35}{RF-35}, \hyperlink{req:RF-54}{RF-54}, \hyperlink{req:RF-55}{RF-55}, \hyperlink{req:RQ-15}{RQ-15}, \hyperlink{req:RP-04}{RP-04}, \hyperlink{req:RV-01}{RV-01}, \hyperlink{req:RV-08}{RV-08}, \hyperlink{req:RV-10}{RV-10}, \hyperlink{req:RV-11}{RV-11}, \hyperlink{req:RV-12}{RV-12}, \hyperlink{req:RV-15}{RV-15}, \hyperlink{req:RV-16}{RV-16}, \hyperlink{req:RV-17}{RV-17}, \hyperlink{req:RV-18}{RV-18} \\
 \mbox{Interno} & Proposta del gruppo, a tutela dell'usabilità o della robustezza. & \hyperlink{req:RF-03}{RF-03}, \hyperlink{req:RF-04}{RF-04}, \hyperlink{req:RF-05}{RF-05}, \hyperlink{req:RF-08}{RF-08}, \hyperlink{req:RF-10}{RF-10}, \hyperlink{req:RF-19}{RF-19}, \hyperlink{req:RF-60}{RF-60}, \hyperlink{req:RF-64}{RF-64}, \hyperlink{req:RF-65}{RF-65}, \hyperlink{req:RF-73}{RF-73}, \hyperlink{req:RF-77}{RF-77}, \hyperlink{req:RF-78}{RF-78}, \hyperlink{req:RF-87}{RF-87}, \hyperlink{req:RF-91}{RF-91}, \hyperlink{req:RF-92}{RF-92}, \hyperlink{req:RF-93}{RF-93}, \hyperlink{req:RF-94}{RF-94}, \hyperlink{req:RQ-16}{RQ-16} \\
 \mbox{VE-2026-11-18} & Verbale esterno dell'incontro con Eggon del 2026-11-18. & \hyperlink{req:RF-01}{RF-01}, \hyperlink{req:RF-02}{RF-02}, \hyperlink{req:RF-09}{RF-09}, \hyperlink{req:RF-18}{RF-18}, \hyperlink{req:RF-20}{RF-20}, \hyperlink{req:RF-22}{RF-22}, \hyperlink{req:RF-39}{RF-39}, \hyperlink{req:RF-54}{RF-54}, \hyperlink{req:RF-57}{RF-57}, \hyperlink{req:RF-58}{RF-58}, \hyperlink{req:RF-59}{RF-59}, \hyperlink{req:RF-63}{RF-63}, \hyperlink{req:RF-65}{RF-65}, \hyperlink{req:RF-66}{RF-66}, \hyperlink{req:RF-83}{RF-83}, \hyperlink{req:RF-84}{RF-84}, \hyperlink{req:RF-85}{RF-85}, \hyperlink{req:RF-90}{RF-90}, \hyperlink{req:RF-95}{RF-95}, \hyperlink{req:RF-96}{RF-96}, \hyperlink{req:RF-97}{RF-97}, \hyperlink{req:RF-98}{RF-98}, \hyperlink{req:RF-99}{RF-99}, \hyperlink{req:RF-100}{RF-100}, \hyperlink{req:RF-101}{RF-101}, \hyperlink{req:RV-03}{RV-03}, \hyperlink{req:RV-13}{RV-13} \\
+\mbox{VE-2026-11-25} & Verbale esterno dell'incontro con Eggon del 2026-11-25. & \hyperlink{req:RF-33}{RF-33}, \hyperlink{req:RF-34}{RF-34}, \hyperlink{req:RF-35}{RF-35}, \hyperlink{req:RF-39}{RF-39}, \hyperlink{req:RF-40}{RF-40}, \hyperlink{req:RF-44}{RF-44}, \hyperlink{req:RF-45}{RF-45}, \hyperlink{req:RF-49}{RF-49}, \hyperlink{req:RF-53}{RF-53}, \hyperlink{req:RF-54}{RF-54}, \hyperlink{req:RF-103}{RF-103}, \hyperlink{req:RF-104}{RF-104}, \hyperlink{req:RF-105}{RF-105}, \hyperlink{req:RQ-13}{RQ-13}, \hyperlink{req:RV-01}{RV-01}, \hyperlink{req:RV-07}{RV-07}, \hyperlink{req:RV-09}{RV-09}, \hyperlink{req:RV-13}{RV-13} \\
 \mbox{Riscontro Eggon} & Osservazioni scritte di Eggon sulla bozza dei requisiti (novembre 2026). & \hyperlink{req:RF-01}{RF-01}, \hyperlink{req:RF-02}{RF-02}, \hyperlink{req:RF-09}{RF-09}, \hyperlink{req:RF-10}{RF-10}, \hyperlink{req:RF-15}{RF-15}, \hyperlink{req:RF-18}{RF-18}, \hyperlink{req:RF-24}{RF-24}, \hyperlink{req:RF-33}{RF-33}, \hyperlink{req:RF-35}{RF-35}, \hyperlink{req:RF-36}{RF-36}, \hyperlink{req:RF-39}{RF-39}, \hyperlink{req:RF-43}{RF-43}, \hyperlink{req:RF-54}{RF-54}, \hyperlink{req:RF-55}{RF-55}, \hyperlink{req:RF-57}{RF-57}, \hyperlink{req:RF-58}{RF-58}, \hyperlink{req:RF-59}{RF-59}, \hyperlink{req:RF-60}{RF-60}, \hyperlink{req:RF-63}{RF-63}, \hyperlink{req:RF-65}{RF-65}, \hyperlink{req:RF-66}{RF-66}, \hyperlink{req:RF-84}{RF-84}, \hyperlink{req:RF-85}{RF-85}, \hyperlink{req:RF-89}{RF-89}, \hyperlink{req:RF-90}{RF-90}, \hyperlink{req:RF-95}{RF-95}, \hyperlink{req:RF-96}{RF-96}, \hyperlink{req:RF-97}{RF-97}, \hyperlink{req:RF-99}{RF-99}, \hyperlink{req:RF-100}{RF-100}, \hyperlink{req:RF-101}{RF-101}, \hyperlink{req:RF-102}{RF-102}, \hyperlink{req:RQ-10}{RQ-10}, \hyperlink{req:RP-03}{RP-03}, \hyperlink{req:RV-03}{RV-03}, \hyperlink{req:RV-06}{RV-06}, \hyperlink{req:RV-09}{RV-09}, \hyperlink{req:RV-13}{RV-13} \\
 \addlinespace
 \end{longtable}}
@@ -3513,7 +3477,7 @@ che ne derivano.
 \toprule \intestazione{Codice} & \intestazione{Caso d'uso} & \intestazione{Requisiti} \\ \midrule\endfirsthead
 \toprule \intestazione{Codice} & \intestazione{Caso d'uso} & \intestazione{Requisiti} \\ \midrule\endhead
 \midrule\multicolumn{3}{r@{}}{\footnotesize\itshape continua nella pagina successiva}\\ \endfoot \bottomrule\endlastfoot
-\hyperref[uc:login]{UC1} & Autenticazione & \hyperlink{req:RF-01}{RF-01}, \hyperlink{req:RF-02}{RF-02}, \hyperlink{req:RF-07}{RF-07} \\
+\hyperref[uc:login]{UC1} & Autenticazione & \hyperlink{req:RF-01}{RF-01}, \hyperlink{req:RF-02}{RF-02}, \hyperlink{req:RF-07}{RF-07}, \hyperlink{req:RF-105}{RF-105} \\
 \hyperref[uc:login_id]{UC1.1} & Inserimento dell'identificativo & \hyperlink{req:RF-03}{RF-03} \\
 \hyperref[uc:login_pw]{UC1.2} & Inserimento della password & \hyperlink{req:RF-04}{RF-04} \\
 \hyperref[uc:cred_err]{UC2} & Credenziali non valide & \hyperlink{req:RF-05}{RF-05} \\
@@ -3536,7 +3500,7 @@ che ne derivano.
 \hyperref[uc:nessun_dato]{UC17} & Nessun dato corrispondente & \hyperlink{req:RF-37}{RF-37} \\
 \hyperref[uc:non_aut]{UC18} & Rifiuto di una richiesta non autorizzata & \hyperlink{req:RF-38}{RF-38} \\
 \hyperref[uc:stato_rich]{UC19} & Consultazione dello stato di una richiesta & \hyperlink{req:RF-39}{RF-39}, \hyperlink{req:RF-96}{RF-96} \\
-\hyperref[uc:registra]{UC20} & Registrazione di una richiesta di ferie o permesso & \hyperlink{req:RF-40}{RF-40}, \hyperlink{req:RF-41}{RF-41}, \hyperlink{req:RF-42}{RF-42}, \hyperlink{req:RF-43}{RF-43}, \hyperlink{req:RF-96}{RF-96} \\
+\hyperref[uc:registra]{UC20} & Registrazione di una richiesta & \hyperlink{req:RF-40}{RF-40}, \hyperlink{req:RF-41}{RF-41}, \hyperlink{req:RF-42}{RF-42}, \hyperlink{req:RF-43}{RF-43}, \hyperlink{req:RF-96}{RF-96}, \hyperlink{req:RF-103}{RF-103}, \hyperlink{req:RF-104}{RF-104} \\
 \hyperref[uc:reg_tipo]{UC20.1} & Determinazione del tipo di richiesta & \hyperlink{req:RF-44}{RF-44} \\
 \hyperref[uc:periodo]{UC21} & Determinazione del periodo & \hyperlink{req:RF-45}{RF-45} \\
 \hyperref[uc:reg_campi]{UC20.2} & Raccolta degli altri dati richiesti & \hyperlink{req:RF-46}{RF-46} \\
@@ -3547,7 +3511,7 @@ che ne derivano.
 \hyperref[uc:op_rinuncia]{UC26} & Rinuncia all'operazione prima della conferma & \hyperlink{req:RF-51}{RF-51} \\
 \hyperref[uc:op_rifiuto]{UC27} & Operazione respinta dal servizio & \hyperlink{req:RF-52}{RF-52} \\
 \hyperref[uc:op_incerto]{UC28} & Esito dell'operazione incerto & \hyperlink{req:RF-53}{RF-53} \\
-\hyperref[uc:annulla_inv]{UC29} & Cancellazione di una richiesta & \hyperlink{req:RF-43}{RF-43}, \hyperlink{req:RF-54}{RF-54}, \hyperlink{req:RF-96}{RF-96}, \hyperlink{req:RF-102}{RF-102} \\
+\hyperref[uc:annulla_inv]{UC29} & Cancellazione di una richiesta & \hyperlink{req:RF-43}{RF-43}, \hyperlink{req:RF-54}{RF-54}, \hyperlink{req:RF-96}{RF-96}, \hyperlink{req:RF-102}{RF-102}, \hyperlink{req:RF-103}{RF-103} \\
 \hyperref[uc:sel_rich]{UC30} & Individuazione della richiesta interessata & \hyperlink{req:RF-55}{RF-55}, \hyperlink{req:RF-102}{RF-102} \\
 \hyperref[uc:bk_elenco]{UC31} & Visualizzazione dell'elenco dei bucket & \hyperlink{req:RF-57}{RF-57} \\
 \hyperref[uc:bk_elem]{UC31.1} & Visualizzazione di un bucket nell'elenco & \hyperlink{req:RF-58}{RF-58} \\
@@ -3584,7 +3548,7 @@ che ne derivano.
 \end{longtable}}
 
 \subsection{Riepilogo}
-Il documento individua 68 casi d'uso, di cui 50 principali e 18 sottocasi, e 129 requisiti, riepilogati per tipo e priorità nella Tabella~\ref{tab:riepilogo}.
+Il documento individua 68 casi d'uso, di cui 50 principali e 18 sottocasi, e 132 requisiti, riepilogati per tipo e priorità nella Tabella~\ref{tab:riepilogo}.
 \begin{table}[H]
 \centering
 \small
@@ -3593,12 +3557,12 @@ Il documento individua 68 casi d'uso, di cui 50 principali e 18 sottocasi, e 129
 \toprule
 \intestazione{Tipo} & \intestazione{Obbligatori} & \intestazione{Desiderabili} & \intestazione{Facoltativi} & \intestazione{Totale} \\
 \midrule
-Funzionali & 73 & 15 & 4 & 92 \\
+Funzionali & 76 & 15 & 4 & 95 \\
 Di qualità & 14 & 1 & 0 & 15 \\
 Prestazionali & 4 & 0 & 0 & 4 \\
 Di vincolo & 14 & 4 & 0 & 18 \\
 \midrule
-\textbf{Totale} & 105 & 20 & 4 & \textbf{129} \\
+\textbf{Totale} & 108 & 20 & 4 & \textbf{132} \\
 \bottomrule
 \end{tabular}
 \end{table}
